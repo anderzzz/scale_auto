@@ -1,0 +1,18 @@
+# Virtual environment
+venv/
+.venv/
+
+# Downloaded / derived data (regenerable, large)
+cache/
+
+# Logs
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store

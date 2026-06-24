@@ -1,0 +1,12 @@
+{
+  "n_stations": 3263,
+  "tatort": {
+    "n": 2017,
+    "stations_in_tatort": 2751
+  },
+  "rural_share": {
+    "stations_total": 3263,
+    "stations_outside_tatort": 512,
+    "rural_fraction": 0.1569
+  }
+}

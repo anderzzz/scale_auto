@@ -1,0 +1,124 @@
+{
+  "n_features": 10280,
+  "by_category": {
+    "accommodation": 7804,
+    "resort": 1514,
+    "ski_lift": 962
+  },
+  "kommun_with_any_accommodation": 288,
+  "kommun_with_ski_lift": 157,
+  "top10_accommodation": [
+    {
+      "name": "Stockholm",
+      "tour_accommodation": 216.0,
+      "tour_ski_lift": 6.0,
+      "tour_camp_chalet": 9.0
+    },
+    {
+      "name": "Kiruna",
+      "tour_accommodation": 213.0,
+      "tour_ski_lift": 16.0,
+      "tour_camp_chalet": 151.0
+    },
+    {
+      "name": "\u00c5re",
+      "tour_accommodation": 197.0,
+      "tour_ski_lift": 91.0,
+      "tour_camp_chalet": 142.0
+    },
+    {
+      "name": "Borgholm",
+      "tour_accommodation": 193.0,
+      "tour_ski_lift": 0.0,
+      "tour_camp_chalet": 164.0
+    },
+    {
+      "name": "Malung-S\u00e4len",
+      "tour_accommodation": 142.0,
+      "tour_ski_lift": 149.0,
+      "tour_camp_chalet": 33.0
+    },
+    {
+      "name": "\u00d6rnsk\u00f6ldsvik",
+      "tour_accommodation": 141.0,
+      "tour_ski_lift": 9.0,
+      "tour_camp_chalet": 51.0
+    },
+    {
+      "name": "Sandviken",
+      "tour_accommodation": 134.0,
+      "tour_ski_lift": 14.0,
+      "tour_camp_chalet": 103.0
+    },
+    {
+      "name": "Torsby",
+      "tour_accommodation": 132.0,
+      "tour_ski_lift": 39.0,
+      "tour_camp_chalet": 102.0
+    },
+    {
+      "name": "Gotland",
+      "tour_accommodation": 123.0,
+      "tour_ski_lift": 0.0,
+      "tour_camp_chalet": 54.0
+    },
+    {
+      "name": "\u00c4lvdalen",
+      "tour_accommodation": 115.0,
+      "tour_ski_lift": 47.0,
+      "tour_camp_chalet": 59.0
+    }
+  ],
+  "top10_ski_lift": [
+    {
+      "name": "Malung-S\u00e4len",
+      "tour_ski_lift": 149.0,
+      "tour_accommodation": 142.0
+    },
+    {
+      "name": "\u00c5re",
+      "tour_ski_lift": 91.0,
+      "tour_accommodation": 197.0
+    },
+    {
+      "name": "H\u00e4rjedalen",
+      "tour_ski_lift": 84.0,
+      "tour_accommodation": 104.0
+    },
+    {
+      "name": "\u00c4lvdalen",
+      "tour_ski_lift": 47.0,
+      "tour_accommodation": 115.0
+    },
+    {
+      "name": "Torsby",
+      "tour_ski_lift": 39.0,
+      "tour_accommodation": 132.0
+    },
+    {
+      "name": "Borl\u00e4nge",
+      "tour_ski_lift": 22.0,
+      "tour_accommodation": 29.0
+    },
+    {
+      "name": "Berg",
+      "tour_ski_lift": 22.0,
+      "tour_accommodation": 35.0
+    },
+    {
+      "name": "Ljusdal",
+      "tour_ski_lift": 16.0,
+      "tour_accommodation": 68.0
+    },
+    {
+      "name": "Kiruna",
+      "tour_ski_lift": 16.0,
+      "tour_accommodation": 213.0
+    },
+    {
+      "name": "Orsa",
+      "tour_ski_lift": 14.0,
+      "tour_accommodation": 52.0
+    }
+  ]
+}

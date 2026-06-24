@@ -1,0 +1,89 @@
+{
+  "files": [
+    {
+      "name": "sweden-latest.osm.pbf",
+      "path": "cache/sweden-latest.osm.pbf",
+      "source_url": "https://download.geofabrik.de/europe/sweden-latest.osm.pbf",
+      "size_bytes": 807350894,
+      "timestamp": "2026-06-22T21:20:52Z"
+    },
+    {
+      "name": "stations.gpkg",
+      "path": "cache/stations.gpkg",
+      "source_url": "derived: dedup of OSM amenity=fuel",
+      "size_bytes": 532480,
+      "timestamp": "2026-06-22T21:20:53Z"
+    },
+    {
+      "name": "units_tatort.gpkg",
+      "path": "cache/units_tatort.gpkg",
+      "source_url": "derived: units + station counts",
+      "size_bytes": 51298304,
+      "timestamp": "2026-06-22T21:26:03Z"
+    },
+    {
+      "name": "units_tatort_smaort.gpkg",
+      "path": "cache/units_tatort_smaort.gpkg",
+      "source_url": "derived: units + station counts",
+      "size_bytes": 103116800,
+      "timestamp": "2026-06-22T21:26:09Z"
+    },
+    {
+      "name": "units_kommun.gpkg",
+      "path": "cache/units_kommun.gpkg",
+      "source_url": "derived: units + station counts",
+      "size_bytes": 1298432,
+      "timestamp": "2026-06-22T21:26:10Z"
+    },
+    {
+      "name": "units_fua.gpkg",
+      "path": "cache/units_fua.gpkg",
+      "source_url": "derived: units + station counts",
+      "size_bytes": 1990656,
+      "timestamp": "2026-06-22T21:34:50Z"
+    },
+    {
+      "name": "tatorter_2023.geojson",
+      "path": "cache/tatorter_2023.geojson",
+      "source_url": "https://geodata.scb.se/geoserver/stat/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames=stat:Tatorter_2023&outputFormat=application/json&srsName=EPSG:3006",
+      "size_bytes": 83395713,
+      "timestamp": "2026-06-22T21:44:31Z"
+    },
+    {
+      "name": "smaorter_2023.geojson",
+      "path": "cache/smaorter_2023.geojson",
+      "source_url": "https://geodata.scb.se/geoserver/stat/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames=stat:Smaorter_2023&outputFormat=application/json&srsName=EPSG:3006",
+      "size_bytes": 83228123,
+      "timestamp": "2026-06-22T21:44:31Z"
+    },
+    {
+      "name": "lau_2024_3035.gpkg",
+      "path": "cache/lau_2024_3035.gpkg",
+      "source_url": "https://gisco-services.ec.europa.eu/distribution/v2/lau/gpkg/LAU_RG_01M_2024_3035.gpkg",
+      "size_bytes": 78225408,
+      "timestamp": "2026-06-22T21:44:31Z"
+    },
+    {
+      "name": "URAU_RG_100K_2021_3035_FUA.gpkg",
+      "path": "cache/URAU_RG_100K_2021_3035_FUA.gpkg",
+      "source_url": "https://gisco-services.ec.europa.eu/distribution/v2/urau/gpkg/URAU_RG_100K_2021_3035_FUA.gpkg",
+      "size_bytes": 18948096,
+      "timestamp": "2026-06-22T21:47:27Z"
+    },
+    {
+      "name": "cars_per_kommun.json",
+      "path": "cache/cars_per_kommun.json",
+      "source_url": "https://api.scb.se/OV0104/v1/doris/en/ssd/TK/TK1001/TK1001A/FordonTrafik (passenger cars, 2025)",
+      "size_bytes": 5409,
+      "timestamp": "2026-06-23T09:46:06Z"
+    },
+    {
+      "name": "tourism_per_kommun.json",
+      "path": "cache/tourism_per_kommun.json",
+      "source_url": "derived: OSM tourism POIs per kommun",
+      "size_bytes": 46084,
+      "timestamp": "2026-06-23T16:55:30Z"
+    }
+  ],
+  "updated": "2026-06-23T16:55:30Z"
+}

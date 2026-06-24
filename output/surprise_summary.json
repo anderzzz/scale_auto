@@ -1,0 +1,436 @@
+{
+  "primary_model": "cars_income_tourism",
+  "exposure_note": "PRIMARY exposure = registered cars (Phase 7); population & cars+income kept for comparison. Cars year=2025, income year=2024.",
+  "models": {
+    "population": {
+      "exposure": "population",
+      "beta": 0.5918,
+      "alpha": 0.0729,
+      "dispersion": 1.77
+    },
+    "cars": {
+      "exposure": "cars",
+      "beta": 0.6806,
+      "alpha": 0.0488,
+      "dispersion": 1.521
+    },
+    "cars_income": {
+      "exposure": "cars",
+      "covariate": "log(median_income)",
+      "beta_cars": 0.7656,
+      "income_coef": {
+        "coef": -2.4988,
+        "se": 0.2251,
+        "p": 1.2657030522768544e-28
+      },
+      "alpha": null,
+      "dispersion": 1.114
+    },
+    "cars_income_tourism": {
+      "exposure": "cars",
+      "covariates": [
+        "log(median_income)",
+        "log1p(tourism_POIs)"
+      ],
+      "beta_cars": 0.6658,
+      "income_coef": {
+        "coef": -1.9823,
+        "se": 0.2366,
+        "p": 5.2896504945619727e-17
+      },
+      "tourism_coef": {
+        "coef": 0.1694,
+        "se": 0.0208,
+        "p": 3.666701471249318e-16
+      },
+      "alpha": null,
+      "dispersion": 0.841
+    }
+  },
+  "income_effect": {
+    "coef": -2.4988,
+    "se": 0.2251,
+    "p": 1.2657030522768544e-28,
+    "interpretation": "holding cars fixed, higher median income is associated with FEWER petrol stations (significant)"
+  },
+  "tourism_effect": {
+    "coef": 0.1694,
+    "se": 0.0208,
+    "p": 3.666701471249318e-16,
+    "proxy": "log1p(accommodation + ski-lift POIs from OSM)",
+    "interpretation": "holding cars & income fixed, more tourism POIs are associated with MORE petrol stations \u2014 a visitor 'effective customer base' (significant)"
+  },
+  "border_survives_tourism": {
+    "band_mean_z": {
+      "Norway": {
+        "z_cars_income": 1.234,
+        "z_cars_income_tour": 0.524
+      },
+      "Finland": {
+        "z_cars_income": -0.198,
+        "z_cars_income_tour": -0.311
+      },
+      "interior": {
+        "z_cars_income": -0.119,
+        "z_cars_income_tour": -0.048
+      }
+    },
+    "reading": "Norway band z staying high from 'cars+income' to '+tourism' => genuine cross-border fuel demand; collapsing toward 0 => it was ski tourism"
+  },
+  "urban_coldspot_across_models": {
+    "definition": "kommuner with population-model z < -1 (per-capita under-stationed)",
+    "n": 43,
+    "mean_z": {
+      "population": -1.575,
+      "cars": -1.541,
+      "cars+income": -1.189,
+      "cars+income\n+tourism": -0.99
+    },
+    "reading": "z moving toward 0 left->right means cars / income explain the urban deficit"
+  },
+  "n_units": 290,
+  "expected_extreme_if_null": {
+    "|z|>1.96_expected": 14.5,
+    "|z|>1.96_observed": 12
+  },
+  "fdr": {
+    "q_threshold": 0.1,
+    "n_significant": 1,
+    "units": [
+      {
+        "name": "Stockholm",
+        "P": 60,
+        "z": -4.33,
+        "q_fdr": 0.005,
+        "border_band": "interior"
+      }
+    ]
+  },
+  "global_moran": {
+    "I": 0.1536,
+    "perm_p": 0.001,
+    "null_mean": -0.0023,
+    "null_sd": 0.0317,
+    "interpretation": "surprises ARE geographically clustered"
+  },
+  "lisa_clusters": {
+    "HH_over_stationed": [
+      {
+        "name": "V\u00e4xj\u00f6",
+        "P": 37,
+        "z": 2.12,
+        "border_band": "interior"
+      },
+      {
+        "name": "Alvesta",
+        "P": 16,
+        "z": 1.98,
+        "border_band": "interior"
+      },
+      {
+        "name": "Arjeplog",
+        "P": 7,
+        "z": 1.65,
+        "border_band": "Norway"
+      },
+      {
+        "name": "Ljungby",
+        "P": 21,
+        "z": 1.5,
+        "border_band": "interior"
+      },
+      {
+        "name": "H\u00e4rryda",
+        "P": 10,
+        "z": 0.97,
+        "border_band": "interior"
+      },
+      {
+        "name": "Hylte",
+        "P": 8,
+        "z": 0.83,
+        "border_band": "interior"
+      },
+      {
+        "name": "V\u00e4rnamo",
+        "P": 15,
+        "z": 0.77,
+        "border_band": "interior"
+      },
+      {
+        "name": "\u00c5nge",
+        "P": 8,
+        "z": 0.6,
+        "border_band": "interior"
+      },
+      {
+        "name": "Lessebo",
+        "P": 6,
+        "z": 0.27,
+        "border_band": "interior"
+      },
+      {
+        "name": "Emmaboda",
+        "P": 7,
+        "z": 0.15,
+        "border_band": "interior"
+      },
+      {
+        "name": "Partille",
+        "P": 7,
+        "z": 0.03,
+        "border_band": "interior"
+      }
+    ],
+    "LL_under_stationed": [
+      {
+        "name": "Stockholm",
+        "P": 60,
+        "z": -4.33,
+        "border_band": "interior"
+      },
+      {
+        "name": "Solna",
+        "P": 8,
+        "z": -2.37,
+        "border_band": "interior"
+      },
+      {
+        "name": "Ljusnarsberg",
+        "P": 2,
+        "z": -1.67,
+        "border_band": "interior"
+      },
+      {
+        "name": "Sundbyberg",
+        "P": 2,
+        "z": -1.61,
+        "border_band": "interior"
+      },
+      {
+        "name": "Nacka",
+        "P": 10,
+        "z": -1.43,
+        "border_band": "interior"
+      },
+      {
+        "name": "Salem",
+        "P": 1,
+        "z": -1.2,
+        "border_band": "interior"
+      },
+      {
+        "name": "Huddinge",
+        "P": 13,
+        "z": -1.05,
+        "border_band": "interior"
+      },
+      {
+        "name": "Tyres\u00f6",
+        "P": 5,
+        "z": -0.9,
+        "border_band": "interior"
+      },
+      {
+        "name": "Filipstad",
+        "P": 6,
+        "z": -0.72,
+        "border_band": "interior"
+      },
+      {
+        "name": "Hagfors",
+        "P": 7,
+        "z": -0.68,
+        "border_band": "interior"
+      },
+      {
+        "name": "Lindesberg",
+        "P": 10,
+        "z": -0.66,
+        "border_band": "interior"
+      },
+      {
+        "name": "Munkfors",
+        "P": 2,
+        "z": -0.58,
+        "border_band": "interior"
+      },
+      {
+        "name": "Nyn\u00e4shamn",
+        "P": 7,
+        "z": -0.57,
+        "border_band": "interior"
+      },
+      {
+        "name": "Danderyd",
+        "P": 3,
+        "z": -0.44,
+        "border_band": "interior"
+      },
+      {
+        "name": "Haninge",
+        "P": 18,
+        "z": -0.41,
+        "border_band": "interior"
+      },
+      {
+        "name": "Liding\u00f6",
+        "P": 6,
+        "z": -0.38,
+        "border_band": "interior"
+      },
+      {
+        "name": "H\u00e4llefors",
+        "P": 5,
+        "z": -0.34,
+        "border_band": "interior"
+      },
+      {
+        "name": "Botkyrka",
+        "P": 16,
+        "z": -0.09,
+        "border_band": "interior"
+      }
+    ]
+  },
+  "border_split": {
+    "band_tests": [
+      {
+        "band": "Norway",
+        "n": 23,
+        "mean_z": 0.524,
+        "perm_p": 0.006
+      },
+      {
+        "band": "Finland",
+        "n": 3,
+        "mean_z": -0.311,
+        "perm_p": 0.55
+      },
+      {
+        "band": "interior",
+        "n": 264,
+        "mean_z": -0.048,
+        "perm_p": 0.011
+      }
+    ],
+    "note": "distance to NO vs FI land border computed separately; band = within 10 km"
+  },
+  "brand_type_tests": {
+    "pool_mean_z": 0.253,
+    "groups": [
+      {
+        "group": "brand:OKQ8",
+        "n_stations": 481,
+        "mean_host_z": 0.067,
+        "effect_vs_pool": -0.186,
+        "perm_p": 0.001
+      },
+      {
+        "group": "brand:Gulf",
+        "n_stations": 55,
+        "mean_host_z": 0.118,
+        "effect_vs_pool": -0.136,
+        "perm_p": 0.374
+      },
+      {
+        "group": "brand:St1",
+        "n_stations": 368,
+        "mean_host_z": 0.15,
+        "effect_vs_pool": -0.103,
+        "perm_p": 0.068
+      },
+      {
+        "group": "brand:Circle K",
+        "n_stations": 339,
+        "mean_host_z": 0.159,
+        "effect_vs_pool": -0.095,
+        "perm_p": 0.109
+      },
+      {
+        "group": "type:full_service",
+        "n_stations": 1743,
+        "mean_host_z": 0.162,
+        "effect_vs_pool": -0.092,
+        "perm_p": 0.001
+      },
+      {
+        "group": "brand:din-X",
+        "n_stations": 107,
+        "mean_host_z": 0.177,
+        "effect_vs_pool": -0.076,
+        "perm_p": 0.455
+      },
+      {
+        "group": "brand:Bilisten",
+        "n_stations": 29,
+        "mean_host_z": 0.21,
+        "effect_vs_pool": -0.043,
+        "perm_p": 0.816
+      },
+      {
+        "group": "brand:Tanka",
+        "n_stations": 157,
+        "mean_host_z": 0.222,
+        "effect_vs_pool": -0.032,
+        "perm_p": 0.731
+      },
+      {
+        "group": "brand:Ingo",
+        "n_stations": 250,
+        "mean_host_z": 0.288,
+        "effect_vs_pool": 0.034,
+        "perm_p": 0.632
+      },
+      {
+        "group": "brand:Preem",
+        "n_stations": 460,
+        "mean_host_z": 0.298,
+        "effect_vs_pool": 0.045,
+        "perm_p": 0.369
+      },
+      {
+        "group": "type:unknown",
+        "n_stations": 465,
+        "mean_host_z": 0.333,
+        "effect_vs_pool": 0.079,
+        "perm_p": 0.092
+      },
+      {
+        "group": "brand:Qstar",
+        "n_stations": 221,
+        "mean_host_z": 0.341,
+        "effect_vs_pool": 0.087,
+        "perm_p": 0.265
+      },
+      {
+        "group": "brand:(unknown)",
+        "n_stations": 164,
+        "mean_host_z": 0.355,
+        "effect_vs_pool": 0.102,
+        "perm_p": 0.23
+      },
+      {
+        "group": "type:automat",
+        "n_stations": 961,
+        "mean_host_z": 0.36,
+        "effect_vs_pool": 0.106,
+        "perm_p": 0.001
+      },
+      {
+        "group": "type:gas_alt",
+        "n_stations": 77,
+        "mean_host_z": 0.519,
+        "effect_vs_pool": 0.265,
+        "perm_p": 0.03
+      },
+      {
+        "group": "brand:Din-X",
+        "n_stations": 20,
+        "mean_host_z": 0.896,
+        "effect_vs_pool": 0.643,
+        "perm_p": 0.01
+      }
+    ]
+  }
+}

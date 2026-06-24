@@ -1,0 +1,260 @@
+{
+  "seed": 17,
+  "bootstrap_n": 1000,
+  "definitions": {
+    "tatort": {
+      "definition": "tatort",
+      "n_units": 2017,
+      "sum_P": 2751,
+      "model_A_primary": {
+        "n": 2017,
+        "n_zero": 1113,
+        "poisson_dispersion": 0.898,
+        "overdispersed": false,
+        "family": "Poisson (not overdispersed)",
+        "intercept": -5.846399222746804,
+        "pseudo_r2_mcfadden": 0.6307,
+        "beta": 0.777,
+        "se": 0.008,
+        "ci95": [
+          0.7613,
+          0.7928
+        ],
+        "z_vs1": -27.725,
+        "p_vs1": 3.530810699593339e-169,
+        "verdict": "sublinear"
+      },
+      "model_B_ols": {
+        "family": "OLS log10(P)~log10(S), positives only",
+        "beta": 0.4601,
+        "se": 0.0112,
+        "t": 41.063,
+        "r2": 0.6515,
+        "n_used": 904,
+        "n_dropped_zeros": 1113,
+        "note": "zero-truncation biased UPWARD; shown only to compare with classic US OLS literature",
+        "verdict_vs1_z_vs1": -48.187,
+        "verdict_vs1_p_vs1": 0.0,
+        "verdict_vs1_verdict": "sublinear"
+      },
+      "bootstrap_modelA": {
+        "n_success": 1000,
+        "beta_mean": 0.7822,
+        "ci95": [
+          0.7459,
+          0.8249
+        ]
+      },
+      "single_power_law_check": {
+        "quad_coef": -0.01868,
+        "quad_se": 0.00322,
+        "quad_p": 6.490622760753062e-09,
+        "significant": true,
+        "interpretation": "curvature present -> NOT a clean single power law",
+        "segmented": {
+          "breakpoint_logS": 8.209,
+          "breakpoint_S": 3673,
+          "slope_below": 0.9009,
+          "slope_above": 0.7408
+        }
+      },
+      "leakage_check": {
+        "n_excluded_border": 14,
+        "n_used": 2003,
+        "beta_no_border": 0.7781,
+        "se": 0.0081,
+        "z_vs1": -27.505,
+        "p_vs1": 1.5239896501658202e-166,
+        "verdict": "sublinear"
+      }
+    },
+    "tatort_smaort": {
+      "definition": "tatort_smaort",
+      "n_units": 5114,
+      "sum_P": 2900,
+      "model_A_primary": {
+        "n": 5114,
+        "n_zero": 4070,
+        "poisson_dispersion": 0.829,
+        "overdispersed": false,
+        "family": "Poisson (not overdispersed)",
+        "intercept": -6.174311028058669,
+        "pseudo_r2_mcfadden": 0.6749,
+        "beta": 0.8076,
+        "se": 0.0069,
+        "ci95": [
+          0.7942,
+          0.8211
+        ],
+        "z_vs1": -28.02,
+        "p_vs1": 9.310890649085124e-173,
+        "verdict": "sublinear"
+      },
+      "model_B_ols": {
+        "family": "OLS log10(P)~log10(S), positives only",
+        "beta": 0.3561,
+        "se": 0.0095,
+        "t": 37.591,
+        "r2": 0.5756,
+        "n_used": 1044,
+        "n_dropped_zeros": 4070,
+        "note": "zero-truncation biased UPWARD; shown only to compare with classic US OLS literature",
+        "verdict_vs1_z_vs1": -67.965,
+        "verdict_vs1_p_vs1": 0.0,
+        "verdict_vs1_verdict": "sublinear"
+      },
+      "bootstrap_modelA": {
+        "n_success": 1000,
+        "beta_mean": 0.8139,
+        "ci95": [
+          0.7771,
+          0.8562
+        ]
+      },
+      "single_power_law_check": {
+        "quad_coef": -0.023,
+        "quad_se": 0.00249,
+        "quad_p": 2.558834741007187e-20,
+        "significant": true,
+        "interpretation": "curvature present -> NOT a clean single power law",
+        "segmented": {
+          "breakpoint_logS": 5.805,
+          "breakpoint_S": 332,
+          "slope_below": 1.3408,
+          "slope_above": 0.7726
+        }
+      },
+      "leakage_check": {
+        "n_excluded_border": 55,
+        "n_used": 5059,
+        "beta_no_border": 0.8093,
+        "se": 0.0069,
+        "z_vs1": -27.636,
+        "p_vs1": 4.061624678103035e-168,
+        "verdict": "sublinear"
+      }
+    },
+    "kommun": {
+      "definition": "kommun",
+      "n_units": 290,
+      "sum_P": 3246,
+      "model_A_primary": {
+        "n": 290,
+        "n_zero": 0,
+        "poisson_dispersion": 1.77,
+        "overdispersed": true,
+        "family": "NegativeBinomial(NB2, MLE)",
+        "nb_alpha": 0.0729,
+        "intercept": -3.629315966526787,
+        "pseudo_r2_mcfadden": 0.1773,
+        "beta": 0.5918,
+        "se": 0.0237,
+        "ci95": [
+          0.5453,
+          0.6383
+        ],
+        "z_vs1": -17.2,
+        "p_vs1": 2.672904642934646e-66,
+        "verdict": "sublinear"
+      },
+      "model_B_ols": {
+        "family": "OLS log10(P)~log10(S), positives only",
+        "beta": 0.5995,
+        "se": 0.0292,
+        "t": 20.548,
+        "r2": 0.5945,
+        "n_used": 290,
+        "n_dropped_zeros": 0,
+        "note": "zero-truncation biased UPWARD; shown only to compare with classic US OLS literature",
+        "verdict_vs1_z_vs1": -13.725,
+        "verdict_vs1_p_vs1": 7.162761196129575e-43,
+        "verdict_vs1_verdict": "sublinear"
+      },
+      "bootstrap_modelA": {
+        "n_success": 1000,
+        "beta_mean": 0.5929,
+        "ci95": [
+          0.5446,
+          0.6409
+        ]
+      },
+      "single_power_law_check": {
+        "quad_coef": 0.00982,
+        "quad_se": 0.01624,
+        "quad_p": 0.5454879086805844,
+        "significant": false,
+        "interpretation": "consistent with single power law"
+      },
+      "leakage_check": {
+        "n_excluded_border": 26,
+        "n_used": 264,
+        "beta_no_border": 0.6354,
+        "se": 0.0251,
+        "z_vs1": -14.5,
+        "p_vs1": 1.2162436745705836e-47,
+        "verdict": "sublinear"
+      }
+    },
+    "fua": {
+      "definition": "fua",
+      "n_units": 12,
+      "sum_P": 1290,
+      "model_A_primary": {
+        "n": 12,
+        "n_zero": 0,
+        "poisson_dispersion": 1.404,
+        "overdispersed": true,
+        "family": "NegativeBinomial(NB2, MLE)",
+        "nb_alpha": 0.0,
+        "intercept": -3.9126544969995374,
+        "pseudo_r2_mcfadden": 0.3198,
+        "beta": 0.6606,
+        "se": 0.0261,
+        "ci95": [
+          0.6095,
+          0.7117
+        ],
+        "z_vs1": -13.019,
+        "p_vs1": 9.552770233340211e-39,
+        "verdict": "sublinear"
+      },
+      "model_B_ols": {
+        "family": "OLS log10(P)~log10(S), positives only",
+        "beta": 0.6584,
+        "se": 0.0464,
+        "t": 14.202,
+        "r2": 0.9528,
+        "n_used": 12,
+        "n_dropped_zeros": 0,
+        "note": "zero-truncation biased UPWARD; shown only to compare with classic US OLS literature",
+        "verdict_vs1_z_vs1": -7.368,
+        "verdict_vs1_p_vs1": 1.7348567827329336e-13,
+        "verdict_vs1_verdict": "sublinear"
+      },
+      "bootstrap_modelA": {
+        "n_success": 1000,
+        "beta_mean": 0.6592,
+        "ci95": [
+          0.4429,
+          0.7548
+        ]
+      },
+      "single_power_law_check": {
+        "quad_coef": -0.00907,
+        "quad_se": NaN,
+        "quad_p": NaN,
+        "significant": false,
+        "interpretation": "consistent with single power law"
+      },
+      "leakage_check": {
+        "n_excluded_border": 0,
+        "n_used": 12,
+        "beta_no_border": 0.6606,
+        "se": 0.0261,
+        "z_vs1": -13.017,
+        "p_vs1": 9.731533145482933e-39,
+        "verdict": "sublinear"
+      }
+    }
+  }
+}

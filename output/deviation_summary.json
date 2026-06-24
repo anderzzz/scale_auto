@@ -1,0 +1,177 @@
+{
+  "station_type_counts": {
+    "full_service": 1746,
+    "automat": 961,
+    "unknown": 479,
+    "gas_alt": 77
+  },
+  "kommun_beta": 0.5918,
+  "top_over_stationed": [
+    {
+      "name": "Malung-S\u00e4len",
+      "S": 10260.0,
+      "P": 17,
+      "expected": 6.3,
+      "automat_share": 0.54,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Arjeplog",
+      "S": 2609.0,
+      "P": 7,
+      "expected": 2.8,
+      "automat_share": 0.5,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "H\u00e4rjedalen",
+      "S": 10145.0,
+      "P": 15,
+      "expected": 6.2,
+      "automat_share": 0.3,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Tingsryd",
+      "S": 12155.0,
+      "P": 16,
+      "expected": 6.9,
+      "automat_share": 0.8,
+      "gas_alt": 1,
+      "is_border": false
+    },
+    {
+      "name": "Jokkmokk",
+      "S": 4728.0,
+      "P": 9,
+      "expected": 4.0,
+      "automat_share": 0.14,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Str\u00f6msund",
+      "S": 11113.0,
+      "P": 14,
+      "expected": 6.6,
+      "automat_share": 0.3,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Torsby",
+      "S": 11387.0,
+      "P": 14,
+      "expected": 6.7,
+      "automat_share": 0.67,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Storuman",
+      "S": 5621.0,
+      "P": 9,
+      "expected": 4.4,
+      "automat_share": 0.71,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Berg",
+      "S": 7140.0,
+      "P": 10,
+      "expected": 5.1,
+      "automat_share": 0.5,
+      "gas_alt": 0,
+      "is_border": true
+    },
+    {
+      "name": "Ljungby",
+      "S": 28304.0,
+      "P": 21,
+      "expected": 11.4,
+      "automat_share": 0.68,
+      "gas_alt": 1,
+      "is_border": false
+    }
+  ],
+  "top_under_stationed": [
+    {
+      "name": "Salem",
+      "S": 17451.0,
+      "P": 1,
+      "expected": 8.6,
+      "automat_share": 0.0,
+      "is_border": false
+    },
+    {
+      "name": "Sundbyberg",
+      "S": 55912.0,
+      "P": 2,
+      "expected": 17.1,
+      "automat_share": 0.0,
+      "is_border": false
+    },
+    {
+      "name": "Tidaholm",
+      "S": 12839.0,
+      "P": 1,
+      "expected": 7.2,
+      "automat_share": 0.0,
+      "is_border": false
+    },
+    {
+      "name": "Vadstena",
+      "S": 7434.0,
+      "P": 1,
+      "expected": 5.2,
+      "automat_share": 0.0,
+      "is_border": false
+    },
+    {
+      "name": "Danderyd",
+      "S": 32419.0,
+      "P": 3,
+      "expected": 12.4,
+      "automat_share": 0.33,
+      "is_border": false
+    },
+    {
+      "name": "Trosa",
+      "S": 14885.0,
+      "P": 2,
+      "expected": 7.8,
+      "automat_share": 0.0,
+      "is_border": false
+    },
+    {
+      "name": "\u00d6cker\u00f6",
+      "S": 12819.0,
+      "P": 2,
+      "expected": 7.2,
+      "automat_share": 0.5,
+      "is_border": false
+    },
+    {
+      "name": "Storfors",
+      "S": 3801.0,
+      "P": 1,
+      "expected": 3.5,
+      "automat_share": 0.0,
+      "is_border": false
+    }
+  ],
+  "corr_residual_automatshare": 0.205,
+  "automat_share_by_size": {
+    "small": 0.424,
+    "medium": 0.402,
+    "large": 0.305
+  },
+  "automat_share_border_vs_not": {
+    "border": 0.369,
+    "non_border": 0.378
+  }
+}

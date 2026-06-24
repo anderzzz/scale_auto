@@ -1,0 +1,41 @@
+{
+  "completeness": {
+    "raw_features": 3421,
+    "dropped_private": 2,
+    "deduped_count": 3263,
+    "drivkraft_anchor": 2700,
+    "tolerance_band": [
+      1800,
+      3600
+    ],
+    "within_band": true,
+    "ratio_to_anchor": 1.209
+  },
+  "brand_histogram_top25": {
+    "OKQ8": 478,
+    "Preem": 462,
+    "(unbranded/unknown)": 424,
+    "St1": 365,
+    "Circle K": 336,
+    "Ingo": 245,
+    "Qstar": 216,
+    "Tanka": 157,
+    "din-X": 104,
+    "Gulf": 55,
+    "Bilisten": 20,
+    "Din-X": 16,
+    "Oljeshejkerna Johnsson AB": 13,
+    "S\u00c5IFA": 11,
+    "Fordonsgas": 11,
+    "FordonsGas Sverige AB": 10,
+    "E.ON": 9,
+    "Runes Bensin & Oljeimport AB": 8,
+    "PS Energi": 8,
+    "S\u00e5ifa": 7,
+    "QStar": 7,
+    "Alltank": 6,
+    "TRB": 6,
+    "Dalvik Oil": 6,
+    "Pump": 6
+  }
+}

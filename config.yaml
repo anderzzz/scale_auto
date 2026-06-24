@@ -1,0 +1,11 @@
+country: Sweden
+national_crs: "EPSG:3006"        # SWEREF99 TM, metric — reproject everything to this
+geofabrik_pbf: "https://download.geofabrik.de/europe/sweden-latest.osm.pbf"
+dedup_radius_m: 50               # merge stations closer than this
+border_buffer_km: 10             # units within this of a national land border = "leaky"
+expected_station_total: 2700     # Drivkraft Sverige sanity anchor (see §3.1)
+station_total_tolerance: [1800, 3600]   # acceptable OSM count band; warn if outside
+bootstrap_n: 1000
+random_seed: 17
+include_smaorter: true           # extend the low-S tail (50–199 inhabitants)
+attempt_custom_cca: false        # optional raster clustering; only if time/space allow
