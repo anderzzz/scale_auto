@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Sweden Fuels — petrol-station scaling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<style>
+:root{
+  --bg:#1B4332;
+  --bg-2:#163a2b;
+  --panel:#21503c;
+  --ink:#EAFBF1;        /* bright mint near-white */
+  --ink-dim:#9DC9B3;    /* muted mint */
+  --accent:#C9B4E6;     /* purple */
+  --accent-2:#B7E4C7;   /* mint green data */
+  --line:#3a6a53;
+  --over:#C9B4E6;       /* over-stationed = purple */
+  --under:#7FE3C0;      /* under-stationed = bright mint */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 28px}
+h1,h2,.kicker,.big{font-family:'Space Grotesk',sans-serif}
+section{padding:78px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.kicker{color:var(--accent);text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:600;margin:0 0 14px}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:0 0 18px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(26px,4vw,38px);line-height:1.12;margin:0 0 16px;font-weight:600;letter-spacing:-.01em}
+p{margin:0 0 18px;color:var(--ink)}
+.lead{font-size:21px;color:var(--ink)}
+.dim{color:var(--ink-dim)}
+strong,.hl{color:var(--accent-2);font-weight:600}
+.purple{color:var(--accent)}
+
+/* hero */
+.hero{padding-top:96px;text-align:left}
+.hero .sub{font-size:20px;color:var(--ink-dim);max-width:560px}
+
+/* big number band */
+.stats{display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 6px}
+.stat{flex:1 1 150px;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.stat .big{font-size:40px;font-weight:700;color:var(--accent-2);line-height:1}
+.stat .lab{font-size:13px;color:var(--ink-dim);margin-top:8px;line-height:1.3}
+
+/* equation panel */
+.eqbox{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:12px;padding:22px 26px;margin:24px 0}
+.eqbox .eq{font-size:20px;color:var(--ink);overflow-x:auto}
+.eqbox .note{font-size:14.5px;color:var(--ink-dim);margin:14px 0 0}
+.katex{color:var(--ink)}
+
+figure{margin:30px 0 8px}
+figcaption{font-size:14px;color:var(--ink-dim);margin-top:12px;line-height:1.45}
+svg{width:100%;height:auto;display:block}
+
+/* effective-customer table */
+table{width:100%;border-collapse:collapse;margin:24px 0 6px;font-size:15.5px}
+th,td{text-align:right;padding:10px 8px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--accent);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em}
+td.name{color:var(--ink);font-weight:500}
+.tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.tag.over{background:rgba(201,180,230,.18);color:var(--over)}
+.tag.under{background:rgba(127,227,192,.16);color:var(--under)}
+
+.pullquote{font-family:'Space Grotesk';font-size:25px;line-height:1.3;color:var(--ink);
+  border-left:3px solid var(--accent);padding-left:22px;margin:30px 0}
+
+footer{padding:54px 0 80px;color:var(--ink-dim);font-size:13.5px}
+footer a{color:var(--accent)}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* interactive scatter explorer */
+.ctrls{display:flex;flex-wrap:wrap;gap:22px;margin:8px 0 18px}
+.ctrl-row{display:flex;flex-direction:column;gap:7px}
+.ctrl-row .lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);font-weight:600}
+.seg{display:inline-flex;background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:13.5px;color:var(--ink-dim);background:none;border:none;border-radius:8px;
+  padding:7px 13px;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:background .15s,color .15s}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#1a132b;font-weight:600}
+.seg button:disabled{opacity:.32;cursor:not-allowed}
+.seg button:disabled:hover{color:var(--ink-dim)}
+.explorer-wrap{position:relative}
+#exptip{position:absolute;pointer-events:none;opacity:0;transition:opacity .1s;z-index:5;
+  background:#10241b;border:1px solid var(--accent);border-radius:9px;padding:9px 12px;font-size:13px;
+  color:var(--ink);max-width:230px;box-shadow:0 6px 20px rgba(0,0,0,.4);transform:translate(-50%,-115%)}
+#exptip .tn{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--accent-2);margin-bottom:3px}
+#exptip .tr{color:var(--ink-dim);font-size:12px}
+.carsnote{font-size:13px;color:var(--ink-dim);min-height:18px;margin:2px 0 0;transition:opacity .2s}
+/* goodness-of-fit checklist */
+.checks{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:14px}
+.checks li{position:relative;padding-left:34px;font-size:15.5px;line-height:1.5}
+.checks li::before{content:"✓";position:absolute;left:0;top:-1px;width:22px;height:22px;border-radius:50%;
+  background:var(--accent);color:#1a132b;font-weight:700;font-size:13px;display:grid;place-items:center}
+.checks li strong{font-family:'Space Grotesk',sans-serif}
+@media print{
+  body{background:#fff;color:#10241b;font-size:12px}
+  .reveal{opacity:1;transform:none}
+  section{padding:24px 0;border-color:#cdddd4}
+  .stat,.eqbox{background:#f3f7f4;border-color:#cdddd4}
+  .accent,a{color:#5a3e86}
+  .seg button[aria-pressed="true"]{background:#5a3e86;color:#fff}
+  .ctrls{gap:14px}
+}
+</style>
+</head>
+<body>
+
+<header class="wrap hero">
+  <p class="kicker reveal">Sweden · petrol stations · scaling laws</p>
+  <h1 class="reveal">Do bigger towns<br>have more petrol stations?</h1>
+  <p class="sub lead reveal">Yes — but not proportionally. Across every Swedish town,
+  fuel provision grows <em>slower</em> than population. We measured exactly how much slower,
+  and found the places where the rule spectacularly breaks.</p>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="big">3,263</div><div class="lab">petrol stations mapped (OpenStreetMap)</div></div>
+    <div class="stat"><div class="big">2,017</div><div class="lab">settlements analysed (<em>tätorter</em>)</div></div>
+    <div class="stat"><div class="big">β ≈ 0.78</div><div class="lab">scaling exponent — well below 1</div></div>
+  </div>
+</header>
+
+<section class="wrap">
+  <p class="kicker reveal">The rule</p>
+  <h2 class="reveal">One number describes the whole country</h2>
+  <p class="lead reveal">Count the people <span class="purple">S</span> in a town and the petrol
+  stations <span class="hl">P</span>, and a single power law links them:</p>
+
+  <div class="eqbox reveal">
+    <div class="eq">$$P \;\propto\; S^{\beta}\qquad\text{(in full, }P = C\cdot S^{\beta}\text{)}$$</div>
+    <p class="note">The whole story lives in the exponent <strong>β</strong>. If stations simply tracked
+    people, <strong>β would equal 1</strong>. We measure <strong>β = 0.78</strong>: doubling a town's
+    population multiplies its stations by only 2<sup>0.78</sup> ≈ <strong>1.7×</strong>. Big towns are
+    more fuel-efficient, per person. <span class="dim">(The constant <em>C</em> just sets the overall
+    scale — fix the country's total station count — and carries no interpretation of its own, so we
+    write the law as a proportionality.)</span></p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">But wait —</p>
+  <h2 class="reveal">City people barely drive</h2>
+  <p class="reveal">Before we go further, the obvious objection. Of course a big city has fewer
+  stations per resident — its people walk, cycle and take the metro, and far fewer of them own a
+  car at all. Maybe the whole "efficiency" is just an artefact of <em>who owns a car</em>, not of
+  how fuel retail actually scales.</p>
+  <p class="reveal">A petrol station doesn't serve people; it serves <em>cars</em>. So we swap the
+  denominator: count a municipality's <strong>registered cars</strong> instead of its residents. If
+  car ownership were the whole story, this would erase the effect and push β back toward 1.</p>
+
+  <div class="stats reveal" style="max-width:560px">
+    <div class="stat"><div class="lab" style="margin:0 0 8px">stations per <em>resident</em></div>
+      <div class="big">β 0.59</div><div class="lab" style="color:var(--under)">sublinear</div></div>
+    <div class="stat" style="display:flex;align-items:center;justify-content:center;flex:0 0 44px;border:none;background:none"><div class="big" style="color:var(--ink-dim)">→</div></div>
+    <div class="stat"><div class="lab" style="margin:0 0 8px">stations per <em>car</em></div>
+      <div class="big">β 0.68</div><div class="lab" style="color:var(--under)">still sublinear</div></div>
+  </div>
+
+  <p class="reveal">It barely moves. Switching to cars lifts β from <strong>0.59 to 0.68</strong> — so
+  about a fifth of the gap from proportionality really was just lower urban car ownership. But the
+  rest is genuine: <strong>even per car, bigger places are served more efficiently</strong>. Greater
+  Stockholm's deficit shrinks once you count its (relatively few) cars — yet it doesn't vanish. The
+  sublinearity is real, not a car-ownership mirage. From here the question is no longer <em>whether</em>
+  fuel scales sublinearly, but <em>where</em> the pattern bends — and where it breaks outright.</p>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">The method, briefly</p>
+  <h2 class="reveal">Why we count stations, not ratios</h2>
+  <p class="reveal">Stations aren't sprinkled at random — they fall as an <em>inhomogeneous
+  Poisson process</em>, denser where demand is higher. The number landing inside a town is a
+  Poisson count whose mean follows the power law:</p>
+  <div class="eqbox reveal">
+    <div class="eq">$$P_i \sim \mathrm{Poisson}(\mu_i),\qquad \log\mu_i = \alpha + \beta\,\log S_i$$</div>
+    <p class="note">This is the honest model for counts: it keeps the many <strong>zero-station
+    towns</strong> (a ratio would throw them away and bias β upward), and where stations cluster
+    more than chance allows we relax to a Negative-Binomial. We test the headline claim against
+    pure proportionality, $H_0:\beta=1$, with $z=(\hat\beta-1)/\mathrm{SE}$ — and reject it
+    overwhelmingly.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">The catch</p>
+  <h2 class="reveal">β depends on where you draw the line</h2>
+  <p class="reveal">Redraw the boundaries — settlements, functional regions, whole
+  municipalities — and β slides from <strong>0.78</strong> down to <strong>0.59</strong>.
+  Every definition is sublinear (none touches β = 1), but the <em>size</em> of the effect is
+  not a law of nature; it depends on the map. That spread is itself the result.</p>
+  <figure class="reveal">
+    <svg id="forest" viewBox="0 0 760 320" role="img" aria-label="Forest plot of beta across three spatial definitions"></svg>
+    <figcaption>β with 95% confidence intervals across three spatial definitions. Dashed purple = pure
+    proportionality (β = 1); shaded band = the 0.75–0.90 range typical of distribution
+    infrastructure. Administrative <em>kommuner</em> bundle dense cities with empty hinterland,
+    pushing β lowest.</figcaption>
+  </figure>
+
+  <p class="reveal">What are those three units? A <strong>tätort</strong> is a built-up settlement —
+  a contiguous patch of buildings (SCB draws them at ≥200 residents, ≤200 m between houses). A
+  <strong>kommun</strong> is an administrative municipality, dense town plus empty hinterland in one
+  parcel. And the widest, the <strong>Functional Urban Area</strong> (FUA), is an OECD/Eurostat unit:
+  a city <em>plus its commuting zone</em> — every surrounding municipality that sends enough commuters
+  into the core to count as functionally part of it. Sweden has just <strong>12</strong>.</p>
+
+  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
+    <svg id="stomap" viewBox="0 0 460 540" role="img" aria-label="Greater Stockholm shown as settlements, municipalities and one functional urban area" style="max-width:430px"></svg>
+    <figcaption style="max-width:540px">One region, three rulers. Greater Stockholm's FUA
+    (<span class="purple">purple outline</span>) bundles <strong>28 municipalities</strong>
+    (<span style="color:var(--ink-dim)">grey borders</span>) and <strong>183 settlements</strong>
+    (<span style="color:var(--accent-2)">mint patches</span>) — and the same
+    <strong>330 stations</strong> (dots) — into a single unit. Count those stations per settlement and
+    β is high (0.78); fold the whole commuting region into one big-S point and β drops to 0.66. Same
+    stations, different denominator. <em>That</em> is the Modifiable Areal Unit Problem.</figcaption>
+  </figure>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">Pick your ruler</p>
+  <h2 class="reveal">There is no single number — and that's the point</h2>
+  <p class="reveal">We never got one tidy headline. Change <em>what</em> we divide by — residents or the
+  cars they actually own — and β moves. Change <em>how</em> we draw the map — settlements, functional
+  regions, whole municipalities — and it moves again. So rather than hand you one figure, here is the
+  whole family of fits. Toggle the denominator and the spatial unit, and watch what changes and what
+  doesn't.</p>
+
+  <div class="ctrls reveal">
+    <div class="ctrl-row">
+      <span class="lbl">Divide by</span>
+      <div class="seg" id="seg-s">
+        <button data-s="pop" aria-pressed="true">People</button>
+        <button data-s="car" aria-pressed="false">Cars</button>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <span class="lbl">Spatial unit</span>
+      <div class="seg" id="seg-u">
+        <button data-u="tatort" aria-pressed="false">Tätort</button>
+        <button data-u="fua" aria-pressed="false">FUA</button>
+        <button data-u="kommun" aria-pressed="true">Kommun</button>
+      </div>
+    </div>
+  </div>
+  <p class="carsnote reveal" id="carsnote"></p>
+
+  <figure class="reveal explorer-wrap">
+    <svg id="explorer" viewBox="0 0 760 560" role="img" aria-label="Interactive scatter of stations against population or cars across spatial units"></svg>
+    <div id="exptip"></div>
+    <figcaption id="expcap" style="max-width:560px"></figcaption>
+  </figure>
+
+  <p class="note reveal">Don't be put off by the fuzzy bottom-left, where small towns hold just one or
+  two stations and the dots scatter widely. We're counting events, not measuring a quantity, so the law
+  is fitted as a <em>count</em> model: it asks how <em>probable</em> each station count is given the rate
+  the line predicts, not how far the dot sits from it. A village going from one station to two looks like
+  a 100% miss to the eye but is an ordinary wobble to the model. Judged on that probability — the right
+  yardstick here, not an R² — the fit holds tightly.</p>
+
+  <p class="reveal">The slope flexes between roughly <strong>0.59 and 0.78</strong> — but every single
+  fit leans the same way: sublinear, larger places served more efficiently, never a straight β = 1.
+  And notice the dots that stay stubbornly <span class="purple">above</span> or
+  <span style="color:var(--under)">below</span> the line <em>no matter which ruler you pick</em> — the
+  ski-and-border north up top, the Stockholm commuter belt down below. Those are the places the law
+  can't explain on its own, and they're where the rest of this story lives.</p>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">Where the rule breaks</p>
+  <h2 class="reveal">The "ghost customer" map</h2>
+  <p class="reveal">Some places have far more stations than their residents can explain — others
+  far fewer. Instead of measuring the gap in <em>stations</em>, we ask the law a different
+  question: <span class="purple">how big would this town have to be</span> to justify the
+  stations it actually has? Slide horizontally to the regression line, and the answer is the
+  town's <strong>effective population</strong>.</p>
+
+  <div class="eqbox reveal">
+    <div class="eq">$$S_{\text{eff}}=\left(\tfrac{P}{C}\right)^{1/\beta}
+      =\exp\!\left(\frac{\log P-\alpha}{\beta}\right)$$</div>
+    <p class="note">This is exactly the value of S that makes the observed count most likely —
+    the maximum-likelihood point on the curve. The gap $S_{\text{eff}}-S$ is the implied crowd of
+    <strong>non-residents</strong>: tourists, cross-border shoppers, transit traffic.</p>
+  </div>
+
+  <figure class="reveal">
+    <svg id="scatter" viewBox="0 0 760 560" role="img" aria-label="Stations vs population per municipality with effective-population arrows"></svg>
+    <figcaption>Each dot is a municipality: stations vs. residents (log–log). The line is the fitted
+    law. <span style="color:var(--over)">Purple</span> arrow — Malung-Sälen <em>fuels like</em> a
+    town 5× its size. <span style="color:var(--under)">Mint</span> arrow — Sundbyberg fuels like a
+    village 1/40th its size.</figcaption>
+  </figure>
+
+  <table class="reveal">
+    <thead><tr><th>Municipality</th><th>Residents</th><th>Stations</th><th>Fuels like</th><th></th></tr></thead>
+    <tbody>
+      <tr><td class="name">Malung-Sälen</td><td>10,260</td><td>17</td><td>~55,300</td><td><span class="tag over">×5.4 ghosts</span></td></tr>
+      <tr><td class="name">Härjedalen</td><td>10,145</td><td>15</td><td>~44,700</td><td><span class="tag over">×4.4</span></td></tr>
+      <tr><td class="name">Tingsryd <span class="dim">(transit + visitors)</span></td><td>12,155</td><td>16</td><td>~49,900</td><td><span class="tag over">×4.1</span></td></tr>
+      <tr><td class="name">Sundbyberg</td><td>55,912</td><td>2</td><td>~1,500</td><td><span class="tag under">×0.03</span></td></tr>
+      <tr><td class="name">Nacka</td><td>110,633</td><td>10</td><td>~22,600</td><td><span class="tag under">×0.20</span></td></tr>
+    </tbody>
+  </table>
+
+  <blockquote class="pullquote reveal">Sälen has 10,000 residents but fuels like a town of 55,000.
+  Sundbyberg has 56,000 residents but fuels like a village of 1,500. Same law, opposite ends —
+  resident population is simply the wrong denominator when demand crosses the line.</blockquote>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">Who are the ghosts?</p>
+  <h2 class="reveal">Tourists — but only the kind that drive</h2>
+  <p class="reveal">If the extra stations serve visitors, we should be able to <em>see</em> the visitors. We
+  can't count them directly, so we proxy them by the footprint they leave behind — but not just any
+  tourism. A crowd wandering Stockholm's Old Town and the Vasa Museum arrives by metro and never buys
+  a litre of fuel. The tourism that <strong>moves petrol</strong> is the kind that arrives by car and
+  stays: a ski week in Sälen, a camping trip on Öland, a lakeside cabin in the forest. So we built the
+  proxy deliberately from <span class="purple">overnight beds and ski-lifts</span> — hotels, hostels,
+  campsites and chalets, lift stations — the infrastructure of <em>mobile, stay-over</em> tourism, and
+  ignored the walk-around urban kind.</p>
+
+  <p class="reveal">It lands. A municipality's over- or under-stationing tracks this mobile-tourism
+  proxy at <strong>+0.58</strong> — far above the <strong>+0.20</strong> we get from the share of
+  cheap unmanned pumps, the other obvious rural suspect. And it isn't just "rural places have both":
+  after we strip out residents, <em>their cars</em>, and their income, the leftover surprise still
+  follows tourism at <strong>+0.43</strong>. In the full model, holding cars and income fixed, more
+  visitor infrastructure means significantly more stations (p &lt; 10⁻¹⁵), and switching it on pulls
+  the over-stationed tail's average gap down by about a quarter.</p>
+
+  <div class="stats reveal" style="max-width:620px">
+    <div class="stat"><div class="lab" style="margin-bottom:6px">residual vs. <em>mobile tourism</em><br>(beds + ski-lifts)</div><div class="big" style="color:var(--over)">+0.58</div><div class="lab">the ghosts have a footprint</div></div>
+    <div class="stat" style="display:flex;align-items:center;justify-content:center;flex:0 0 44px;border:none;background:none"><div class="big" style="color:var(--ink-dim)">vs</div></div>
+    <div class="stat"><div class="lab" style="margin-bottom:6px">residual vs. <em>unmanned pumps</em><br>(automat share)</div><div class="big" style="color:var(--ink-dim)">+0.20</div><div class="lab">a rural texture, not the cause</div></div>
+  </div>
+
+  <p class="note reveal">It explains the resorts cleanly — Sälen, Härjedalen, Åre light up on both beds
+  and lifts. It explains Tingsryd only <em>partly</em>: the Kingdom of Crystal's glassworks and
+  forest day-trips leave no overnight footprint, so the proxy under-counts exactly the car-borne
+  day-tourism we'd most want to measure. The signal is real; the proxy is a floor, not a ceiling.</p>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">The same story, on the map</p>
+  <h2 class="reveal">It's geography, not noise</h2>
+  <p class="reveal">Plot every municipality where it actually sits — circle size for population, colour
+  for the deviation — and the surprises aren't scattered at random. <span class="purple">Over-stationed</span>
+  places line the <em>Norwegian mountain border</em> and the sparse north: ski resorts and
+  cross-border fuel runs. <span style="color:var(--under)">Under-stationed</span> places cluster in the
+  <em>Stockholm and Göteborg suburbs</em>, whose residents fuel up in the core or in transit.</p>
+  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
+    <svg id="map" viewBox="0 0 360 700" role="img" aria-label="Map of Sweden, municipalities coloured by over- or under-stationing" style="max-width:340px"></svg>
+    <figcaption style="max-width:520px">Each circle is a municipality at its true location; area ∝ population.
+    <span style="color:var(--over)">●</span> over-stationed (fuels for ghosts) ·
+    <span style="color:var(--under)">●</span> under-stationed ·
+    <span style="color:var(--ink-dim)">●</span> in line with the law. The over/under split is
+    the same north-vs-suburb pattern the arrows above revealed.</figcaption>
+  </figure>
+</section>
+
+<section class="wrap">
+  <p class="kicker reveal">Due diligence</p>
+  <h2 class="reveal">Did we fit reality to the theory?</h2>
+  <p class="reveal">A petrol station is a <em>counted thing</em>, not a measured quantity, so we fitted it
+  with a count model (negative-binomial regression) rather than a tidy line through logged data — which
+  would have silently dropped every town with zero stations. The real test is whether the model reproduces
+  the actual spread of counts:</p>
+
+  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
+    <svg id="rootogram" viewBox="0 0 760 400" role="img" aria-label="Rootogram: observed versus predicted number of settlements by station count" style="max-width:640px"></svg>
+    <figcaption style="max-width:580px">A <em>rootogram</em>: each bar is how many of the 2,017 settlements
+    have exactly 0, 1, 2 … stations; the <span style="color:var(--accent-2)">mint curve</span> is the
+    model's prediction. Bars hang <em>from</em> the curve, so a bar reaching below the baseline means
+    slightly more real towns than predicted, above means fewer. The big <strong>zero</strong> bar lands
+    almost dead on — 1,113 empty settlements observed, ~1,142 predicted — so the model earns its zeros
+    rather than needing a special fudge.</figcaption>
+  </figure>
+
+  <p class="note reveal">It isn't a flawless fit, and shouldn't be: a single exponent slightly mis-describes
+  the smallest and largest towns (a real, tested bend in the curve), and the leftover surprises cluster on
+  the map rather than scattering at random. Those misses aren't hidden — they're the second half of this
+  story. The sublinearity is what survives the checks, not what a flattering line invented.</p>
+</section>
+
+<footer class="wrap">
+  <p><strong>Data.</strong> Stations: OpenStreetMap <code>amenity=fuel</code> (2026), deduped at 50 m.
+  Population: SCB <em>tätort/småort</em> 2023, GISCO LAU 2024. Cars: Trafikanalys 2025.
+  Model: Poisson / Negative-Binomial GLM, log link; β tested against 1; 1,000-sample bootstrap; seed 17.</p>
+  <p class="dim">A small data study on how infrastructure scales with population in Sweden — MVP draft.</p>
+</footer>
+
+<script>
+const KOMMUN = [["Stockholm",988943,60,-1.34,"interior"],["Orsa",6908,2,-1.49,"interior"],["Tidaholm",12839,1,-2.12,"interior"],["Solna",85426,8,-2.21,"interior"],["Borgholm",10748,6,-0.17,"interior"],["Töreboda",9141,2,-1.6,"interior"],["Vadstena",7434,1,-1.76,"interior"],["Lund",130288,20,-0.92,"interior"],["Södertälje",102519,22,-0.24,"interior"],["Ljusnarsberg",4407,2,-1.05,"interior"],["Storfors",3801,1,-1.5,"interior"],["Sundbyberg",55912,2,-3.36,"interior"],["Nora",10627,3,-1.17,"interior"],["Mullsjö",7577,2,-1.58,"interior"],["Höganäs",28193,6,-1.25,"interior"],["Hörby",15585,4,-1.24,"interior"],["Trosa",14885,2,-1.84,"interior"],["Nacka",110633,10,-2.27,"interior"],["Orust",15333,5,-0.97,"interior"],["Sunne",13366,5,-0.72,"Norway"],["Sandviken",38628,15,0.38,"interior"],["Öckerö",12819,2,-1.82,"interior"],["Leksand",16043,6,-0.5,"interior"],["Ludvika",26402,9,-0.49,"interior"],["Forshaga",11538,3,-1.46,"interior"],["Vänersborg",40012,11,-0.52,"interior"],["Flen",15668,6,-0.64,"interior"],["Salem",17451,1,-2.53,"interior"],["Mellerud",9165,5,-0.39,"interior"],["Eskilstuna",107468,23,-0.2,"interior"],["Karlsborg",7061,3,-0.81,"interior"],["Dals-Ed",4606,2,-0.81,"Norway"],["Färgelanda",6434,2,-0.97,"interior"],["Huddinge",113920,13,-1.64,"interior"],["Kungsör",8643,2,-1.34,"interior"],["Hallstahammar",16654,4,-1.12,"interior"],["Östra Göinge",14331,5,-0.86,"interior"],["Smedjebacken",10913,4,-0.73,"interior"],["Malmö",362133,51,0.02,"interior"],["Robertsfors",6740,3,-0.75,"interior"],["Hjo",9258,3,-0.88,"interior"],["Oxelösund",12106,3,-1.28,"interior"],["Vellinge",37738,6,-1.77,"interior"],["Sollentuna",76790,11,-1.49,"interior"],["Gnosjö",9246,3,-0.94,"interior"],["Tyresö",49173,5,-2.33,"interior"],["Vimmerby",15461,6,-0.38,"interior"],["Sjöbo",19437,7,-0.51,"interior"],["Haparanda",9177,5,-0.1,"Finland"],["Varberg",68325,19,0.06,"interior"],["Hässleholm",52241,17,0.2,"interior"],["Lysekil",13969,5,-0.56,"interior"],["Söderköping",14867,6,-0.57,"interior"],["Vaxholm",11817,2,-1.84,"interior"],["Filipstad",10034,6,0.1,"interior"],["Norrtälje",65770,23,0.73,"interior"],["Örebro",159348,32,0.1,"interior"],["Sollefteå",18523,10,0.41,"interior"],["Hagfors",11536,7,0.16,"interior"],["Boxholm",5523,2,-1.03,"interior"],["Tomelilla",13660,7,-0.05,"interior"],["Lindesberg",23292,10,-0.01,"interior"],["Hofors",9374,4,-0.74,"interior"],["Essunga",5656,2,-1.17,"interior"],["Ystad",31911,10,-0.33,"interior"],["Kil",12085,4,-0.88,"interior"],["Munkedal",10502,5,-0.4,"interior"],["Munkfors",3669,2,-0.56,"interior"],["Nynäshamn",30311,7,-0.95,"interior"],["Landskrona",47134,12,-0.46,"interior"],["Åstorp",16458,5,-0.91,"interior"],["Åmål",12006,7,0.11,"interior"],["Helsingborg",151306,31,0.09,"interior"],["Valdemarsvik",7541,5,-0.01,"interior"],["Övertorneå",4088,3,-0.02,"Finland"],["Älvsbyn",7783,4,-0.39,"interior"],["Ljusdal",18538,12,0.83,"interior"],["Sölvesborg",17475,9,0.13,"interior"],["Gotland",61029,29,1.56,"interior"],["Grästorp",5563,2,-1.01,"interior"],["Skinnskatteberg",4348,2,-0.57,"interior"],["Bollnäs",26414,12,0.26,"interior"],["Luleå",79352,22,0.18,"interior"],["Danderyd",32419,3,-2.38,"interior"],["Lekeberg",8606,3,-0.92,"interior"],["Perstorp",7323,3,-0.57,"interior"],["Åre",12464,9,0.7,"Norway"],["Sotenäs",9052,4,-0.42,"interior"],["Haninge",99751,18,-0.68,"interior"],["Bromölla",12498,5,-0.5,"interior"],["Vännäs",9059,4,-0.63,"interior"],["Oskarshamn",26918,10,-0.27,"interior"],["Svenljunga",10759,6,0.02,"interior"],["Lidingö",48324,6,-2.06,"interior"],["Boden",27943,12,0.22,"interior"],["Ronneby",29021,15,0.69,"interior"],["Nordanstig",9370,7,0.47,"interior"],["Hällefors",6495,5,0.26,"interior"],["Ale",32446,7,-1.19,"interior"],["Klippan",17723,8,-0.06,"interior"],["Surahammar",9934,4,-0.68,"interior"],["Norberg",5517,3,-0.46,"interior"],["Älvkarleby",9572,4,-0.56,"interior"],["Ekerö",28808,5,-1.69,"interior"],["Kristinehamn",23817,11,0.23,"interior"],["Aneby",6852,3,-0.5,"interior"],["Olofström",13061,8,0.26,"interior"],["Österåker",49282,11,-0.78,"interior"],["Tranås",18755,6,-0.62,"interior"],["Herrljunga",9441,4,-0.45,"interior"],["Karlstad",97233,24,0.08,"interior"],["Västervik",36434,17,0.79,"interior"],["Åsele",2718,3,0.19,"interior"],["Alingsås",42382,9,-0.93,"interior"],["Gnesta",11520,5,-0.59,"interior"],["Finspång",21694,8,-0.49,"interior"],["Laholm",26565,13,0.52,"interior"],["Säffle",15011,9,0.42,"interior"],["Östersund",64881,23,0.76,"interior"],["Strömstad",13476,8,0.16,"Norway"],["Katrineholm",34324,12,-0.07,"interior"],["Degerfors",9357,4,-0.43,"interior"],["Tranemo",11883,5,-0.59,"interior"],["Dorotea",2339,2,-0.02,"interior"],["Uppsala",245329,42,0.16,"interior"],["Vårgårda",12384,5,-0.6,"interior"],["Ockelbo",5758,5,0.2,"interior"],["Upplands-Bro",32453,7,-1.26,"interior"],["Botkyrka",95592,16,-1.01,"interior"],["Hammarö",16940,4,-1.31,"interior"],["Rättvik",11042,9,0.89,"interior"],["Kramfors",17631,13,1.08,"interior"],["Ulricehamn",25087,11,0.14,"interior"],["Trelleborg",46936,14,-0.1,"interior"],["Burlöv",19844,7,-0.57,"interior"],["Upplands Väsby",50110,9,-1.32,"interior"],["Habo",13275,4,-0.94,"interior"],["Älvdalen",6929,9,1.36,"Norway"],["Knivsta",20714,4,-1.39,"interior"],["Borlänge",51735,21,0.87,"interior"],["Skara",18654,10,0.26,"interior"],["Skövde",57763,16,-0.2,"interior"],["Vingåker",8856,5,-0.05,"interior"],["Avesta",22753,10,0.11,"interior"],["Partille",40730,7,-1.56,"interior"],["Höör",17376,8,-0.11,"interior"],["Åtvidaberg",11460,6,-0.23,"interior"],["Bjurholm",2348,3,0.22,"interior"],["Ovanåker",11525,8,0.47,"interior"],["Hallsberg",16232,7,-0.23,"interior"],["Skurup",16861,6,-0.47,"interior"],["Båstad",15912,8,0.1,"interior"],["Nykvarn",12107,3,-1.19,"interior"],["Säter",11243,7,0.08,"interior"],["Köping",25978,10,-0.09,"interior"],["Hudiksvall",37645,20,1.19,"interior"],["Karlskrona",66420,25,0.96,"interior"],["Högsby",5438,5,0.57,"interior"],["Skellefteå",76542,26,0.74,"interior"],["Härnösand",24654,11,0.31,"interior"],["Ragunda",5135,5,0.45,"interior"],["Järfälla",86330,14,-1.07,"interior"],["Gagnef",10430,7,0.29,"interior"],["Emmaboda",9056,7,0.51,"interior"],["Bräcke",6099,6,0.55,"interior"],["Bengtsfors",9138,8,0.75,"Norway"],["Kävlinge",32430,9,-0.71,"interior"],["Nässjö",31648,12,0.07,"interior"],["Arvika",25682,15,0.9,"Norway"],["Malå",2990,3,0.13,"interior"],["Sala",22853,11,0.39,"interior"],["Östhammar",22172,11,0.39,"interior"],["Grums",9057,6,0.12,"interior"],["Söderhamn",24858,14,0.8,"interior"],["Eda",8499,6,0.31,"Norway"],["Vetlanda",27498,13,0.39,"interior"],["Hedemora",15345,10,0.65,"interior"],["Svalöv",14544,6,-0.36,"interior"],["Kiruna",22433,12,0.58,"Norway"],["Sävsjö",11668,7,0.19,"interior"],["Lessebo",8342,6,0.32,"interior"],["Värmdö",46637,11,-0.7,"interior"],["Trollhättan",59073,16,-0.12,"interior"],["Simrishamn",18962,14,1.28,"interior"],["Tierp",21193,11,0.48,"interior"],["Bjuv",15968,6,-0.59,"interior"],["Lidköping",40539,16,0.35,"interior"],["Kungälv",49785,12,-0.64,"interior"],["Vilhelmina",6263,8,1.27,"Norway"],["Mörbylånga",16144,10,0.64,"interior"],["Nybro",20145,12,0.79,"interior"],["Falkenberg",47108,21,0.91,"interior"],["Eksjö",17750,10,0.34,"interior"],["Kalix",15547,10,0.66,"interior"],["Arboga",14002,8,0.19,"interior"],["Bollebygd",9733,4,-0.61,"interior"],["Sorsele",2387,4,0.79,"Norway"],["Tibro",11332,6,-0.23,"interior"],["Götene",13218,8,0.33,"interior"],["Hultsfred",13883,11,1,"interior"],["Karlskoga",30261,11,0,"interior"],["Tjörn",16146,8,0.14,"interior"],["Örkelljunga",10433,7,0.2,"interior"],["Pajala",5871,6,0.64,"Finland"],["Enköping",48292,16,0.13,"interior"],["Lomma",24627,5,-1.4,"interior"],["Nordmaling",7033,6,0.3,"interior"],["Kungsbacka",85653,16,-0.7,"interior"],["Laxå",5497,6,0.75,"interior"],["Vaggeryd",14811,9,0.46,"interior"],["Överkalix",3162,5,0.91,"interior"],["Sigtuna",52529,16,0.05,"interior"],["Vara",16066,9,0.36,"interior"],["Ängelholm",44866,16,0.3,"interior"],["Ånge",9109,8,0.9,"interior"],["Staffanstorp",27152,7,-0.95,"interior"],["Lycksele",12213,9,0.61,"interior"],["Mark",35287,14,0.28,"interior"],["Vansbro",6728,7,0.76,"interior"],["Torsby",11387,14,1.95,"Norway"],["Norsjö",3924,4,0.37,"interior"],["Svedala",23470,6,-0.91,"interior"],["Motala",43728,19,0.85,"interior"],["Håbo",22974,8,-0.45,"interior"],["Timrå",17540,10,0.41,"interior"],["Ydre",3637,4,0.48,"interior"],["Norrköping",145163,41,1.09,"interior"],["Årjäng",9893,9,0.88,"Norway"],["Kinda",9992,8,0.74,"interior"],["Mönsterås",13134,8,0.34,"interior"],["Osby",13106,10,0.82,"interior"],["Markaryd",10076,8,0.61,"interior"],["Karlshamn",31996,21,1.61,"interior"],["Kumla",22516,9,-0.08,"interior"],["Falköping",32991,17,0.94,"interior"],["Värnamo",34601,15,0.44,"interior"],["Västerås",159662,36,0.45,"interior"],["Piteå",42344,19,0.81,"interior"],["Lilla Edet",14426,7,0.04,"interior"],["Hylte",10299,8,0.56,"interior"],["Berg",7140,10,1.69,"Norway"],["Halmstad",105796,32,0.86,"interior"],["Umeå",133091,36,0.78,"interior"],["Gullspång",5119,6,0.84,"interior"],["Uddevalla",57045,21,0.72,"interior"],["Linköping",167404,38,0.56,"interior"],["Mölndal",70534,14,-0.87,"interior"],["Uppvidinge",9263,8,0.87,"interior"],["Nyköping",58200,23,0.92,"interior"],["Fagersta",13222,9,0.49,"interior"],["Arvidsjaur",6113,7,0.89,"interior"],["Strängnäs",38917,15,0.29,"interior"],["Mora",20536,16,1.44,"interior"],["Heby",14343,11,0.9,"interior"],["Strömsund",11113,14,2.04,"Norway"],["Härryda",39875,10,-0.65,"interior"],["Ödeshög",5279,6,0.73,"interior"],["Tanum",12865,11,1.23,"Norway"],["Torsås",7002,7,0.83,"interior"],["Vindeln",5461,7,0.99,"interior"],["Örnsköldsvik",55478,30,1.89,"interior"],["Älmhult",17932,10,0.45,"interior"],["Gällivare",17330,11,0.74,"Norway"],["Härjedalen",10145,15,2.33,"Norway"],["Täby",76738,12,-1.31,"interior"],["Lerum",43706,11,-0.6,"interior"],["Krokom",15595,12,1.12,"Norway"],["Vallentuna",35076,9,-0.7,"interior"],["Falun",59986,25,1.17,"interior"],["Jönköping",146161,45,1.45,"interior"],["Stenungsund",27862,11,0.01,"interior"],["Borås",114592,35,1,"interior"],["Storuman",5621,9,1.77,"Norway"],["Kalmar",72304,25,0.81,"interior"],["Askersund",11478,11,1.27,"interior"],["Eslöv",34775,14,0.28,"interior"],["Ljungby",28304,21,1.9,"interior"],["Jokkmokk",4728,9,1.86,"Norway"],["Malung-Sälen",10260,17,2.79,"Norway"],["Arjeplog",2609,7,1.79,"Norway"],["Gislaved",29014,19,1.42,"interior"],["Gävle",103532,34,1.16,"interior"],["Tingsryd",12155,16,2.26,"interior"],["Göteborg",604616,91,1.01,"interior"],["Alvesta",20040,16,1.64,"interior"],["Växjö",97574,37,1.5,"interior"],["Mariestad",24647,19,1.85,"interior"],["Kristianstad",86560,40,2.09,"interior"],["Mjölby",28576,17,1.24,"interior"],["Sundsvall",99213,44,2.14,"interior"]];
+
+// kommun population-model fit (results.json)
+const ALPHA = -3.629315966526787, BETA = 0.5918;
+const C = Math.exp(ALPHA);
+
+// kommun centroids (km, EPSG:3006) + simplified national outline — for the map
+const MAP = {"cent":{"Sala":[583.1,6647.9],"Fagersta":[549.5,6645.9],"Köping":[550.2,6604.4],"Arboga":[544.7,6579.8],"Vansbro":[459.2,6701.1],"Malung-Sälen":[411.7,6750.8],"Gagnef":[494.3,6704.4],"Leksand":[495.8,6731.2],"Rättvik":[516.0,6775.8],"Orsa":[484.8,6798.2],"Älvdalen":[401.7,6836.0],"Smedjebacken":[525.3,6661.3],"Mora":[460.1,6766.5],"Falun":[545.7,6735.4],"Borlänge":[519.9,6701.4],"Säter":[538.4,6693.3],"Hedemora":[558.5,6691.4],"Avesta":[575.6,6676.0],"Ludvika":[486.9,6671.7],"Ockelbo":[585.3,6755.4],"Hofors":[577.9,6707.0],"Ovanåker":[541.2,6803.8],"Nordanstig":[602.4,6882.5],"Ljusdal":[528.2,6857.8],"Gävle":[613.5,6725.9],"Sandviken":[590.9,6712.7],"Söderhamn":[603.5,6792.3],"Bollnäs":[573.8,6798.3],"Hudiksvall":[592.9,6852.8],"Ånge":[537.2,6927.1],"Timrå":[620.1,6946.4],"Härnösand":[637.3,6957.7],"Sundsvall":[598.1,6930.2],"Kramfors":[647.7,6987.9],"Sollefteå":[594.2,7035.8],"Örnsköldsvik":[660.9,7050.5],"Ragunda":[553.2,7006.9],"Bräcke":[530.3,6969.8],"Krokom":[460.9,7071.9],"Strömsund":[511.6,7121.3],"Åre":[399.4,7033.2],"Berg":[438.0,6960.5],"Härjedalen":[433.0,6898.5],"Östersund":[493.3,7012.1],"Nordmaling":[717.3,7067.5],"Bjurholm":[695.5,7097.2],"Vindeln":[717.8,7144.4],"Robertsfors":[780.0,7131.7],"Norsjö":[715.1,7208.5],"Malå":[674.1,7240.0],"Storuman":[549.7,7257.5],"Sorsele":[580.4,7289.9],"Dorotea":[544.1,7155.3],"Vännäs":[730.9,7099.7],"Vilhelmina":[548.2,7201.6],"Åsele":[627.7,7119.1],"Umeå":[755.5,7099.6],"Lycksele":[665.3,7174.2],"Skellefteå":[763.4,7198.8],"Arvidsjaur":[695.6,7291.2],"Arjeplog":[600.6,7362.1],"Jokkmokk":[661.3,7424.4],"Överkalix":[837.3,7392.2],"Kalix":[860.9,7339.3],"Övertorneå":[876.8,7404.4],"Pajala":[838.9,7487.6],"Gällivare":[720.2,7472.5],"Älvsbyn":[759.2,7303.0],"Luleå":[824.5,7313.9],"Piteå":[772.9,7265.7],"Boden":[786.8,7341.3],"Haparanda":[898.6,7341.8],"Kiruna":[737.0,7572.0],"Simrishamn":[449.8,6159.7],"Ängelholm":[373.9,6237.5],"Hässleholm":[420.9,6229.3],"Hylte":[395.3,6315.8],"Halmstad":[376.5,6291.4],"Laholm":[389.2,6263.2],"Falkenberg":[362.3,6324.2],"Stockholm":[670.4,6579.6],"Södertälje":[644.5,6556.4],"Nacka":[684.6,6578.1],"Sundbyberg":[668.3,6585.8],"Solna":[670.9,6584.9],"Lidingö":[680.3,6585.0],"Vaxholm":[687.0,6589.7],"Norrtälje":[704.3,6638.2],"Nora":[493.8,6599.6],"Lindesberg":[518.7,6612.3],"Skinnskatteberg":[540.5,6629.0],"Surahammar":[563.0,6626.0],"Kungsör":[561.7,6586.8],"Hallstahammar":[568.9,6606.2],"Norberg":[553.9,6660.4],"Västerås":[588.4,6611.0],"Sigtuna":[663.0,6615.8],"Nynäshamn":[665.2,6540.4],"Håbo":[641.2,6612.4],"Älvkarleby":[634.1,6717.0],"Knivsta":[660.5,6627.5],"Heby":[612.0,6663.0],"Tierp":[645.3,6695.5],"Uppsala":[651.7,6648.4],"Varberg":[344.2,6340.9],"Kungsbacka":[329.7,6370.8],"Härryda":[340.1,6395.0],"Partille":[329.0,6402.5],"Enköping":[620.7,6615.9],"Östhammar":[677.0,6680.9],"Vingåker":[550.8,6547.1],"Gnesta":[623.2,6551.2],"Nyköping":[612.2,6520.6],"Oxelösund":[621.5,6505.7],"Flen":[597.6,6548.6],"Katrineholm":[572.8,6542.2],"Öckerö":[300.5,6402.9],"Stenungsund":[318.0,6439.0],"Eskilstuna":[581.0,6576.4],"Strängnäs":[617.7,6581.5],"Trosa":[643.3,6530.7],"Ödeshög":[480.9,6452.9],"Tjörn":[300.9,6435.4],"Ydre":[515.1,6412.6],"Kinda":[543.1,6428.8],"Boxholm":[507.2,6444.6],"Åtvidaberg":[565.2,6454.2],"Finspång":[544.9,6518.6],"Valdemarsvik":[593.8,6452.6],"Linköping":[535.0,6470.2],"Norrköping":[575.1,6496.0],"Söderköping":[584.3,6474.1],"Orust":[302.0,6453.1],"Sotenäs":[286.0,6481.4],"Munkedal":[308.7,6498.0],"Tanum":[293.7,6513.8],"Motala":[508.2,6498.5],"Vadstena":[487.7,6476.1],"Mjölby":[509.8,6464.7],"Aneby":[487.9,6413.7],"Gnosjö":[428.1,6357.6],"Mullsjö":[430.6,6424.1],"Habo":[445.8,6426.0],"Dals-Ed":[320.9,6540.2],"Färgelanda":[326.7,6502.8],"Ale":[336.1,6428.4],"Lerum":[341.1,6412.4],"Vårgårda":[367.9,6429.6],"Bollebygd":[358.3,6402.0],"Grästorp":[363.0,6467.8],"Essunga":[367.6,6451.7],"Karlsborg":[471.1,6493.7],"Gislaved":[409.9,6346.6],"Vaggeryd":[447.3,6370.4],"Jönköping":[453.4,6408.6],"Nässjö":[479.3,6386.0],"Värnamo":[445.3,6334.2],"Gullspång":[448.3,6534.5],"Tranemo":[404.8,6375.6],"Bengtsfors":[339.5,6547.2],"Mellerud":[355.6,6508.2],"Lilla Edet":[331.8,6447.1],"Mark":[356.5,6371.6],"Sävsjö":[474.8,6354.0],"Vetlanda":[509.6,6358.3],"Eksjö":[512.5,6386.3],"Tranås":[490.4,6431.7],"Uppvidinge":[525.8,6321.9],"Lessebo":[519.4,6292.4],"Svenljunga":[383.5,6362.5],"Herrljunga":[388.4,6431.7],"Vara":[386.2,6457.6],"Götene":[410.2,6494.9],"Tibro":[454.6,6479.2],"Töreboda":[451.7,6503.7],"Göteborg":[318.4,6403.2],"Mölndal":[326.1,6388.9],"Kungälv":[314.5,6421.9],"Tingsryd":[498.4,6265.7],"Alvesta":[469.2,6300.7],"Älmhult":[449.3,6270.2],"Markaryd":[414.7,6267.1],"Växjö":[492.3,6309.7],"Ljungby":[428.4,6297.3],"Lysekil":[294.1,6474.4],"Uddevalla":[316.9,6469.2],"Strömstad":[285.9,6541.4],"Vänersborg":[345.9,6482.5],"Högsby":[556.5,6332.7],"Torsås":[556.0,6253.4],"Mörbylånga":[593.3,6263.5],"Hultsfred":[548.2,6362.0],"Trollhättan":[344.2,6456.0],"Alingsås":[354.3,6429.9],"Borås":[377.4,6400.7],"Ulricehamn":[408.7,6408.7],"Åmål":[364.3,6536.9],"Mariestad":[426.9,6519.2],"Lidköping":[385.2,6492.7],"Mönsterås":[581.5,6326.0],"Emmaboda":[534.0,6277.0],"Kalmar":[570.4,6282.8],"Skara":[411.0,6472.0],"Skövde":[436.1,6476.9],"Hjo":[458.0,6459.5],"Tidaholm":[437.9,6445.6],"Falköping":[414.6,6445.8],"Kil":[398.4,6605.0],"Eda":[342.5,6632.1],"Torsby":[383.4,6712.3],"Nybro":[554.0,6299.5],"Oskarshamn":[582.6,6360.5],"Västervik":[582.5,6412.1],"Vimmerby":[552.0,6394.7],"Borgholm":[611.4,6316.4],"Gotland":[712.1,6380.0],"Olofström":[473.0,6241.9],"Karlskrona":[541.9,6237.7],"Storfors":[457.9,6594.8],"Hammarö":[417.0,6566.4],"Munkfors":[414.6,6632.4],"Forshaga":[415.9,6613.5],"Grums":[387.3,6585.2],"Årjäng":[334.4,6590.9],"Sunne":[391.5,6641.5],"Karlstad":[421.1,6592.8],"Kristinehamn":[443.7,6564.4],"Ronneby":[514.6,6240.2],"Karlshamn":[491.5,6234.9],"Sölvesborg":[478.2,6215.5],"Svalöv":[383.0,6203.1],"Filipstad":[452.6,6635.2],"Hagfors":[423.8,6661.5],"Arvika":[366.6,6618.8],"Säffle":[385.6,6551.1],"Lekeberg":[488.1,6560.0],"Laxå":[473.9,6531.1],"Staffanstorp":[387.4,6168.1],"Burlöv":[380.1,6166.9],"Vellinge":[374.0,6147.2],"Östra Göinge":[447.0,6235.9],"Örkelljunga":[397.3,6242.6],"Bjuv":[373.4,6213.9],"Kävlinge":[378.0,6184.5],"Lomma":[378.8,6175.4],"Svedala":[390.4,6155.6],"Skurup":[408.2,6148.1],"Sjöbo":[421.0,6167.0],"Hallsberg":[514.2,6540.5],"Degerfors":[467.0,6558.3],"Hällefors":[478.5,6626.7],"Ljusnarsberg":[498.2,6644.4],"Örebro":[518.9,6569.5],"Kumla":[508.0,6553.9],"Askersund":[497.3,6523.7],"Karlskoga":[475.3,6582.1],"Upplands Väsby":[664.3,6601.7],"Vallentuna":[680.6,6609.8],"Österåker":[696.4,6601.4],"Värmdö":[707.6,6581.0],"Hörby":[420.5,6188.7],"Höör":[407.2,6201.5],"Tomelilla":[437.8,6163.6],"Bromölla":[468.6,6220.7],"Osby":[447.4,6252.7],"Perstorp":[399.1,6228.1],"Klippan":[391.0,6219.9],"Åstorp":[375.1,6222.5],"Båstad":[363.6,6253.0],"Malmö":[375.0,6159.6],"Järfälla":[659.9,6591.7],"Ekerö":[650.6,6582.3],"Huddinge":[672.2,6567.8],"Botkyrka":[661.6,6561.7],"Salem":[653.4,6569.8],"Haninge":[684.4,6553.7],"Tyresö":[688.8,6568.5],"Upplands-Bro":[650.0,6601.6],"Nykvarn":[636.8,6564.1],"Täby":[673.8,6596.3],"Danderyd":[673.1,6589.5],"Sollentuna":[666.1,6593.9],"Lund":[397.7,6170.3],"Landskrona":[368.0,6196.0],"Helsingborg":[362.2,6215.6],"Höganäs":[352.1,6232.6],"Eslöv":[397.8,6189.0],"Ystad":[429.9,6146.9],"Trelleborg":[390.7,6142.3],"Kristianstad":[446.6,6206.5]},
+"rings":[[[282.3,6527.8],[280.7,6535.6],[280.8,6527.7],[276.5,6532.4],[279.8,6537.9],[279.2,6545.7],[277.7,6546.1],[276.6,6545.8],[281.5,6554.5],[290.4,6558.0],[299.9,6531.6],[315.3,6554.3],[313.2,6610.2],[328.1,6622.0],[322.9,6637.9],[341.9,6642.6],[361.0,6664.9],[368.6,6710.7],[350.0,6767.4],[374.9,6771.9],[386.1,6804.4],[348.8,6846.9],[359.8,6906.9],[349.0,6945.7],[351.4,6978.1],[359.1,6988.7],[348.3,7019.2],[361.1,7041.9],[358.6,7054.9],[398.9,7105.1],[412.8,7108.9],[449.5,7098.5],[459.0,7119.0],[457.4,7148.7],[435.6,7162.4],[477.0,7243.1],[482.8,7299.0],[478.3,7334.8],[501.7,7337.1],[521.7,7351.4],[516.8,7373.9],[560.4,7437.2],[560.6,7455.0],[546.7,7480.4],[563.6,7498.4],[573.0,7534.4],[594.9,7557.8],[621.3,7542.3],[630.5,7568.3],[627.6,7605.9],[638.7,7611.5],[702.4,7590.7],[713.6,7606.6],[701.2,7613.1],[715.1,7641.8],[701.8,7667.8],[730.3,7668.9],[736.1,7653.8],[787.8,7612.9],[812.6,7610.7],[831.6,7598.7],[838.1,7580.5],[844.0,7582.7],[861.3,7563.7],[857.9,7509.9],[874.1,7506.1],[869.4,7475.7],[894.0,7439.9],[886.8,7380.3],[901.7,7365.5],[917.3,7329.9],[886.8,7325.0],[847.6,7330.6],[834.7,7324.4],[802.9,7230.2],[791.7,7202.3],[788.6,7108.9],[773.9,7087.1],[735.7,7054.1],[727.6,7052.2],[702.7,7013.2],[675.2,6993.4],[650.2,6967.2],[631.0,6926.9],[619.7,6929.0],[621.8,6859.7],[614.1,6797.9],[616.2,6765.1],[618.9,6729.6],[647.0,6710.9],[664.8,6721.4],[699.5,6685.6],[693.8,6678.9],[710.5,6660.9],[728.3,6644.9],[712.3,6622.0],[709.5,6615.6],[685.6,6596.1],[697.3,6580.9],[703.7,6586.0],[711.2,6577.1],[695.1,6559.8],[683.6,6551.7],[672.3,6548.6],[652.1,6562.4],[648.6,6524.6],[632.6,6510.9],[611.9,6498.4],[569.0,6500.1],[613.3,6484.0],[601.9,6477.1],[600.2,6470.0],[609.7,6449.9],[604.4,6442.6],[606.9,6437.2],[603.4,6420.9],[603.5,6368.0],[588.7,6336.6],[585.8,6294.6],[576.7,6277.1],[552.7,6214.8],[458.9,6201.6],[449.4,6176.6],[459.4,6154.8],[447.6,6137.2],[430.9,6143.7],[396.1,6133.6],[361.3,6139.1],[378.2,6171.1],[342.1,6242.7],[353.2,6255.5],[353.9,6300.0],[339.3,6311.6],[331.5,6345.6],[326.0,6369.6],[316.2,6390.9],[303.5,6400.2],[309.4,6424.7],[318.7,6458.0],[294.3,6460.7],[300.3,6487.0],[282.1,6491.3],[280.7,6518.8],[282.3,6527.8]],[[735.3,6369.2],[705.8,6338.1],[706.2,6322.0],[690.4,6311.9],[686.6,6350.7],[686.1,6381.2],[718.9,6425.8],[737.7,6426.7],[743.1,6415.9],[727.0,6406.8],[726.0,6376.1],[735.3,6369.2]]]};
+// Stockholm FUA region: nested settlement / municipality / functional-area footprints + stations
+const STO = {"fua":[[[695.6,6673.9],[699.9,6662.9],[699.4,6672.9],[708.3,6670.5],[710.2,6660.5],[712.6,6654.8],[709.4,6669.0],[713.3,6669.9],[717.9,6650.1],[728.6,6644.6],[727.8,6637.6],[719.7,6648.6],[715.2,6650.9],[720.6,6640.5],[717.1,6634.2],[717.1,6633.3],[709.8,6631.3],[708.5,6629.2],[714.9,6632.2],[716.1,6631.7],[717.7,6632.6],[715.8,6628.8],[718.7,6628.3],[717.9,6632.7],[725.1,6632.9],[729.3,6631.8],[728.9,6627.0],[720.8,6627.1],[712.0,6622.4],[710.8,6621.4],[710.8,6618.7],[710.5,6619.4],[709.1,6620.1],[707.5,6616.7],[710.1,6616.7],[711.3,6617.4],[711.5,6614.8],[709.5,6616.2],[708.7,6613.3],[705.1,6616.6],[707.1,6610.2],[698.8,6604.7],[692.0,6595.4],[686.3,6597.3],[686.7,6592.9],[682.9,6593.7],[682.4,6592.4],[686.5,6592.3],[684.6,6589.7],[689.0,6589.0],[689.2,6587.3],[679.6,6588.1],[682.0,6593.5],[677.9,6594.7],[673.7,6586.2],[667.6,6592.8],[671.3,6587.3],[679.5,6580.2],[675.1,6581.1],[674.9,6579.8],[677.9,6578.7],[682.6,6581.8],[682.4,6577.9],[686.6,6577.6],[687.8,6578.9],[688.6,6574.5],[690.1,6575.3],[691.9,6574.4],[685.4,6574.4],[695.0,6566.8],[693.9,6565.2],[694.2,6566.8],[692.7,6567.8],[691.5,6567.8],[690.1,6570.3],[689.0,6571.2],[688.7,6571.3],[689.5,6567.7],[693.9,6566.6],[692.1,6563.5],[694.5,6564.8],[695.6,6560.4],[696.3,6563.6],[698.1,6563.1],[694.9,6559.5],[688.9,6558.2],[687.5,6556.7],[688.3,6555.9],[687.3,6555.5],[691.5,6555.2],[683.1,6551.6],[685.7,6554.0],[685.5,6557.8],[673.4,6549.2],[674.6,6548.0],[674.5,6546.0],[672.2,6548.6],[666.1,6526.0],[664.8,6534.4],[663.0,6531.9],[659.3,6539.1],[662.2,6532.4],[661.3,6528.5],[657.3,6535.4],[658.7,6542.2],[657.3,6550.0],[658.7,6550.8],[657.1,6552.5],[658.8,6556.4],[654.5,6549.0],[655.0,6554.6],[652.6,6562.0],[652.0,6563.3],[650.1,6564.7],[653.9,6554.8],[649.8,6552.2],[650.7,6537.5],[647.9,6537.3],[651.5,6530.1],[645.6,6531.3],[648.8,6524.2],[641.5,6530.7],[644.9,6524.7],[642.1,6518.4],[636.1,6524.5],[637.3,6535.2],[634.2,6533.2],[621.8,6539.9],[607.7,6554.0],[610.5,6565.4],[605.2,6566.6],[603.9,6586.5],[596.4,6595.6],[608.0,6595.0],[611.2,6599.7],[619.8,6600.6],[637.2,6585.3],[641.9,6593.4],[634.1,6616.4],[639.1,6616.7],[646.7,6625.9],[648.0,6620.2],[655.0,6616.7],[673.4,6626.4],[675.6,6635.4],[690.4,6644.4],[688.7,6649.2],[693.7,6657.0],[688.7,6661.0],[695.6,6673.9]],[[721.4,6642.0],[724.7,6635.1],[723.1,6633.7],[720.8,6634.7],[717.7,6633.4],[721.4,6642.0]],[[694.5,6592.3],[702.1,6585.6],[707.4,6585.0],[700.0,6585.6],[708.7,6580.7],[702.6,6577.2],[706.9,6577.2],[710.8,6579.2],[707.8,6573.2],[696.8,6579.9],[690.5,6577.8],[692.3,6581.3],[683.7,6578.1],[687.6,6585.1],[689.1,6583.5],[693.4,6585.0],[695.9,6580.6],[698.0,6581.4],[696.0,6588.8],[698.7,6587.6],[694.5,6592.3]],[[705.5,6607.2],[712.0,6606.0],[707.0,6603.8],[708.0,6603.5],[706.5,6602.9],[707.2,6602.2],[705.7,6601.8],[705.4,6599.7],[702.8,6600.2],[701.7,6592.4],[698.7,6600.2],[701.2,6600.8],[700.9,6599.6],[701.2,6599.0],[702.0,6598.7],[702.3,6599.0],[702.9,6601.0],[700.2,6601.4],[705.5,6607.2]],[[690.5,6577.5],[698.5,6577.4],[700.3,6575.5],[706.4,6573.0],[702.2,6572.2],[701.6,6571.3],[701.3,6573.0],[700.0,6574.2],[701.2,6571.0],[702.9,6572.0],[704.4,6570.5],[699.6,6569.1],[690.5,6577.5]],[[707.0,6681.2],[711.3,6677.0],[710.5,6674.3],[706.2,6675.1],[707.0,6681.2]],[[699.3,6558.7],[696.4,6547.1],[693.2,6545.9],[692.8,6553.8],[699.3,6558.7]],[[677.8,6546.9],[683.1,6547.1],[685.5,6547.4],[683.5,6543.4],[680.3,6546.1],[681.3,6541.2],[675.5,6539.1],[677.8,6546.9]],[[677.1,6587.8],[684.7,6586.4],[685.1,6585.1],[680.0,6582.1],[677.1,6587.8]],[[652.8,6551.2],[655.8,6542.7],[654.1,6534.5],[655.4,6531.4],[650.6,6539.8],[652.4,6544.6],[651.8,6545.0],[652.0,6547.0],[651.7,6549.1],[651.3,6549.8],[652.8,6551.2]]],"kom":[[[667.9,6587.9],[666.5,6585.6],[669.6,6582.3],[672.0,6581.8],[673.3,6585.8],[679.3,6581.1],[675.0,6580.5],[682.2,6570.0],[675.8,6570.0],[667.8,6575.5],[663.1,6574.1],[668.1,6578.4],[658.9,6583.0],[656.8,6586.9],[659.9,6587.9],[661.3,6585.9],[664.5,6592.6],[667.9,6587.9]],[[651.7,6550.6],[655.7,6544.2],[654.4,6534.2],[655.1,6532.0],[652.5,6533.3],[652.0,6538.4],[650.7,6540.2],[651.7,6550.6]],[[632.9,6581.6],[640.2,6580.3],[640.8,6576.7],[646.3,6575.5],[648.3,6570.8],[651.7,6571.2],[650.8,6568.2],[656.4,6563.4],[653.7,6558.0],[652.1,6562.4],[653.6,6555.0],[650.1,6552.0],[650.1,6537.4],[647.2,6537.6],[646.8,6540.9],[636.6,6540.6],[633.1,6547.9],[632.7,6558.2],[641.6,6556.4],[646.3,6564.8],[644.6,6568.5],[633.7,6570.7],[632.9,6581.6]],[[691.6,6574.4],[681.3,6572.2],[677.0,6579.3],[688.8,6585.4],[691.5,6582.4],[688.4,6580.8],[687.8,6577.6],[688.8,6574.7],[691.6,6574.4]],[[670.5,6588.3],[673.3,6585.8],[671.9,6581.7],[669.6,6582.3],[668.4,6583.6],[670.5,6588.3]],[[675.8,6586.7],[684.7,6586.3],[685.0,6585.4],[680.1,6582.1],[675.8,6586.7]],[[675.7,6635.4],[688.3,6641.1],[690.3,6644.5],[688.8,6649.3],[693.7,6656.9],[688.7,6661.0],[691.8,6663.0],[694.1,6668.1],[695.1,6674.5],[699.6,6664.7],[699.1,6670.4],[697.9,6673.2],[699.0,6674.2],[704.9,6670.0],[708.1,6670.5],[710.5,6660.9],[709.5,6668.7],[712.4,6671.0],[714.1,6662.1],[718.7,6650.2],[728.3,6644.9],[728.5,6638.5],[726.6,6637.0],[726.1,6639.9],[725.6,6638.9],[719.6,6647.8],[716.2,6650.4],[725.2,6634.5],[717.5,6634.4],[709.3,6630.0],[722.1,6633.1],[728.6,6632.1],[729.3,6628.7],[726.6,6625.5],[720.7,6626.2],[714.1,6622.4],[720.2,6619.9],[712.3,6622.0],[709.0,6617.3],[711.2,6615.6],[712.4,6615.9],[712.1,6614.4],[710.8,6614.0],[709.6,6611.4],[709.5,6615.6],[707.0,6610.1],[697.2,6611.5],[694.8,6607.6],[691.3,6612.1],[690.8,6617.5],[686.9,6621.3],[678.0,6618.8],[675.8,6621.8],[676.4,6624.1],[673.4,6626.4],[675.7,6635.4]],[[720.9,6612.3],[717.4,6611.4],[723.0,6619.6],[724.7,6616.5],[721.7,6616.8],[720.9,6615.2],[720.9,6612.3]],[[711.8,6610.3],[714.1,6611.7],[722.2,6620.7],[716.5,6612.8],[716.3,6611.7],[711.8,6610.3]],[[710.3,6675.0],[709.2,6671.5],[709.2,6674.1],[706.5,6674.9],[706.6,6681.8],[711.2,6676.9],[711.5,6675.5],[710.3,6675.0]],[[669.8,6626.9],[675.9,6624.6],[677.5,6620.4],[674.4,6615.0],[670.1,6614.9],[670.2,6607.5],[667.9,6604.9],[662.4,6605.2],[645.1,6615.7],[648.0,6620.2],[655.0,6616.8],[656.3,6620.1],[658.8,6619.0],[669.8,6626.9]],[[667.3,6557.1],[671.0,6554.8],[669.1,6550.7],[673.2,6545.1],[671.9,6544.6],[671.0,6540.1],[674.7,6543.6],[674.4,6538.7],[673.5,6536.5],[671.7,6538.8],[670.8,6538.2],[668.0,6527.9],[668.5,6532.5],[667.9,6533.7],[667.0,6527.3],[666.2,6527.0],[666.2,6525.4],[664.8,6532.6],[663.5,6527.9],[665.6,6522.8],[663.8,6520.6],[661.8,6521.9],[663.7,6532.3],[659.7,6537.6],[662.0,6531.9],[660.6,6529.0],[657.5,6535.8],[658.5,6542.0],[657.6,6552.4],[664.4,6553.1],[667.3,6557.1]],[[646.7,6625.9],[649.1,6624.2],[648.1,6618.8],[641.7,6611.0],[645.9,6604.2],[639.5,6599.2],[634.1,6608.8],[634.7,6616.1],[639.2,6616.8],[642.6,6624.4],[646.7,6625.9]],[[617.0,6543.9],[607.9,6554.1],[610.7,6564.5],[624.5,6563.9],[631.4,6560.5],[633.1,6547.9],[638.7,6536.7],[634.2,6533.3],[630.8,6537.3],[627.7,6536.8],[617.0,6543.9]],[[621.2,6599.4],[625.2,6593.6],[633.5,6591.2],[637.2,6585.3],[637.9,6581.8],[632.9,6581.6],[633.8,6573.5],[628.2,6566.8],[630.5,6561.2],[605.5,6566.6],[603.8,6586.5],[596.3,6593.6],[599.7,6597.3],[607.9,6595.0],[611.2,6599.7],[621.2,6599.4]],[[646.8,6540.9],[651.2,6530.4],[647.9,6530.7],[647.4,6528.0],[649.9,6527.3],[648.2,6526.6],[648.6,6524.6],[641.7,6530.4],[644.7,6524.3],[642.3,6521.2],[645.1,6518.6],[643.6,6518.2],[636.0,6524.7],[638.7,6536.7],[636.6,6540.6],[646.8,6540.9]],[[658.6,6607.5],[667.8,6606.1],[670.4,6602.1],[669.9,6594.8],[665.5,6599.1],[660.8,6596.5],[658.5,6600.1],[660.3,6602.0],[658.6,6607.5]],[[677.5,6620.4],[681.6,6618.9],[686.9,6621.3],[690.8,6617.5],[694.2,6608.2],[678.2,6598.4],[670.1,6600.5],[667.9,6604.5],[670.2,6607.5],[670.1,6614.9],[674.4,6615.0],[677.5,6620.4]],[[716.2,6600.4],[714.9,6598.6],[712.8,6596.8],[709.9,6598.1],[716.2,6600.4]],[[703.8,6606.6],[707.6,6608.3],[708.4,6605.3],[716.4,6607.4],[708.1,6604.1],[705.8,6601.4],[704.9,6599.6],[704.0,6600.5],[704.0,6594.5],[705.0,6591.9],[701.3,6592.8],[698.8,6599.6],[703.8,6606.6]],[[681.3,6599.2],[697.2,6611.5],[707.0,6610.1],[698.6,6603.8],[691.9,6595.6],[685.6,6596.1],[687.4,6594.2],[683.0,6593.3],[682.1,6590.6],[681.6,6593.9],[678.7,6592.6],[678.0,6599.5],[681.3,6599.2]],[[726.4,6587.9],[720.9,6589.8],[721.8,6592.4],[726.4,6587.9]],[[718.8,6589.2],[719.0,6595.2],[722.2,6596.4],[718.8,6589.2]],[[714.2,6579.1],[716.5,6577.7],[714.9,6573.1],[713.6,6575.0],[711.5,6574.0],[714.2,6579.1]],[[690.2,6584.7],[694.2,6584.4],[696.0,6581.2],[697.3,6580.9],[694.2,6591.8],[697.5,6591.9],[700.9,6587.9],[703.7,6586.0],[710.7,6587.1],[713.0,6582.6],[709.2,6579.2],[709.6,6583.0],[707.0,6586.4],[703.0,6584.5],[707.4,6582.8],[708.3,6579.6],[706.0,6577.6],[710.3,6578.8],[711.2,6577.1],[704.3,6572.6],[703.9,6570.4],[700.7,6569.3],[693.1,6575.2],[690.3,6576.0],[690.4,6580.0],[689.2,6580.9],[691.5,6582.4],[690.2,6584.7]],[[708.6,6593.9],[712.4,6594.3],[713.0,6593.1],[708.9,6591.2],[708.6,6593.9]],[[711.9,6596.9],[705.5,6593.0],[706.9,6596.5],[711.9,6596.9]],[[664.5,6590.0],[660.5,6585.9],[655.0,6590.0],[658.4,6595.3],[658.5,6600.1],[664.5,6590.0]],[[649.5,6593.2],[658.9,6583.0],[668.1,6578.4],[662.8,6573.3],[643.4,6575.6],[637.1,6583.3],[639.1,6592.3],[647.8,6590.8],[649.5,6593.2]],[[667.8,6575.5],[675.8,6570.0],[681.3,6570.2],[676.6,6560.9],[673.0,6559.8],[667.0,6568.6],[664.2,6568.6],[663.1,6574.1],[667.8,6575.5]],[[656.1,6571.2],[662.8,6573.3],[670.6,6561.4],[664.4,6553.1],[659.9,6553.4],[658.5,6556.3],[657.0,6550.2],[655.3,6550.1],[654.5,6549.1],[653.7,6558.0],[659.7,6565.1],[656.1,6571.2]],[[646.3,6575.5],[658.1,6569.9],[659.5,6564.7],[654.9,6563.4],[650.8,6568.2],[651.7,6571.2],[648.3,6570.8],[646.3,6575.5]],[[694.1,6563.7],[690.6,6562.5],[685.0,6568.7],[681.7,6567.8],[681.3,6570.2],[686.4,6573.4],[694.6,6567.6],[694.1,6563.7]],[[647.3,6614.2],[657.9,6608.5],[660.3,6602.2],[654.6,6589.8],[649.5,6593.2],[647.8,6590.8],[642.0,6591.9],[639.5,6599.2],[645.9,6604.2],[641.8,6612.1],[647.3,6614.2]],[[635.2,6570.0],[646.0,6567.1],[641.6,6556.4],[632.7,6558.2],[629.4,6562.3],[629.8,6569.5],[633.4,6572.9],[635.2,6570.0]],[[669.9,6594.8],[669.8,6600.4],[678.2,6598.4],[675.8,6590.7],[669.9,6594.8]],[[670.5,6593.0],[674.8,6591.2],[675.9,6585.7],[670.6,6588.7],[670.5,6593.0]],[[670.5,6588.3],[660.2,6595.7],[662.4,6598.3],[665.5,6599.1],[669.9,6594.8],[670.8,6591.5],[668.0,6592.1],[670.5,6588.3]]],"tat":[[[689.1,6611.0],[690.1,6612.3],[689.6,6614.0],[690.3,6614.4],[690.4,6613.2],[691.1,6613.0],[691.2,6614.2],[691.2,6612.7],[689.1,6611.0]],[[699.5,6600.7],[700.5,6600.5],[699.7,6600.1],[700.4,6599.3],[700.1,6599.3],[700.1,6597.4],[699.7,6597.2],[698.9,6597.5],[699.3,6598.8],[699.1,6598.3],[698.6,6598.7],[699.5,6600.7]],[[709.8,6582.9],[709.8,6584.6],[710.5,6583.7],[711.9,6585.3],[712.6,6582.5],[711.9,6580.8],[711.2,6584.2],[710.7,6582.9],[709.8,6582.9]],[[695.9,6579.6],[693.1,6580.4],[692.4,6579.2],[691.5,6580.6],[692.6,6581.2],[691.8,6581.3],[692.6,6582.0],[692.0,6582.8],[693.3,6582.6],[693.9,6581.8],[693.0,6581.7],[694.7,6580.0],[695.5,6581.3],[696.9,6580.2],[698.0,6581.4],[696.2,6585.4],[696.5,6586.8],[697.4,6585.4],[696.8,6584.7],[697.9,6584.3],[697.4,6583.8],[700.0,6581.7],[697.9,6579.5],[695.9,6579.6]],[[649.2,6586.3],[648.0,6588.4],[647.6,6589.7],[649.0,6589.7],[649.0,6588.9],[648.5,6589.5],[648.0,6589.2],[648.1,6588.7],[649.7,6588.3],[650.3,6589.2],[649.2,6586.3]],[[652.2,6560.5],[651.0,6560.6],[649.6,6562.4],[648.8,6561.7],[646.7,6563.8],[647.6,6567.1],[650.1,6565.3],[648.8,6568.7],[649.6,6567.3],[650.5,6568.8],[651.2,6566.3],[652.0,6566.7],[653.7,6565.0],[652.3,6563.4],[653.4,6563.6],[653.4,6562.2],[652.4,6562.4],[651.9,6563.3],[651.0,6563.6],[652.3,6561.8],[652.2,6560.5]],[[708.5,6616.5],[705.1,6616.8],[705.3,6617.3],[708.2,6617.5],[707.5,6616.7],[708.5,6616.5]],[[721.2,6615.3],[722.5,6618.5],[723.0,6617.4],[724.8,6617.6],[723.9,6616.2],[722.8,6616.2],[723.6,6616.6],[722.4,6617.5],[722.7,6616.2],[721.2,6615.3]],[[717.8,6629.7],[715.5,6629.2],[715.9,6630.9],[716.6,6630.0],[716.5,6630.8],[717.4,6631.0],[716.7,6632.1],[717.4,6632.5],[718.2,6631.2],[717.8,6629.7]],[[691.4,6622.9],[690.8,6622.1],[690.3,6622.5],[692.0,6623.9],[692.2,6621.9],[691.4,6622.9]],[[707.9,6631.6],[709.3,6632.8],[711.2,6632.0],[708.3,6630.3],[709.5,6629.8],[709.1,6629.7],[708.1,6628.9],[709.4,6628.5],[706.9,6627.3],[706.6,6627.7],[707.6,6628.6],[708.0,6628.6],[708.2,6628.8],[706.1,6628.5],[706.0,6629.3],[707.1,6629.6],[706.0,6630.7],[707.0,6630.8],[706.3,6631.7],[707.2,6631.5],[707.0,6632.2],[707.9,6631.6]],[[672.4,6600.4],[674.0,6603.1],[671.5,6604.9],[673.4,6605.8],[674.7,6605.2],[674.2,6606.2],[675.0,6606.4],[675.6,6604.4],[676.1,6605.7],[677.0,6604.9],[675.0,6603.2],[677.0,6603.1],[676.2,6601.8],[675.7,6602.8],[674.2,6602.5],[675.3,6599.8],[673.2,6597.5],[672.4,6600.4]],[[698.2,6603.0],[695.6,6601.2],[695.4,6602.3],[696.0,6601.9],[697.1,6603.0],[698.2,6603.1],[697.0,6605.1],[697.9,6605.5],[698.7,6604.0],[698.2,6603.0]],[[690.4,6599.8],[688.4,6601.0],[688.5,6601.8],[690.2,6601.2],[689.5,6600.6],[689.8,6600.6],[690.4,6599.8]],[[681.7,6599.5],[682.3,6600.6],[682.8,6599.8],[684.1,6600.6],[683.8,6599.7],[681.7,6599.5]],[[703.8,6604.2],[705.5,6605.2],[704.4,6604.3],[706.2,6604.3],[705.5,6602.8],[706.4,6603.2],[706.9,6602.4],[705.7,6602.6],[706.0,6601.4],[705.3,6600.8],[704.9,6601.4],[705.7,6604.3],[704.5,6603.3],[703.8,6604.2]],[[685.9,6595.6],[686.1,6594.5],[686.4,6595.2],[687.6,6594.6],[686.7,6592.9],[685.3,6592.9],[685.0,6594.1],[684.7,6592.8],[683.5,6592.9],[685.9,6595.6]],[[688.7,6595.3],[687.8,6597.0],[688.3,6596.0],[687.5,6595.4],[686.2,6597.8],[683.7,6597.8],[683.7,6598.9],[684.6,6598.0],[685.4,6598.5],[684.1,6599.5],[684.6,6599.4],[685.1,6600.0],[684.3,6600.4],[684.7,6601.8],[685.3,6600.0],[687.1,6602.5],[687.4,6601.5],[688.4,6601.6],[686.0,6600.0],[687.6,6598.9],[688.3,6599.5],[687.4,6600.1],[688.7,6600.6],[688.2,6598.4],[690.4,6597.8],[689.7,6596.4],[690.6,6597.2],[691.0,6596.4],[691.8,6596.2],[692.1,6598.0],[693.0,6597.9],[691.8,6598.2],[691.9,6597.2],[690.8,6597.0],[691.6,6598.9],[693.1,6598.7],[691.6,6599.6],[693.9,6599.0],[693.8,6598.5],[692.6,6598.7],[693.2,6598.0],[691.9,6595.3],[689.5,6595.6],[689.5,6596.3],[688.9,6596.5],[688.7,6595.3]],[[708.9,6578.9],[709.8,6580.5],[710.4,6580.9],[709.8,6581.3],[709.5,6581.9],[709.8,6582.3],[710.2,6582.5],[710.0,6581.3],[710.8,6581.3],[710.8,6582.2],[711.5,6580.8],[708.9,6578.9]],[[695.2,6575.7],[693.4,6577.2],[694.3,6577.3],[694.5,6577.1],[695.0,6577.3],[695.5,6577.0],[695.6,6577.7],[698.6,6577.3],[697.1,6576.6],[696.2,6577.3],[695.5,6576.2],[696.5,6576.8],[697.1,6576.1],[696.3,6576.0],[697.5,6575.5],[698.0,6576.3],[698.7,6574.8],[697.5,6575.3],[697.2,6574.6],[695.8,6573.7],[695.0,6574.8],[694.6,6574.7],[695.4,6572.5],[696.2,6572.9],[696.8,6571.8],[695.3,6572.3],[693.4,6574.7],[694.5,6574.4],[694.3,6575.1],[695.1,6575.2],[696.3,6574.1],[696.0,6575.0],[697.1,6575.1],[695.2,6575.7]],[[700.4,6575.6],[701.7,6575.3],[703.8,6574.1],[702.5,6573.7],[701.4,6575.2],[698.9,6575.4],[698.6,6577.2],[700.5,6576.7],[700.4,6575.6]],[[706.2,6583.2],[706.0,6581.4],[705.0,6582.3],[705.3,6583.5],[703.9,6583.0],[703.7,6581.4],[703.7,6582.7],[701.7,6582.3],[701.2,6583.0],[702.1,6584.8],[703.1,6584.5],[702.8,6583.4],[704.0,6583.5],[703.9,6584.5],[706.2,6583.2]],[[700.7,6572.7],[701.7,6570.0],[700.2,6569.3],[700.9,6571.5],[699.7,6572.8],[700.7,6572.7]],[[692.4,6585.1],[693.8,6584.8],[694.8,6583.8],[693.6,6583.7],[692.4,6585.1]],[[701.8,6571.6],[701.0,6572.2],[701.4,6573.0],[700.4,6574.3],[702.3,6573.6],[702.1,6572.3],[703.8,6572.8],[704.3,6571.9],[702.5,6572.3],[701.8,6571.6]],[[706.9,6577.1],[710.0,6578.9],[710.8,6579.3],[710.4,6578.4],[711.2,6578.1],[710.1,6577.1],[711.4,6577.0],[709.2,6575.0],[709.0,6575.6],[710.0,6576.6],[709.9,6577.2],[708.9,6576.1],[708.2,6577.7],[707.6,6575.9],[706.1,6575.6],[706.3,6577.2],[705.5,6576.6],[704.2,6577.2],[706.7,6577.7],[706.9,6577.1]],[[701.9,6576.7],[696.3,6579.0],[696.7,6579.5],[699.8,6578.6],[699.2,6579.2],[699.9,6579.7],[700.5,6579.2],[700.0,6578.5],[701.4,6578.8],[703.2,6577.7],[702.2,6577.3],[703.8,6577.2],[701.9,6576.7]],[[707.6,6582.0],[707.8,6580.3],[707.1,6579.9],[707.6,6579.6],[708.2,6580.7],[708.4,6579.4],[705.3,6577.9],[705.3,6579.0],[706.4,6579.3],[706.6,6580.6],[707.3,6580.4],[707.6,6582.0]],[[707.1,6586.8],[706.4,6587.3],[707.9,6587.4],[708.5,6587.6],[708.6,6587.1],[709.1,6587.5],[709.5,6585.3],[707.8,6584.8],[707.1,6586.8]],[[651.5,6581.1],[652.4,6581.7],[653.9,6580.7],[653.9,6579.6],[655.1,6579.5],[654.4,6579.0],[653.6,6579.6],[653.5,6580.1],[652.8,6579.2],[651.5,6581.1]],[[657.9,6579.5],[658.4,6577.6],[657.3,6578.3],[657.0,6579.2],[655.6,6577.7],[653.6,6578.6],[656.6,6579.6],[657.5,6579.5],[657.6,6578.5],[657.9,6579.5]],[[651.3,6589.4],[650.6,6589.8],[652.2,6589.3],[652.7,6587.9],[651.0,6588.4],[651.2,6586.3],[650.0,6587.6],[650.6,6587.3],[651.3,6589.4]],[[658.3,6572.9],[657.6,6574.0],[658.8,6574.6],[658.7,6576.3],[661.3,6575.4],[659.8,6575.3],[660.8,6575.0],[659.7,6574.7],[660.8,6573.1],[658.3,6572.9]],[[674.6,6566.7],[675.7,6566.0],[674.3,6564.8],[674.0,6565.6],[674.6,6566.7]],[[650.6,6599.8],[647.3,6600.7],[647.4,6602.8],[648.1,6601.2],[648.7,6601.9],[649.5,6600.7],[649.8,6601.4],[650.8,6600.9],[650.6,6599.9],[651.1,6600.4],[651.4,6598.7],[650.6,6599.8]],[[650.8,6606.2],[651.1,6607.7],[649.9,6608.8],[651.8,6607.6],[651.7,6606.3],[650.8,6606.2]],[[659.8,6561.6],[658.8,6562.1],[660.0,6562.9],[660.4,6561.9],[660.8,6563.8],[657.8,6563.7],[659.9,6564.8],[660.0,6565.2],[655.0,6563.3],[654.8,6565.3],[655.1,6565.8],[655.7,6565.1],[656.0,6566.1],[656.8,6565.5],[657.8,6566.8],[660.3,6566.2],[660.5,6565.4],[661.3,6566.4],[660.3,6567.7],[661.3,6566.9],[661.1,6567.6],[662.8,6567.4],[662.0,6565.8],[663.2,6566.1],[663.4,6564.7],[662.5,6564.7],[662.0,6563.1],[661.2,6563.9],[661.4,6562.2],[659.8,6561.6]],[[694.8,6559.4],[694.9,6560.8],[693.5,6560.3],[695.3,6562.0],[694.3,6563.0],[696.0,6562.9],[695.4,6560.4],[696.4,6563.6],[696.5,6562.8],[698.0,6563.5],[694.8,6559.4]],[[680.2,6546.1],[680.3,6545.3],[679.9,6546.8],[681.7,6547.8],[682.7,6546.3],[681.5,6544.7],[680.2,6546.1]],[[671.3,6557.4],[672.3,6556.5],[671.1,6555.7],[670.1,6556.8],[671.3,6557.4]],[[677.7,6562.0],[680.1,6560.9],[679.9,6559.3],[678.7,6559.5],[678.1,6558.5],[678.9,6556.4],[678.6,6555.4],[677.7,6556.8],[676.3,6556.4],[676.7,6557.1],[674.4,6554.4],[673.3,6554.4],[673.5,6556.0],[672.0,6555.1],[673.4,6556.1],[672.9,6557.4],[674.0,6557.0],[673.6,6557.9],[674.5,6556.5],[674.7,6557.8],[674.2,6557.7],[673.8,6558.2],[674.1,6558.5],[675.5,6557.3],[676.3,6557.7],[675.6,6558.2],[675.7,6558.9],[676.7,6558.1],[677.6,6559.4],[677.9,6559.0],[677.8,6558.7],[677.9,6558.6],[678.0,6558.3],[678.0,6558.3],[677.7,6562.0]],[[677.6,6549.6],[674.5,6549.9],[674.3,6550.2],[674.5,6550.8],[675.7,6550.3],[675.8,6552.0],[676.0,6552.4],[676.4,6552.5],[675.9,6550.6],[677.6,6549.6]],[[680.5,6553.3],[681.5,6554.2],[681.3,6555.3],[681.8,6555.2],[682.4,6553.9],[680.5,6553.3]],[[653.1,6597.1],[655.2,6598.8],[653.3,6600.3],[656.6,6600.2],[654.9,6598.0],[656.5,6597.6],[656.3,6596.3],[653.1,6597.1]],[[638.2,6561.7],[638.1,6560.5],[637.3,6561.9],[638.4,6562.0],[637.3,6563.3],[638.4,6562.9],[640.5,6564.0],[641.9,6562.7],[640.9,6562.3],[639.7,6563.2],[639.6,6559.7],[638.2,6561.7]],[[677.8,6595.2],[676.5,6596.3],[677.1,6597.2],[678.0,6596.3],[677.8,6595.2]],[[663.8,6597.8],[665.6,6598.2],[665.4,6599.5],[662.3,6600.4],[663.2,6601.4],[662.8,6602.3],[664.4,6603.0],[665.5,6601.6],[666.3,6603.5],[667.0,6601.9],[667.7,6602.7],[668.9,6602.1],[668.1,6601.3],[667.8,6602.0],[667.9,6600.4],[666.7,6601.9],[666.1,6600.0],[667.4,6600.5],[667.8,6599.5],[665.4,6597.0],[665.5,6596.0],[666.8,6593.8],[666.9,6595.4],[667.5,6594.6],[668.9,6595.6],[669.3,6594.4],[668.4,6594.9],[667.7,6593.8],[669.0,6593.5],[668.9,6591.9],[667.5,6592.7],[670.0,6589.5],[670.3,6587.5],[668.1,6589.3],[668.2,6588.3],[666.8,6587.8],[664.7,6589.7],[666.0,6592.6],[664.8,6594.4],[663.9,6593.8],[663.0,6595.6],[665.2,6595.5],[663.7,6596.5],[663.8,6597.8]],[[678.8,6577.8],[676.5,6577.5],[679.4,6574.9],[678.4,6574.3],[679.3,6574.3],[678.7,6573.5],[679.4,6572.7],[678.5,6572.9],[678.3,6571.9],[677.3,6572.1],[677.2,6571.9],[681.1,6569.7],[681.3,6568.0],[679.7,6566.6],[679.8,6565.7],[683.0,6567.8],[681.2,6569.2],[682.4,6570.0],[680.9,6571.7],[681.8,6571.1],[682.6,6572.4],[680.9,6572.4],[680.7,6575.1],[683.8,6572.1],[685.3,6573.0],[686.1,6572.3],[686.4,6573.4],[692.2,6570.4],[694.6,6567.7],[694.9,6565.5],[693.9,6565.2],[694.3,6566.9],[691.4,6567.8],[690.8,6569.3],[689.9,6570.5],[688.8,6571.3],[690.0,6568.9],[688.8,6569.4],[688.3,6568.3],[687.4,6569.1],[688.3,6570.0],[686.9,6570.6],[687.0,6569.8],[684.0,6568.4],[685.2,6568.7],[684.3,6567.1],[685.0,6566.6],[686.1,6567.5],[686.1,6566.8],[684.6,6566.0],[683.4,6566.7],[684.2,6565.7],[683.6,6565.0],[683.0,6566.0],[682.5,6564.9],[682.0,6565.4],[683.1,6563.2],[679.2,6561.4],[678.9,6562.6],[679.3,6563.3],[679.1,6563.7],[678.2,6563.4],[677.2,6565.0],[679.1,6566.2],[677.4,6565.7],[677.8,6567.1],[679.1,6566.6],[677.6,6570.3],[676.3,6570.0],[675.9,6568.5],[674.7,6570.5],[672.5,6570.4],[671.2,6569.4],[672.1,6569.0],[671.7,6568.0],[670.3,6569.3],[668.0,6567.0],[668.1,6568.0],[667.2,6568.1],[667.3,6566.6],[665.8,6566.2],[667.0,6565.7],[666.0,6565.0],[664.0,6566.0],[664.8,6565.9],[664.7,6568.5],[667.0,6569.5],[668.9,6568.9],[665.1,6570.6],[666.2,6570.9],[665.6,6571.9],[665.9,6572.1],[667.9,6570.3],[668.3,6570.6],[668.7,6571.7],[668.0,6571.1],[667.4,6571.2],[668.7,6572.4],[667.7,6574.2],[665.5,6572.4],[664.8,6572.4],[665.4,6573.3],[664.9,6573.4],[664.3,6572.0],[664.6,6570.7],[664.2,6570.7],[664.0,6571.5],[663.8,6571.4],[663.5,6569.4],[661.8,6569.7],[661.8,6568.8],[661.1,6570.4],[660.1,6569.7],[659.6,6570.5],[660.3,6571.2],[658.9,6570.7],[659.3,6571.9],[661.4,6571.4],[662.7,6572.6],[663.8,6572.0],[663.4,6574.5],[665.8,6576.8],[670.9,6579.4],[672.5,6578.9],[671.8,6579.9],[674.9,6579.9],[672.3,6580.5],[669.8,6579.1],[670.1,6580.2],[671.1,6580.4],[670.3,6581.0],[668.4,6578.7],[659.6,6584.2],[658.5,6587.4],[658.9,6586.9],[660.0,6587.8],[660.5,6587.1],[660.6,6588.4],[661.4,6588.4],[660.5,6588.8],[659.3,6587.5],[657.7,6588.1],[658.8,6589.4],[657.6,6590.1],[658.8,6590.3],[660.3,6592.3],[660.2,6593.7],[659.1,6593.0],[658.2,6593.8],[658.7,6597.3],[659.0,6596.2],[659.8,6596.7],[659.2,6595.8],[659.9,6595.2],[660.0,6595.6],[660.7,6595.7],[660.1,6594.4],[661.5,6590.9],[663.8,6589.4],[662.9,6587.4],[664.6,6588.1],[666.6,6587.6],[666.7,6586.3],[669.6,6587.1],[671.1,6586.1],[670.9,6587.7],[671.3,6587.3],[672.7,6586.7],[670.4,6588.9],[669.5,6591.3],[669.9,6593.6],[672.1,6594.4],[671.6,6596.1],[672.7,6596.8],[673.4,6595.1],[674.9,6594.6],[674.1,6596.0],[675.1,6597.4],[676.2,6597.4],[675.7,6595.2],[677.8,6593.9],[676.3,6592.8],[675.8,6590.6],[674.7,6591.4],[676.2,6588.3],[675.1,6586.3],[673.8,6586.2],[672.8,6586.7],[672.8,6586.6],[675.8,6584.9],[675.4,6583.9],[676.1,6584.4],[677.3,6582.5],[678.1,6582.8],[677.4,6582.2],[678.5,6582.4],[679.4,6581.3],[679.5,6580.7],[678.2,6580.9],[679.6,6580.2],[676.3,6579.8],[676.0,6581.0],[675.1,6581.1],[675.9,6580.0],[675.0,6580.7],[674.6,6580.7],[674.9,6579.8],[679.3,6579.4],[681.8,6580.4],[682.6,6581.8],[683.4,6579.5],[683.1,6581.5],[684.3,6583.3],[685.5,6583.1],[685.4,6584.2],[687.6,6585.1],[688.5,6584.1],[687.4,6584.2],[687.8,6583.1],[687.0,6582.5],[686.9,6582.7],[686.4,6583.2],[686.6,6582.4],[688.5,6580.8],[686.5,6578.0],[683.8,6578.0],[683.4,6579.4],[682.9,6577.5],[680.7,6578.1],[678.5,6578.3],[678.8,6577.8]],[[646.5,6546.1],[645.6,6544.4],[644.2,6545.2],[645.5,6545.5],[645.6,6546.4],[646.5,6546.1]],[[645.2,6551.0],[646.1,6552.3],[645.5,6553.7],[648.3,6554.3],[647.8,6552.6],[645.2,6551.0]],[[642.6,6573.8],[644.1,6572.7],[643.2,6572.8],[642.7,6571.6],[641.4,6571.9],[641.3,6572.7],[642.9,6573.0],[642.6,6573.8]],[[648.7,6568.9],[648.7,6571.0],[649.5,6570.6],[650.0,6569.3],[648.7,6568.9]],[[645.9,6555.4],[646.6,6556.1],[647.4,6555.4],[646.7,6554.9],[646.1,6555.6],[646.2,6554.6],[645.5,6553.9],[645.1,6555.0],[645.9,6554.7],[645.9,6555.4]],[[687.7,6574.6],[688.5,6573.4],[688.2,6573.5],[686.6,6574.6],[688.3,6575.2],[687.6,6576.7],[687.7,6575.6],[686.1,6576.1],[686.9,6577.6],[687.7,6577.8],[688.4,6576.7],[687.8,6576.5],[689.1,6575.7],[688.6,6574.1],[688.1,6574.8],[687.7,6574.6]],[[682.3,6582.1],[678.5,6583.0],[676.0,6586.5],[677.3,6585.8],[677.7,6586.6],[678.1,6585.8],[679.2,6587.0],[681.4,6586.9],[681.8,6585.7],[679.4,6585.3],[681.2,6583.5],[681.0,6582.5],[682.4,6584.1],[681.4,6584.9],[683.5,6584.8],[683.9,6583.9],[682.3,6582.1]],[[687.6,6592.9],[688.1,6594.3],[690.5,6592.3],[688.4,6591.4],[688.9,6592.7],[688.1,6593.6],[687.6,6592.9]],[[689.8,6587.9],[691.7,6588.7],[691.3,6588.0],[692.4,6588.1],[695.0,6585.3],[689.8,6587.9]],[[693.0,6591.0],[692.6,6590.2],[690.9,6590.6],[691.4,6591.3],[693.0,6591.0]],[[688.2,6590.5],[687.4,6591.1],[690.5,6589.6],[688.1,6589.5],[688.2,6590.5]],[[704.7,6616.7],[705.4,6615.4],[704.4,6613.9],[703.3,6614.9],[704.1,6614.6],[704.6,6616.2],[703.7,6615.9],[704.3,6616.8],[703.5,6617.3],[704.7,6616.7]],[[717.4,6611.3],[718.5,6614.5],[719.5,6614.5],[718.9,6615.1],[720.5,6617.0],[719.7,6615.1],[720.4,6614.9],[721.0,6617.8],[722.1,6617.9],[720.9,6614.4],[719.9,6614.8],[718.8,6612.2],[717.4,6611.3]],[[696.3,6643.6],[694.4,6644.0],[694.2,6644.8],[695.3,6645.7],[696.6,6645.6],[695.4,6644.3],[694.6,6644.6],[696.3,6643.6]],[[709.4,6668.9],[712.4,6670.0],[711.8,6669.1],[713.1,6669.5],[711.9,6668.0],[710.2,6668.8],[709.7,6667.5],[710.5,6665.9],[709.7,6665.6],[709.4,6668.9]],[[701.5,6658.4],[700.1,6661.7],[698.9,6662.2],[699.2,6663.5],[700.0,6662.8],[699.9,6664.8],[701.0,6663.4],[701.5,6658.4]],[[701.0,6672.6],[703.1,6672.3],[702.9,6670.4],[702.4,6671.5],[701.0,6672.6]],[[728.7,6632.1],[729.4,6631.5],[728.9,6629.5],[728.2,6631.1],[728.8,6631.0],[729.0,6631.5],[728.2,6632.1],[727.1,6631.1],[725.3,6631.6],[725.3,6629.9],[723.5,6630.7],[725.3,6631.7],[724.8,6632.5],[728.7,6632.1]],[[698.4,6615.6],[698.5,6617.5],[699.1,6616.2],[698.8,6615.6],[700.4,6615.9],[700.5,6615.5],[697.2,6615.4],[697.2,6616.2],[698.4,6615.6]],[[689.3,6626.9],[686.0,6627.1],[687.5,6627.1],[688.5,6628.9],[690.4,6628.7],[689.3,6626.9]],[[714.3,6622.9],[716.3,6624.3],[716.1,6625.2],[715.4,6624.9],[715.6,6625.3],[717.0,6625.9],[717.1,6625.0],[718.6,6625.1],[718.2,6626.6],[719.0,6625.0],[719.7,6625.5],[719.5,6624.7],[717.0,6624.7],[716.1,6623.2],[714.3,6622.9]],[[719.2,6637.5],[718.2,6635.7],[717.3,6635.7],[718.1,6636.0],[717.8,6637.6],[719.2,6637.5]],[[722.6,6630.2],[719.7,6630.0],[719.9,6629.5],[719.6,6629.0],[720.7,6629.7],[720.8,6629.0],[719.3,6627.7],[720.0,6631.8],[720.1,6630.5],[722.6,6630.2]],[[693.0,6614.4],[693.9,6615.3],[694.6,6615.1],[693.3,6614.6],[694.0,6613.4],[693.0,6612.6],[693.0,6614.4]],[[712.8,6654.6],[712.5,6655.7],[713.8,6655.3],[712.2,6652.5],[710.6,6652.5],[711.8,6652.8],[712.2,6655.2],[712.8,6654.6]],[[663.1,6605.8],[661.7,6607.9],[663.2,6609.2],[663.7,6607.7],[662.9,6607.9],[663.6,6607.4],[663.1,6605.8]],[[654.4,6612.3],[652.7,6611.3],[651.3,6612.1],[652.3,6613.3],[653.1,6612.6],[653.0,6613.8],[654.5,6612.3],[655.7,6613.2],[654.6,6610.9],[654.4,6612.3]],[[658.9,6610.9],[658.1,6612.0],[659.5,6612.7],[658.7,6613.5],[661.0,6614.9],[661.9,6613.9],[661.3,6612.1],[658.9,6610.9]],[[665.4,6548.4],[664.1,6549.5],[664.8,6551.0],[665.4,6548.4]],[[663.0,6527.1],[662.6,6528.9],[663.9,6532.5],[664.8,6531.7],[663.5,6531.1],[664.6,6531.0],[663.3,6530.2],[663.2,6527.4],[664.7,6526.9],[663.0,6527.1]],[[665.8,6542.9],[667.6,6541.6],[666.2,6541.6],[666.0,6540.7],[665.8,6542.9]],[[671.0,6536.5],[669.6,6531.1],[668.1,6531.0],[669.1,6533.4],[668.2,6535.7],[670.2,6534.4],[671.0,6536.5]],[[635.4,6609.2],[634.4,6611.5],[634.7,6611.6],[635.3,6610.1],[636.7,6610.0],[635.4,6609.2]],[[646.8,6618.8],[645.8,6620.2],[646.7,6620.8],[647.6,6620.0],[646.8,6618.8]],[[644.7,6604.0],[643.3,6604.6],[643.2,6602.6],[642.6,6602.6],[640.9,6604.3],[642.6,6603.3],[643.2,6605.0],[641.2,6604.6],[639.5,6606.4],[641.0,6606.0],[640.3,6607.4],[639.5,6606.8],[639.3,6607.2],[641.2,6607.9],[643.3,6607.4],[643.1,6605.9],[644.3,6606.0],[645.1,6605.5],[644.0,6604.9],[644.7,6604.0]],[[623.4,6549.9],[624.7,6549.3],[623.8,6548.2],[622.9,6548.1],[624.0,6548.7],[623.0,6549.0],[623.4,6549.9]],[[615.2,6550.6],[614.0,6549.9],[613.6,6551.0],[614.9,6550.7],[614.7,6551.4],[615.7,6551.6],[615.2,6550.6]],[[632.2,6549.0],[634.0,6545.9],[630.6,6547.7],[632.2,6549.0]],[[636.7,6535.4],[636.0,6534.2],[637.3,6534.6],[637.2,6533.8],[636.4,6533.1],[636.1,6533.9],[636.2,6533.2],[635.8,6533.3],[635.7,6533.0],[635.5,6533.0],[635.8,6535.3],[636.7,6535.4]],[[616.4,6583.7],[615.1,6585.2],[615.2,6586.5],[615.6,6585.2],[616.9,6585.3],[616.4,6583.7]],[[613.2,6587.9],[611.8,6589.1],[613.4,6589.6],[613.2,6587.9]],[[627.9,6571.9],[626.1,6570.2],[625.2,6571.8],[625.5,6573.0],[627.9,6571.9]],[[625.4,6582.8],[624.0,6583.7],[625.6,6583.6],[625.7,6581.5],[624.4,6581.7],[624.1,6582.9],[625.4,6582.8]],[[627.7,6582.4],[626.3,6583.1],[628.2,6582.7],[627.5,6583.5],[628.3,6584.4],[628.9,6582.8],[627.7,6582.4]],[[620.8,6571.6],[620.5,6569.9],[621.6,6569.7],[620.9,6569.5],[619.4,6570.1],[619.7,6569.5],[618.7,6569.1],[618.3,6570.0],[620.0,6570.8],[619.8,6573.0],[620.8,6571.6]],[[615.9,6583.8],[616.2,6581.4],[615.5,6579.9],[616.1,6579.9],[616.4,6579.4],[616.7,6579.8],[617.6,6579.4],[615.0,6578.7],[615.7,6580.6],[613.8,6581.8],[614.4,6582.7],[613.7,6584.9],[615.9,6583.8]],[[644.2,6536.5],[642.2,6535.4],[641.5,6536.8],[642.3,6537.9],[642.9,6537.0],[643.3,6538.0],[644.2,6536.5]],[[650.8,6531.3],[650.2,6531.7],[650.1,6530.9],[649.3,6530.6],[648.6,6531.4],[650.1,6532.1],[650.8,6531.3]],[[647.7,6529.3],[647.2,6530.7],[646.3,6530.8],[644.7,6532.4],[646.0,6532.5],[646.3,6531.8],[646.5,6534.0],[647.5,6534.5],[648.0,6533.7],[647.0,6533.0],[648.2,6532.7],[648.9,6530.2],[647.3,6530.6],[649.0,6529.5],[648.1,6529.2],[648.6,6528.5],[647.7,6529.3]]],"st":[[673.8,6601.7],[677.3,6585.3],[677.6,6584.8],[673.8,6584.2],[698.0,6661.3],[661.3,6564.8],[671.0,6586.2],[671.9,6586.3],[661.7,6565.3],[661.3,6570.2],[666.0,6566.7],[660.6,6593.6],[665.2,6600.9],[661.9,6590.3],[673.9,6592.6],[674.2,6592.5],[668.8,6585.8],[666.8,6586.6],[655.2,6599.5],[665.8,6593.9],[665.6,6587.6],[650.2,6564.1],[673.1,6597.9],[678.1,6584.7],[687.3,6598.0],[707.0,6617.5],[697.7,6661.4],[707.3,6630.9],[617.5,6578.9],[615.5,6581.6],[625.3,6582.5],[634.9,6611.7],[673.1,6598.0],[674.2,6603.3],[689.3,6590.2],[673.1,6580.4],[652.0,6565.4],[676.9,6594.1],[676.9,6557.7],[678.2,6584.0],[668.3,6568.7],[646.6,6553.4],[664.7,6585.2],[671.6,6583.3],[694.8,6559.5],[662.1,6590.1],[659.9,6585.7],[664.6,6582.2],[672.7,6572.7],[659.7,6595.3],[648.0,6563.0],[680.4,6584.2],[707.8,6627.8],[678.2,6566.8],[661.1,6544.7],[651.8,6561.9],[667.3,6561.1],[672.0,6604.8],[661.1,6597.1],[644.4,6605.4],[654.4,6596.5],[662.4,6611.9],[669.2,6534.7],[651.1,6560.7],[651.0,6565.8],[673.1,6592.9],[685.9,6598.2],[678.7,6559.7],[674.7,6571.7],[662.9,6571.5],[680.6,6563.8],[671.7,6574.2],[665.1,6573.3],[667.2,6576.6],[661.6,6567.4],[685.8,6598.3],[662.3,6585.1],[674.4,6603.3],[665.6,6601.1],[651.8,6565.7],[669.8,6583.7],[667.9,6575.5],[707.3,6630.5],[680.3,6579.2],[661.4,6590.4],[665.5,6598.5],[662.0,6611.9],[666.1,6573.9],[671.0,6576.7],[676.7,6573.5],[707.2,6629.1],[671.5,6577.3],[660.4,6589.6],[661.4,6588.8],[626.5,6571.0],[713.0,6627.8],[687.8,6615.4],[665.1,6596.4],[662.0,6559.1],[671.7,6618.5],[676.6,6577.7],[671.4,6576.7],[680.6,6564.1],[703.1,6605.8],[674.0,6582.9],[662.8,6571.7],[671.9,6572.4],[671.6,6571.8],[671.5,6571.8],[671.1,6571.2],[669.9,6570.0],[675.7,6576.2],[639.3,6562.2],[711.6,6668.2],[663.8,6604.9],[664.0,6605.0],[674.2,6574.1],[707.4,6629.5],[707.2,6629.3],[673.2,6588.1],[679.6,6563.8],[670.3,6584.1],[651.1,6562.6],[659.0,6574.4],[669.7,6575.9],[649.4,6600.3],[660.6,6593.7],[711.2,6668.8],[708.8,6631.4],[654.3,6548.6],[673.7,6575.9],[663.5,6583.4],[671.5,6583.3],[675.2,6603.3],[662.1,6611.9],[686.3,6576.5],[672.0,6577.3],[672.2,6590.0],[665.8,6574.0],[666.4,6574.2],[675.6,6593.4],[683.0,6607.0],[688.8,6589.7],[712.0,6606.0],[669.2,6583.4],[661.8,6570.6],[668.3,6575.5],[615.7,6580.4],[657.6,6565.8],[666.5,6541.7],[661.3,6569.4],[642.2,6606.7],[643.4,6605.6],[641.5,6607.8],[643.5,6605.2],[678.2,6575.2],[677.6,6595.7],[647.5,6621.5],[680.2,6582.7],[672.1,6577.3],[671.9,6572.6],[666.1,6591.9],[672.1,6589.8],[663.9,6524.2],[650.1,6563.8],[685.0,6576.9],[663.3,6571.5],[672.6,6593.0],[669.3,6580.9],[669.3,6576.9],[615.2,6550.7],[689.2,6558.2],[660.8,6613.4],[671.3,6619.4],[665.8,6615.9],[660.0,6594.9],[663.7,6607.8],[712.3,6653.6],[669.5,6534.3],[685.9,6598.2],[686.1,6598.2],[665.4,6573.5],[673.9,6592.4],[677.3,6595.5],[662.6,6584.3],[669.3,6534.6],[662.9,6572.5],[716.9,6624.3],[678.8,6566.5],[685.0,6594.2],[648.4,6565.9],[646.8,6564.1],[651.0,6565.7],[640.6,6563.9],[663.4,6601.2],[700.9,6660.2],[685.7,6599.6],[614.4,6595.1],[651.4,6560.3],[665.6,6600.6],[662.5,6580.3],[674.2,6555.8],[696.9,6550.9],[696.3,6645.4],[663.7,6586.9],[666.0,6590.1],[726.7,6631.8],[648.0,6603.2],[667.6,6579.2],[691.3,6541.5],[708.9,6578.2],[671.5,6574.2],[661.5,6567.3],[640.5,6563.6],[647.8,6552.6],[614.9,6578.3],[647.1,6563.6],[680.0,6579.1],[685.6,6599.0],[614.7,6578.3],[683.7,6579.6],[665.1,6586.6],[663.6,6607.8],[693.0,6581.6],[667.2,6584.0],[648.8,6603.1],[640.7,6607.4],[659.2,6593.2],[672.8,6576.9],[615.5,6581.0],[679.7,6564.1],[668.1,6593.2],[683.1,6607.2],[721.4,6646.4],[648.7,6600.4],[683.5,6572.0],[654.6,6596.6],[665.6,6600.9],[675.0,6594.0],[668.4,6581.7],[667.1,6590.8],[668.8,6589.3],[666.0,6590.2],[665.1,6585.8],[665.9,6592.9],[666.7,6590.3],[661.1,6585.3],[649.1,6552.7],[669.9,6570.7],[667.2,6581.7],[648.5,6564.7],[651.5,6564.0],[676.2,6571.5],[676.7,6570.4],[670.8,6582.8],[649.5,6562.9],[688.7,6597.4],[666.7,6589.0],[663.4,6583.6],[649.4,6563.8],[679.2,6561.7],[681.1,6579.3],[662.2,6570.1],[661.6,6596.7],[683.0,6569.0],[665.8,6601.0],[615.0,6582.7],[614.3,6583.7],[614.3,6583.7],[614.4,6583.7],[614.9,6582.6],[666.3,6589.8],[643.9,6536.9],[667.0,6586.1],[661.5,6591.2],[661.4,6591.3],[659.5,6575.3],[665.9,6574.4],[683.6,6571.6],[683.4,6571.5],[680.0,6568.5],[673.4,6574.2],[680.5,6564.4],[680.7,6562.7],[694.9,6579.8],[695.1,6579.9],[692.6,6579.2],[662.9,6587.2],[685.4,6580.6],[695.2,6576.6],[666.8,6593.4],[696.9,6580.1],[673.0,6573.0],[684.4,6572.3],[653.5,6612.6],[689.6,6627.6],[680.8,6579.1],[663.5,6611.1],[677.7,6626.5],[689.8,6627.9],[676.5,6584.0],[678.7,6560.4],[678.2,6560.7],[674.5,6573.3],[656.5,6579.3],[681.1,6578.7],[664.1,6582.8],[666.9,6581.3],[661.4,6564.9],[661.7,6606.3],[661.6,6606.3],[661.7,6606.2],[654.7,6575.2],[663.4,6611.2],[658.8,6589.4],[643.2,6536.6],[677.2,6582.1],[680.0,6564.0],[662.2,6587.5],[679.6,6564.1],[633.6,6546.8],[633.5,6547.0],[633.5,6546.8],[633.8,6546.2],[678.1,6578.4],[675.0,6601.4],[670.4,6534.1],[624.0,6570.0],[660.8,6612.1],[720.7,6591.7]]};
+const EXP = {"views":{"pop_tatort":[[213,2,"Brottby"],[25034,5,"Gustavsberg"],[78377,18,"Södertälje"],[740,1,"Hästängen och Mora"],[23606,7,"Norrtälje"],[1850,1,"Östervåla"],[2962,6,"Heby"],[1206,1,"Karlholmsbruk"],[33918,8,"Vallentuna"],[3325,1,"Svinninge"],[37714,8,"Åkersberga"],[4223,1,"Fågelvik, Brunn och Fagerholm"],[1898,1,"Stavsnäs"],[478,1,"Sundby"],[969,1,"Tureholm"],[12270,2,"Ekerö"],[9440,2,"Bro"],[46893,6,"Tumba"],[1885,1,"Dalarö"],[31941,5,"Västerhaninge"],[16899,3,"Kungsängen och Brunna"],[8508,3,"Nykvarn"],[2789,2,"Arninge"],[156517,20,"Upplands Väsby och Sollentuna"],[1652895,132,"Stockholm"],[6110,2,"Järna"],[2242,1,"Pershagen"],[7897,1,"Fisksätra"],[9409,1,"Saltsjöbaden"],[44642,6,"Lidingö"],[6025,2,"Vaxholm"],[574,1,"Edsbro"],[368,2,"Grisslehamn"],[4598,1,"Hallstavik"],[653,1,"Nabbo, Gräddö och Rävsnäs"],[5346,2,"Rimbo"],[1513,1,"Älmsta"],[1833,2,"Rosersberg"],[10407,1,"Sigtuna"],[449,1,"Linneryd"],[1318,3,"Ryd"],[940,2,"Söderåkra"],[1967,3,"Torsås"],[866,1,"Algutsrum"],[289,1,"Degerhamn"],[6674,4,"Färjestaden"],[222,1,"Kastlösa"],[30576,2,"Märsta"],[3988,1,"Ösmo"],[16447,4,"Nynäshamn"],[1809,2,"Mörbylånga"],[1461,3,"Målilla"],[16205,5,"Bålsta"],[1506,1,"Älvkarleby"],[6606,2,"Skutskär"],[5339,1,"Alsike"],[9771,1,"Knivsta"],[1516,1,"Morgongåva"],[664,1,"Månkarbo"],[718,1,"Skärplinge"],[1646,1,"Söderfors"],[2276,1,"Örbyhus"],[6346,3,"Tierp"],[946,1,"Almunge"],[1698,1,"Virserum"],[5614,5,"Hultsfred"],[2249,1,"Blomstermåla"],[710,1,"Fliseryd"],[1423,1,"Timmernabben"],[5127,4,"Mönsterås"],[401,1,"Johansfors"],[601,1,"Vissefjärda"],[4788,3,"Emmaboda"],[6061,1,"Lindsdal"],[655,2,"Påryd"],[1642,1,"Rinkabyholm"],[974,1,"Rockneby"],[3742,1,"Smedby"],[594,1,"Järlåsa"],[702,1,"Knutby"],[683,1,"Länna"],[1559,1,"Trekanten"],[336,1,"Ramstalund"],[9614,1,"Sävja"],[26305,12,"Visby"],[1533,1,"Jämshög"],[976,1,"Kyrkhult"],[7628,4,"Olofström"],[697,1,"Fridlevstad"],[366,1,"Fågelmara"],[1704,1,"Hasslö"],[357,1,"Holmsjö"],[2674,2,"Jämjö"],[174982,29,"Uppsala"],[935,1,"Fjärdhundra"],[1175,1,"Grillby"],[606,1,"Högsjö"],[6963,4,"Åtvidaberg"],[1423,1,"Örsundsbro"],[3338,1,"Nättraby"],[257,1,"Skolsta"],[26353,11,"Enköping"],[2677,2,"Alunda"],[2811,2,"Gimo"],[284,1,"Hargshamn"],[1571,1,"Öregrund"],[2344,1,"Österbybruk"],[4986,3,"Östhammar"],[4514,4,"Vingåker"],[604,1,"Stjärnhov"],[6472,4,"Gnesta"],[620,1,"Jönåker"],[250,2,"Kvegerö"],[288,1,"Eringsboda"],[19966,12,"Karlshamn"],[1379,1,"Mjällby"],[364,1,"Pukavik"],[1937,1,"Stigtomta"],[639,1,"Vrena"],[39770,12,"Nyköping"],[11485,3,"Oxelösund"],[1992,1,"Malmköping"],[725,1,"Sparreholm"],[6266,3,"Flen"],[546,2,"Åsby"],[38575,9,"Varberg"],[312,1,"Äsköping"],[23953,9,"Katrineholm"],[383,1,"Alberga"],[899,1,"Hållsta"],[3373,1,"Hällbybrunn"],[4921,1,"Skiftinge"],[9167,1,"Torshälla"],[70646,18,"Eskilstuna"],[1612,1,"Marielund"],[4277,1,"Mariefred"],[2141,1,"Stallarholmen"],[15369,8,"Strängnäs"],[4109,2,"Vagnhärad"],[339,1,"Hästholmen"],[2646,2,"Ödeshög"],[437,1,"Hestra"],[286,1,"Rydsnäs"],[862,1,"Österbymo"],[454,1,"Horn"],[2291,2,"Rimforsa"],[3746,3,"Kisa"],[3391,2,"Boxholm"],[303,1,"Hällestad"],[244,1,"Igelfors"],[862,1,"Rejmyre"],[13186,4,"Finspång"],[318,2,"Gryt"],[585,1,"Ringarum"],[2655,2,"Valdemarsvik"],[480,1,"Hällingsjö"],[3073,1,"Hindås"],[1207,1,"Härryda"],[9999,2,"Landvetter"],[7215,3,"Ljungsbro"],[3258,6,"Tallboda"],[2734,1,"Vikingstad"],[116851,21,"Linköping"],[5125,2,"Krokek"],[3469,3,"Höviksnäs"],[1597,1,"Rönnäng"],[548,1,"Norsholm"],[820,1,"Lekeryd"],[1497,1,"Bredaryd"],[1431,1,"Forsheda"],[261,1,"Simonstorp"],[4068,2,"Skärblacka"],[7173,4,"Åby"],[906,1,"Östra Husby"],[201,1,"Arkösund"],[2014,1,"Svanesund"],[933,1,"Varekil"],[2394,1,"Henån"],[1988,2,"Hunnebostrand"],[4866,2,"Smögen, Kungshamn och Väjern"],[910,1,"Dingle"],[398,1,"Hedekas"],[816,1,"Fjällbacka"],[1936,1,"Grebbestad"],[696,1,"Hamburgsund"],[6634,1,"Älvängen"],[11658,3,"Nödinge-Nol"],[6953,2,"Gråbo"],[98229,28,"Norrköping"],[439,1,"Östra Ryd"],[7617,4,"Söderköping"],[3119,2,"Borensberg"],[465,1,"Fornåsa"],[487,1,"Tjällmo"],[31367,13,"Motala"],[5802,1,"Vadstena"],[4260,3,"Mantorp"],[3374,1,"Skänninge"],[1000,1,"Tidan"],[14282,9,"Mjölby"],[678,1,"Koppom"],[2503,3,"Charlottenberg"],[402,3,"Sysslebäck"],[4446,3,"Torsby"],[308,1,"Sundhultsbrunn"],[3653,2,"Aneby"],[1660,1,"Hillerstorp"],[270,1,"Gropen"],[3156,1,"Vintrosa"],[2381,1,"Fjugesta"],[517,1,"Finnerödja"],[3161,5,"Laxå"],[4251,2,"Gnosjö"],[5858,2,"Mullsjö"],[9499,2,"Habo"],[5026,1,"Anderstorp"],[275,1,"Broaryd"],[899,1,"Burseryd"],[1343,1,"Hestra"],[1293,2,"Reftele"],[360,2,"Skeppshult"],[4504,2,"Smålandsstenar"],[10029,6,"Gislaved"],[686,1,"Hok"],[279,2,"Klevshult"],[4261,2,"Skillingaryd"],[5761,2,"Vaggeryd"],[8997,2,"Bankeryd"],[5010,1,"Taberg"],[3053,1,"Tenhult"],[103032,31,"Jönköping"],[863,1,"Anneberg"],[1902,1,"Bodafors"],[1071,1,"Malmbäck"],[18639,9,"Nässjö"],[1277,1,"Bor"],[831,1,"Östansjö"],[8321,2,"Hallsberg"],[439,1,"Svartå"],[7047,2,"Degerfors"],[801,1,"Grythyttan"],[4124,4,"Hällefors"],[2697,2,"Kopparberg"],[1275,1,"Odensbacken"],[829,1,"Stora Mellösa"],[1477,1,"Rydaholm"],[5581,4,"Sävsjö"],[444,1,"Kvillsfors"],[1408,1,"Landsbro"],[707,1,"Korsberga"],[13895,8,"Vetlanda"],[1518,1,"Mariannelund"],[11077,7,"Eksjö"],[20273,6,"Värnamo"],[1031,1,"Stockaryd"],[1477,2,"Vrigstad"],[246,1,"Bruzaholm"],[486,1,"Ingatorp"],[14611,6,"Tranås"],[845,1,"Alstermo"],[1694,2,"Lenhovda"],[1184,1,"Norrhult-Klavreström"],[416,1,"Älghult"],[2713,3,"Åseda"],[3208,1,"Hovmantorp"],[836,1,"Kosta"],[485,1,"Skruv"],[2881,3,"Lessebo"],[302,1,"Rävemåla"],[924,1,"Urshult"],[946,1,"Väckelsång"],[3164,7,"Tingsryd"],[597,1,"Grimslöv"],[1836,2,"Moheda"],[1297,1,"Siljansnäs"],[6505,4,"Leksand"],[525,1,"Boda"],[438,1,"Furudal"],[1809,2,"Vislanda"],[9172,8,"Alvesta"],[1469,1,"Diö och Liatorp"],[11053,7,"Älmhult"],[2216,2,"Strömsnäsbruk"],[5085,4,"Markaryd"],[1633,2,"Braås"],[1081,1,"Gemla"],[1863,1,"Ingelstad"],[1600,2,"Lammhult"],[2465,2,"Rottne"],[74052,25,"Växjö"],[5369,5,"Rättvik"],[5800,2,"Orsa"],[695,1,"Idre"],[655,2,"Särna"],[1871,3,"Älvdalen"],[1626,1,"Lagan"],[615,1,"Lidhult"],[744,1,"Ryssby"],[305,1,"Vittaryd"],[16076,12,"Ljungby"],[556,1,"Ruda"],[1872,4,"Högsby"],[1129,1,"Bergkvara"],[642,1,"Silverdalen"],[372,1,"Vena"],[396,1,"Tvärskog"],[42622,16,"Kalmar"],[419,1,"Alsterbro"],[663,1,"Orrefors"],[13584,9,"Nybro"],[334,1,"Bockara"],[474,1,"Fårbo"],[926,1,"Kristdala"],[18817,6,"Oskarshamn"],[2759,2,"Gamleby"],[425,1,"Loftahammar"],[223,1,"Totebo"],[1096,1,"Överum"],[21615,7,"Västervik"],[8176,6,"Vimmerby"],[564,2,"Löttorp"],[4280,2,"Borgholm"],[322,1,"Burgsvik"],[883,1,"Fårösund"],[1752,2,"Hemse"],[1539,1,"Klintehamn"],[202,1,"Ljugarn"],[466,2,"Lärbro"],[1347,3,"Romakloster"],[1405,1,"Slite"],[335,1,"Stånga"],[3473,2,"Rödeby"],[1372,1,"Sturkö"],[545,1,"Tving"],[36423,13,"Karlskrona"],[347,1,"Backaryd"],[1704,2,"Bräkne-Hoby"],[4579,2,"Kallinge"],[1073,1,"Listerby"],[12636,3,"Ronneby"],[3913,2,"Mörrum"],[1924,1,"Svängsta"],[330,4,"Horsaryd och Stilleryd"],[8744,7,"Sölvesborg"],[1053,1,"Billeberga"],[1585,1,"Kågeröd"],[911,1,"Röstånga"],[484,1,"Tågarp"],[4250,2,"Svalöv"],[10453,3,"Kävlinge"],[9816,2,"Bjärred"],[1533,1,"Enviken, Linghed och Yttertänger"],[972,1,"Sundborn"],[1318,2,"Svärdsjö"],[560,1,"Vika"],[39939,16,"Falun"],[44299,19,"Borlänge"],[1935,2,"Enbacka, Mora och Naglarby"],[17838,6,"Staffanstorp"],[1405,2,"Långshyttan"],[7461,8,"Hedemora"],[1012,1,"Horndal"],[330,1,"Arrie"],[2119,1,"Grängesberg"],[976,1,"Nyhammar"],[565,1,"Sunnansjö"],[6037,3,"Hofors"],[2418,1,"Alfta"],[258,1,"Viksjöfors"],[4244,5,"Edsbyn"],[1132,2,"Gnarp"],[1324,1,"Färila"],[1592,1,"Järvsö"],[313,1,"Los"],[7125,4,"Ljusdal"],[1697,1,"Forsbacka"],[15669,2,"Höllviken och Ljunghusen"],[7339,1,"Skanör med Falsterbo"],[7274,2,"Vellinge"],[1484,2,"Glimåkra"],[3346,1,"Knislinge"],[1337,1,"Sibbhult"],[951,1,"Skånes-Fagerhult"],[5507,4,"Örkelljunga"],[3344,1,"Ekeby"],[11209,4,"Bjuv"],[902,1,"Dösjebro"],[4633,1,"Furulund"],[4067,1,"Hofterup"],[6714,3,"Löddeköpinge"],[13699,2,"Lomma"],[2317,1,"Klågerup"],[13433,4,"Svedala"],[1521,1,"Rydsgård"],[1397,1,"Skivarp"],[9233,4,"Skurup"],[1031,1,"Grevie"],[1044,1,"Torekov"],[7073,4,"Båstad"],[15488,1,"Bunkeflostrand"],[14040,2,"Oxie"],[1081,2,"Hedesunda"],[1535,1,"Blentarp"],[709,1,"Lövestad"],[945,1,"Vollsjö"],[8565,2,"Sjöbo"],[379,2,"Docksta"],[335,1,"Lunde"],[284,1,"Nordingrå"],[800,1,"Nyland"],[745,1,"Ullånger"],[6605,5,"Kramfors"],[1523,1,"Långsele"],[500,2,"Näsåker"],[768,1,"Ramsele"],[8270,4,"Sollefteå"],[1805,2,"Bjästa"],[345,2,"Björna"],[1169,1,"Bredbyn"],[7583,3,"Hörby"],[231,1,"Norra Rörum"],[14004,5,"Höör"],[721,1,"Brösarp"],[252,1,"Skåne-Tranås"],[7262,5,"Tomelilla"],[261,1,"Nymölla"],[1274,1,"Näsum"],[7905,2,"Bromölla"],[612,1,"Killeberg"],[1851,2,"Lönsboda"],[7754,7,"Osby"],[5972,3,"Perstorp"],[275,1,"Gideå"],[1475,2,"Husum"],[2167,2,"Ljungbyhed"],[9049,5,"Klippan"],[2454,1,"Hyllinge"],[1986,1,"Kvidinge"],[10063,3,"Åstorp"],[2484,1,"Förslöv"],[339316,54,"Malmö"],[6969,1,"Dalby"],[3180,1,"Genarp"],[6886,1,"Södra Sandby"],[5647,4,"Veberöd"],[98308,12,"Lund"],[2243,2,"Glumslöv"],[4024,1,"Häljarp"],[592,1,"Löderup"],[41198,18,"Kristianstad"],[353,1,"Vitaby"],[33859,9,"Landskrona"],[710,1,"Mellansel"],[386,1,"Sidensjö"],[1589,1,"Ås"],[822,1,"Mörsil"],[3699,2,"Åre"],[1597,2,"Järpen"],[358,1,"Klövsjö"],[286,2,"Myrviken"],[1226,1,"Lit"],[5882,1,"Påarp"],[6597,2,"Rydebäck"],[866,1,"Vallåkra"],[5768,1,"Ödåkra"],[116029,25,"Helsingborg"],[2203,1,"Jonstorp"],[5162,1,"Viken"],[16274,4,"Höganäs"],[1633,1,"Åsele"],[3055,1,"Sävar"],[484,1,"Tavelsjö"],[264,1,"Överboda"],[94243,23,"Umeå"],[221,1,"Rusksele"],[8580,5,"Lycksele"],[887,1,"Harlösa"],[1276,1,"Löberöd"],[1725,1,"Marieholm"],[20422,9,"Eslöv"],[21259,7,"Ystad"],[343,1,"Alstad"],[2023,1,"Anderslöv"],[1644,1,"Beddingestrand"],[1614,1,"Boliden"],[2552,1,"Bureå"],[1616,1,"Burträsk"],[291,1,"Bygdsiljum"],[1741,1,"Byske"],[606,1,"Jörn"],[767,1,"Lövånger"],[3302,1,"Skelleftehamn"],[3999,1,"Ursviken"],[346,1,"Drängsmark"],[31366,9,"Trelleborg"],[792,1,"Arkelstorp"],[1350,1,"Degeberga"],[906,1,"Everöd"],[1872,1,"Fjälkinge"],[1630,1,"Färlöv"],[893,1,"Gärds Köpinge"],[3585,2,"Hammar"],[256,1,"Huaröd"],[3385,2,"Tollarp"],[268,1,"Vånga"],[758,1,"Yngsjö"],[10877,3,"Åhus"],[1393,2,"Önnestad"],[840,1,"Borrby"],[1039,1,"Gärsnäs"],[920,3,"Hammenhög"],[679,1,"Sankt Olof"],[6863,7,"Simrishamn"],[1218,2,"Hjärnarp"],[3687,2,"Munka-Ljungby"],[1449,1,"Strövelstorp"],[2063,1,"Getinge"],[1855,1,"Gullbrandstorp"],[332,1,"Morup"],[1077,1,"Slöinge"],[879,2,"Ullared"],[875,1,"Vessigebro"],[595,1,"Rolfstorp"],[482,1,"Tofta"],[3265,1,"Tvååker"],[1106,1,"Tångaberg"],[2284,1,"Veddige"],[850,1,"Väröbacka"],[31089,11,"Ängelholm"],[2762,1,"Bjärnum"],[286,1,"Emmaljunga"],[1731,1,"Hästveda"],[1835,1,"Sösdala"],[4752,2,"Tyringe"],[4113,2,"Vinslöv"],[19760,9,"Hässleholm"],[1268,1,"Torup"],[699,1,"Unnaryd"],[3929,4,"Hyltebruk"],[1925,1,"Haverdal"],[1016,1,"Kvibille"],[39146,12,"Skellefteå"],[208,1,"Glommersträsk"],[4448,3,"Arvidsjaur"],[1626,2,"Arjeplog"],[4116,3,"Oskarström"],[692,1,"Simlångsdalen"],[1709,2,"Trönninge"],[72979,21,"Halmstad"],[322,1,"Hishult"],[1177,1,"Knäred"],[4641,2,"Mellbystrand"],[1444,1,"Veinge"],[1098,1,"Våxtorp"],[6861,4,"Laholm"],[256,1,"Porjus"],[591,2,"Vuollerim"],[2711,3,"Jokkmokk"],[472,1,"Tallvik"],[993,2,"Överkalix"],[993,1,"Töre"],[8226,5,"Kalix"],[1651,2,"Övertorneå"],[210,1,"Kangos"],[442,1,"Älvsered"],[1962,2,"Pajala"],[332,1,"Hakkas"],[258,1,"Persön"],[49646,12,"Luleå"],[2352,1,"Bergsviken"],[569,1,"Jävre"],[1501,2,"Norrfjärden"],[393,1,"Ätran"],[29671,11,"Falkenberg"],[203,1,"Fjärås station"],[3773,1,"Frillesås"],[12486,2,"Onsala"],[6102,1,"Åsa"],[1241,1,"Roknäs"],[1857,1,"Rosvik"],[25172,2,"Mölnlycke och Öjersjö"],[23824,10,"Piteå"],[504,1,"Harads"],[3548,1,"Sävast"],[447,1,"Unbyn"],[16644,8,"Boden"],[6292,4,"Haparanda"],[272,2,"Karesuando"],[392,1,"Svappavaara"],[743,1,"Vittangi"],[17284,6,"Kiruna"],[1447,1,"Björkö"],[9114,1,"Hönö och Öckerö"],[3122,2,"Stora Höga"],[761,1,"Ucklum"],[14381,7,"Stenungsund"],[256,1,"Djupvik och Fagerfjäll"],[803,1,"Kållekärr"],[219,1,"Östad"],[2012,3,"Tanumshede"],[2901,2,"Ed"],[1938,2,"Färgelanda"],[6530,1,"Surte"],[28789,8,"Lerum"],[6198,3,"Vårgårda"],[1931,1,"Nossebro"],[1048,1,"Mölltorp"],[207,1,"Undenäs"],[3876,1,"Karlsborg"],[606,1,"Otterbäcken"],[1579,1,"Gullspång"],[1225,4,"Hova"],[1895,1,"Lödöse"],[3907,5,"Lilla Edet"],[563,1,"Björketorp"],[2346,1,"Fritsla"],[1283,1,"Horred"],[780,1,"Hyssna"],[15507,7,"Kinna"],[4670,3,"Bollebygd"],[3022,1,"Grästorp"],[680,1,"Grimsås"],[1441,1,"Limmared"],[3455,2,"Tranemo"],[632,1,"Bäckefors"],[1337,1,"Dals Långed"],[3102,3,"Bengtsfors"],[775,1,"Dals Rostock"],[3974,4,"Mellerud"],[1622,1,"Lilla Edet västra"],[1493,1,"Sätila"],[412,1,"Torestorp"],[329,1,"Öxabäck"],[296,1,"Mjöbäck"],[488,1,"Överlida"],[3717,3,"Svenljunga"],[1190,1,"Ljung och Annelund"],[4113,2,"Herrljunga"],[1330,1,"Kvänum"],[945,1,"Vedum"],[4432,4,"Vara"],[618,2,"Hällekis"],[1511,1,"Källby"],[901,1,"Lundsbrunn"],[5153,2,"Götene"],[723,1,"Fagersanna"],[8588,5,"Tibro"],[4731,2,"Töreboda"],[48217,6,"Nordöstra Göteborg"],[4169,1,"Olofstorp"],[674529,110,"Göteborg"],[1569,1,"Kode"],[1234,1,"Kärna"],[28912,11,"Kungälv"],[1947,1,"Brastad"],[7340,3,"Lysekil"],[385,1,"Hogstorp"],[35639,16,"Uddevalla"],[7836,5,"Strömstad"],[27895,9,"Alingsås"],[11794,3,"Ulricehamn"],[336,1,"Fengersfors"],[8954,5,"Åmål"],[1461,2,"Brålanda"],[4942,1,"Vargön"],[24731,6,"Vänersborg"],[2218,1,"Sjuntorp"],[50069,15,"Trollhättan"],[431,1,"Aplared"],[434,1,"Borgstena"],[3915,2,"Dalsjöfors"],[425,1,"Dannike"],[6189,2,"Fristad"],[2558,1,"Gånghester och Målsryd"],[356,1,"Hedared"],[3855,2,"Sjömarken och Viared"],[703,1,"Sandhult"],[2787,1,"Viskafors"],[3640,2,"Sandared"],[75565,19,"Borås"],[536,1,"Blidsberg"],[642,1,"Dalum"],[601,1,"Gällstad"],[255,1,"Hulu"],[726,1,"Hökerum"],[468,1,"Lyrestad"],[420,1,"Sjötorp"],[16750,11,"Mariestad"],[1063,1,"Vinninga"],[23585,12,"Lidköping"],[777,1,"Järpås"],[1121,1,"Axvall"],[11475,8,"Skara"],[669,1,"Väring"],[40422,13,"Skövde"],[6427,3,"Hjo"],[8285,1,"Tidaholm"],[1548,2,"Floby"],[427,1,"Gudhem"],[949,1,"Kinnarp"],[216,1,"Kättilstorp"],[1823,1,"Stenstorp"],[583,1,"Åsarp"],[17924,9,"Falköping"],[449,1,"Fagerås"],[8381,3,"Kil"],[1904,1,"Storfors"],[14610,4,"Skoghall"],[2841,2,"Munkfors"],[2717,1,"Deje"],[6433,2,"Forshaga"],[1068,1,"Slottsbron"],[4975,2,"Grums"],[1292,2,"Töcksfors"],[3328,4,"Årjäng"],[331,1,"Lysvik"],[260,1,"Uddheden"],[5138,2,"Sunne"],[1887,2,"Molkom"],[1960,1,"Skattkärr"],[5415,1,"Skåre"],[2764,1,"Vålberg"],[566,1,"Väse"],[69615,16,"Karlstad"],[281,1,"Bäckhammar"],[8823,7,"Säffle"],[18358,9,"Kristinehamn"],[713,1,"Lesjöfors"],[5970,5,"Filipstad"],[955,1,"Ekshärad"],[339,1,"Råda"],[288,1,"Sunnemo"],[4731,3,"Hagfors"],[672,1,"Edane"],[279,1,"Gunnarskog"],[377,1,"Sulvik"],[14186,9,"Arvika"],[220,1,"Hjortkvarn"],[1610,1,"Pålsboda"],[1112,1,"Sköllersta"],[784,1,"Glanshammar"],[201,1,"Sänna"],[334,1,"Zinkgruvan"],[443,1,"Åmmeberg"],[1460,1,"Åsbro"],[4271,5,"Askersund"],[27261,9,"Karlskoga"],[128658,27,"Örebro"],[17889,7,"Kumla"],[225,2,"Olshammar"],[6633,1,"Nora"],[1374,2,"Fellingsbro"],[2533,1,"Frövi"],[1847,1,"Storå"],[669,1,"Vedevåg"],[9575,3,"Lindesberg"],[297,1,"Riddarhyttan"],[2236,1,"Skinnskatteberg"],[1185,1,"Ramnäs"],[1263,1,"Virsbo"],[6316,2,"Surahammar"],[6108,1,"Kungsör"],[2282,1,"Kvicksund"],[10147,3,"Hallstahammar"],[4387,3,"Norberg"],[13702,7,"Sala"],[11771,9,"Fagersta"],[2375,2,"Kolsva"],[18605,8,"Köping"],[549,1,"Malungsfors"],[946,2,"Sälen"],[367,1,"Transtrand"],[4873,4,"Malung"],[674,1,"Björbo"],[682,1,"Floda / Dala-Floda"],[2268,2,"Djurås"],[1981,1,"Mockfjärd"],[1257,2,"Gagnef"],[2110,1,"Insjön"],[3226,1,"Skultuna"],[2191,1,"Tillberga"],[2942,1,"Irsta"],[131643,31,"Västerås"],[320,1,"Möklinta"],[858,1,"Ransta"],[245,1,"Salbohed"],[263,1,"Götlunda"],[10906,3,"Arboga"],[1590,1,"Järna"],[477,1,"Äppelbo"],[2137,3,"Vansbro"],[214,1,"Lima"],[357,1,"Limedsforsen"],[1032,1,"Söderbärke"],[5190,3,"Smedjebacken"],[808,1,"Våmhus"],[12830,11,"Mora"],[2141,2,"Bjursås"],[431,1,"Skedvi kyrkby"],[4812,2,"Säter"],[16055,8,"Avesta"],[230,1,"Fredriksberg västra"],[15675,5,"Ludvika"],[375,1,"Lingbo"],[235,1,"Åmot"],[2901,2,"Ockelbo"],[867,1,"Torsåker"],[419,1,"Ilsbo"],[336,1,"Hassela"],[328,1,"Stocka"],[1335,1,"Bergsjö"],[86533,28,"Gävle"],[1758,1,"Järbo"],[744,1,"Kungsgården"],[2252,2,"Storvik"],[985,1,"Årsunda"],[456,1,"Österfärnebo"],[24827,9,"Sandviken"],[1710,1,"Ljusne"],[315,1,"Mohed"],[1844,1,"Sandarne"],[12038,8,"Söderhamn"],[1992,1,"Arbrå"],[1115,1,"Kilafors"],[256,1,"Rengsjö"],[331,1,"Vallsta"],[13918,8,"Bollnäs"],[2206,2,"Delsbo"],[3370,1,"Iggesund"],[994,1,"Näsviken"],[16792,10,"Hudiksvall"],[2002,1,"Ljungaverk och Fränsta"],[438,1,"Torpshammar"],[2688,2,"Ånge"],[2408,2,"Söråker"],[888,2,"Älandsbro"],[18236,8,"Härnösand"],[6834,2,"Vi"],[940,1,"Indal"],[5189,2,"Kvissleby"],[612,1,"Lucksta"],[3312,2,"Matfors"],[2391,1,"Stockvik"],[1276,1,"Stöde"],[531,1,"Vattjom"],[70918,31,"Sundsvall och Timrå"],[33399,12,"Örnsköldsvik"],[211,1,"Östra Bispgården"],[411,1,"Västra Bispgården"],[574,1,"Stugun"],[1078,1,"Hammarstrand"],[377,1,"Kälarne"],[1477,3,"Bräcke"],[421,1,"Föllinge"],[1844,1,"Krokom"],[475,1,"Backe"],[254,1,"Gäddede"],[1089,2,"Hammerdal"],[577,1,"Hoting"],[203,1,"Näsviken"],[319,1,"Rossön"],[3590,3,"Strömsund"],[820,1,"Björnänge"],[235,1,"Hallen"],[259,1,"Åsarne"],[1064,1,"Funäsdalen"],[711,2,"Hede"],[333,1,"Lillhärdal"],[225,1,"Norr-Hede"],[661,1,"Vemdalen"],[472,1,"Ytterhogdal"],[232,1,"Bruksvallarna/Våålleh"],[2448,3,"Sveg"],[363,1,"Häggenås"],[53992,19,"Östersund"],[2640,2,"Nordmaling"],[984,2,"Bjurholm"],[231,1,"Hällnäs"],[337,1,"Tvärålund"],[2505,2,"Vindeln"],[479,1,"Bygdeå"],[598,1,"Ånäset"],[1939,1,"Robertsfors"],[329,1,"Bastuträsk"],[1995,1,"Norsjö"],[2013,2,"Malå"],[299,2,"Hemavan/Bierke"],[415,1,"Tärnaby"],[2080,3,"Storuman"],[1092,2,"Sorsele"],[1208,1,"Dorotea"],[1763,3,"Vännäsby"],[4585,1,"Vännäs"],[3245,4,"Vilhelmina"],[212,1,"Botsmark"],[363,1,"Brännland"],[313,1,"Bullmark"],[6064,2,"Holmsund"],[2547,1,"Hörnefors"],[12385,5,"Gällivare"],[389,1,"Vidsel"],[4923,3,"Älvsbyn"],[1693,1,"Antnäs"],[4851,3,"Gammelstaden"]],"pop_fua":[[2543117,330,"FUA Stockholm"],[1090713,206,"FUA Göteborg"],[870330,181,"FUA Malmö / Lund"],[163732,59,"FUA Umeå"],[323751,79,"FUA Uppsala"],[261160,88,"FUA Linköping"],[217329,54,"FUA Örebro"],[209103,55,"FUA Västerås"],[189265,63,"FUA Norrköping"],[256791,64,"FUA Helsingborg"],[150438,52,"FUA Borås"],[125956,59,"FUA Växjö"]],"pop_kommun":[[22853,11,"Sala"],[13222,9,"Fagersta"],[25978,10,"Köping"],[14002,8,"Arboga"],[6728,7,"Vansbro"],[10260,17,"Malung-Sälen"],[10430,7,"Gagnef"],[16043,6,"Leksand"],[11042,9,"Rättvik"],[6908,2,"Orsa"],[6929,9,"Älvdalen"],[10913,4,"Smedjebacken"],[20536,16,"Mora"],[59986,25,"Falun"],[51735,21,"Borlänge"],[11243,7,"Säter"],[15345,10,"Hedemora"],[22753,10,"Avesta"],[26402,9,"Ludvika"],[5758,5,"Ockelbo"],[9374,4,"Hofors"],[11525,8,"Ovanåker"],[9370,7,"Nordanstig"],[18538,12,"Ljusdal"],[103532,34,"Gävle"],[38628,15,"Sandviken"],[24858,14,"Söderhamn"],[26414,12,"Bollnäs"],[37645,20,"Hudiksvall"],[9109,8,"Ånge"],[17540,10,"Timrå"],[24654,11,"Härnösand"],[99213,44,"Sundsvall"],[17631,13,"Kramfors"],[18523,10,"Sollefteå"],[55478,30,"Örnsköldsvik"],[5135,5,"Ragunda"],[6099,6,"Bräcke"],[15595,12,"Krokom"],[11113,14,"Strömsund"],[12464,9,"Åre"],[7140,10,"Berg"],[10145,15,"Härjedalen"],[64881,23,"Östersund"],[7033,6,"Nordmaling"],[2348,3,"Bjurholm"],[5461,7,"Vindeln"],[6740,3,"Robertsfors"],[3924,4,"Norsjö"],[2990,3,"Malå"],[5621,9,"Storuman"],[2387,4,"Sorsele"],[2339,2,"Dorotea"],[9059,4,"Vännäs"],[6263,8,"Vilhelmina"],[2718,3,"Åsele"],[133091,36,"Umeå"],[12213,9,"Lycksele"],[76542,26,"Skellefteå"],[6113,7,"Arvidsjaur"],[2609,7,"Arjeplog"],[4728,9,"Jokkmokk"],[3162,5,"Överkalix"],[15547,10,"Kalix"],[4088,3,"Övertorneå"],[5871,6,"Pajala"],[17330,11,"Gällivare"],[7783,4,"Älvsbyn"],[79352,22,"Luleå"],[42344,19,"Piteå"],[27943,12,"Boden"],[9177,5,"Haparanda"],[22433,12,"Kiruna"],[18962,14,"Simrishamn"],[44866,16,"Ängelholm"],[52241,17,"Hässleholm"],[10299,8,"Hylte"],[105796,32,"Halmstad"],[26565,13,"Laholm"],[47108,21,"Falkenberg"],[988943,60,"Stockholm"],[102519,22,"Södertälje"],[110633,10,"Nacka"],[55912,2,"Sundbyberg"],[85426,8,"Solna"],[48324,6,"Lidingö"],[11817,2,"Vaxholm"],[65770,23,"Norrtälje"],[10627,3,"Nora"],[23292,10,"Lindesberg"],[4348,2,"Skinnskatteberg"],[9934,4,"Surahammar"],[8643,2,"Kungsör"],[16654,4,"Hallstahammar"],[5517,3,"Norberg"],[159662,36,"Västerås"],[52529,16,"Sigtuna"],[30311,7,"Nynäshamn"],[22974,8,"Håbo"],[9572,4,"Älvkarleby"],[20714,4,"Knivsta"],[14343,11,"Heby"],[21193,11,"Tierp"],[245329,42,"Uppsala"],[68325,19,"Varberg"],[85653,16,"Kungsbacka"],[39875,10,"Härryda"],[40730,7,"Partille"],[48292,16,"Enköping"],[22172,11,"Östhammar"],[8856,5,"Vingåker"],[11520,5,"Gnesta"],[58200,23,"Nyköping"],[12106,3,"Oxelösund"],[15668,6,"Flen"],[34324,12,"Katrineholm"],[12819,2,"Öckerö"],[27862,11,"Stenungsund"],[107468,23,"Eskilstuna"],[38917,15,"Strängnäs"],[14885,2,"Trosa"],[5279,6,"Ödeshög"],[16146,8,"Tjörn"],[3637,4,"Ydre"],[9992,8,"Kinda"],[5523,2,"Boxholm"],[11460,6,"Åtvidaberg"],[21694,8,"Finspång"],[7541,5,"Valdemarsvik"],[167404,38,"Linköping"],[145163,41,"Norrköping"],[14867,6,"Söderköping"],[15333,5,"Orust"],[9052,4,"Sotenäs"],[10502,5,"Munkedal"],[12865,11,"Tanum"],[43728,19,"Motala"],[7434,1,"Vadstena"],[28576,17,"Mjölby"],[6852,3,"Aneby"],[9246,3,"Gnosjö"],[7577,2,"Mullsjö"],[13275,4,"Habo"],[4606,2,"Dals-Ed"],[6434,2,"Färgelanda"],[32446,7,"Ale"],[43706,11,"Lerum"],[12384,5,"Vårgårda"],[9733,4,"Bollebygd"],[5563,2,"Grästorp"],[5656,2,"Essunga"],[7061,3,"Karlsborg"],[29014,19,"Gislaved"],[14811,9,"Vaggeryd"],[146161,45,"Jönköping"],[31648,12,"Nässjö"],[34601,15,"Värnamo"],[5119,6,"Gullspång"],[11883,5,"Tranemo"],[9138,8,"Bengtsfors"],[9165,5,"Mellerud"],[14426,7,"Lilla Edet"],[35287,14,"Mark"],[11668,7,"Sävsjö"],[27498,13,"Vetlanda"],[17750,10,"Eksjö"],[18755,6,"Tranås"],[9263,8,"Uppvidinge"],[8342,6,"Lessebo"],[10759,6,"Svenljunga"],[9441,4,"Herrljunga"],[16066,9,"Vara"],[13218,8,"Götene"],[11332,6,"Tibro"],[9141,2,"Töreboda"],[604616,91,"Göteborg"],[70534,14,"Mölndal"],[49785,12,"Kungälv"],[12155,16,"Tingsryd"],[20040,16,"Alvesta"],[17932,10,"Älmhult"],[10076,8,"Markaryd"],[97574,37,"Växjö"],[28304,21,"Ljungby"],[13969,5,"Lysekil"],[57045,21,"Uddevalla"],[13476,8,"Strömstad"],[40012,11,"Vänersborg"],[5438,5,"Högsby"],[7002,7,"Torsås"],[16144,10,"Mörbylånga"],[13883,11,"Hultsfred"],[59073,16,"Trollhättan"],[42382,9,"Alingsås"],[114592,35,"Borås"],[25087,11,"Ulricehamn"],[12006,7,"Åmål"],[24647,19,"Mariestad"],[40539,16,"Lidköping"],[13134,8,"Mönsterås"],[9056,7,"Emmaboda"],[72304,25,"Kalmar"],[18654,10,"Skara"],[57763,16,"Skövde"],[9258,3,"Hjo"],[12839,1,"Tidaholm"],[32991,17,"Falköping"],[12085,4,"Kil"],[8499,6,"Eda"],[11387,14,"Torsby"],[20145,12,"Nybro"],[26918,10,"Oskarshamn"],[36434,17,"Västervik"],[15461,6,"Vimmerby"],[10748,6,"Borgholm"],[61029,29,"Gotland"],[13061,8,"Olofström"],[66420,25,"Karlskrona"],[3801,1,"Storfors"],[16940,4,"Hammarö"],[3669,2,"Munkfors"],[11538,3,"Forshaga"],[9057,6,"Grums"],[9893,9,"Årjäng"],[13366,5,"Sunne"],[97233,24,"Karlstad"],[23817,11,"Kristinehamn"],[29021,15,"Ronneby"],[31996,21,"Karlshamn"],[17475,9,"Sölvesborg"],[14544,6,"Svalöv"],[10034,6,"Filipstad"],[11536,7,"Hagfors"],[25682,15,"Arvika"],[15011,9,"Säffle"],[8606,3,"Lekeberg"],[5497,6,"Laxå"],[27152,7,"Staffanstorp"],[19844,7,"Burlöv"],[37738,6,"Vellinge"],[14331,5,"Östra Göinge"],[10433,7,"Örkelljunga"],[15968,6,"Bjuv"],[32430,9,"Kävlinge"],[24627,5,"Lomma"],[23470,6,"Svedala"],[16861,6,"Skurup"],[19437,7,"Sjöbo"],[16232,7,"Hallsberg"],[9357,4,"Degerfors"],[6495,5,"Hällefors"],[4407,2,"Ljusnarsberg"],[159348,32,"Örebro"],[22516,9,"Kumla"],[11478,11,"Askersund"],[30261,11,"Karlskoga"],[50110,9,"Upplands Väsby"],[35076,9,"Vallentuna"],[49282,11,"Österåker"],[46637,11,"Värmdö"],[15585,4,"Hörby"],[17376,8,"Höör"],[13660,7,"Tomelilla"],[12498,5,"Bromölla"],[13106,10,"Osby"],[7323,3,"Perstorp"],[17723,8,"Klippan"],[16458,5,"Åstorp"],[15912,8,"Båstad"],[362133,51,"Malmö"],[86330,14,"Järfälla"],[28808,5,"Ekerö"],[113920,13,"Huddinge"],[95592,16,"Botkyrka"],[17451,1,"Salem"],[99751,18,"Haninge"],[49173,5,"Tyresö"],[32453,7,"Upplands-Bro"],[12107,3,"Nykvarn"],[76738,12,"Täby"],[32419,3,"Danderyd"],[76790,11,"Sollentuna"],[130288,20,"Lund"],[47134,12,"Landskrona"],[151306,31,"Helsingborg"],[28193,6,"Höganäs"],[34775,14,"Eslöv"],[31911,10,"Ystad"],[46936,14,"Trelleborg"],[86560,40,"Kristianstad"]],"car_kommun":[[12458,11,"Sala"],[6762,9,"Fagersta"],[13607,10,"Köping"],[7622,8,"Arboga"],[4444,7,"Vansbro"],[7029,17,"Malung-Sälen"],[6727,7,"Gagnef"],[10071,6,"Leksand"],[7465,9,"Rättvik"],[4447,2,"Orsa"],[4935,9,"Älvdalen"],[6857,4,"Smedjebacken"],[13589,16,"Mora"],[32339,25,"Falun"],[28695,21,"Borlänge"],[7126,7,"Säter"],[9365,10,"Hedemora"],[13354,10,"Avesta"],[14623,9,"Ludvika"],[3356,5,"Ockelbo"],[5500,4,"Hofors"],[6891,8,"Ovanåker"],[5864,7,"Nordanstig"],[11106,12,"Ljusdal"],[47944,34,"Gävle"],[21394,15,"Sandviken"],[13770,14,"Söderhamn"],[15617,12,"Bollnäs"],[21708,20,"Hudiksvall"],[5571,8,"Ånge"],[10367,10,"Timrå"],[12604,11,"Härnösand"],[51157,44,"Sundsvall"],[10356,13,"Kramfors"],[11318,10,"Sollefteå"],[32328,30,"Örnsköldsvik"],[3363,5,"Ragunda"],[3764,6,"Bräcke"],[9854,12,"Krokom"],[7026,14,"Strömsund"],[7372,9,"Åre"],[4590,10,"Berg"],[6745,15,"Härjedalen"],[33977,23,"Östersund"],[4217,6,"Nordmaling"],[1464,3,"Bjurholm"],[3144,7,"Vindeln"],[4011,3,"Robertsfors"],[2414,4,"Norsjö"],[1801,3,"Malå"],[3576,9,"Storuman"],[1546,4,"Sorsele"],[1499,2,"Dorotea"],[5128,4,"Vännäs"],[4114,8,"Vilhelmina"],[1688,3,"Åsele"],[58378,36,"Umeå"],[7211,9,"Lycksele"],[40341,26,"Skellefteå"],[3899,7,"Arvidsjaur"],[1719,7,"Arjeplog"],[2841,9,"Jokkmokk"],[2120,5,"Överkalix"],[9713,10,"Kalix"],[2581,3,"Övertorneå"],[3708,6,"Pajala"],[10952,11,"Gällivare"],[5048,4,"Älvsbyn"],[41902,22,"Luleå"],[25541,19,"Piteå"],[16857,12,"Boden"],[5269,5,"Haparanda"],[13806,12,"Kiruna"],[11108,14,"Simrishamn"],[25062,16,"Ängelholm"],[28079,17,"Hässleholm"],[5744,8,"Hylte"],[52763,32,"Halmstad"],[16336,13,"Laholm"],[26368,21,"Falkenberg"],[358597,60,"Stockholm"],[59203,22,"Södertälje"],[52733,10,"Nacka"],[14299,2,"Sundbyberg"],[57138,8,"Solna"],[18303,6,"Lidingö"],[5210,2,"Vaxholm"],[35148,23,"Norrtälje"],[5979,3,"Nora"],[13320,10,"Lindesberg"],[2504,2,"Skinnskatteberg"],[5545,4,"Surahammar"],[4956,2,"Kungsör"],[8970,4,"Hallstahammar"],[3059,3,"Norberg"],[73273,36,"Västerås"],[20776,16,"Sigtuna"],[12884,7,"Nynäshamn"],[11930,8,"Håbo"],[5126,4,"Älvkarleby"],[9908,4,"Knivsta"],[7980,11,"Heby"],[11230,11,"Tierp"],[91337,42,"Uppsala"],[37434,19,"Varberg"],[45672,16,"Kungsbacka"],[18730,10,"Härryda"],[16696,7,"Partille"],[24893,16,"Enköping"],[12550,11,"Östhammar"],[5056,5,"Vingåker"],[5755,5,"Gnesta"],[29462,23,"Nyköping"],[5988,3,"Oxelösund"],[8226,6,"Flen"],[16756,12,"Katrineholm"],[5998,2,"Öckerö"],[14953,11,"Stenungsund"],[49576,23,"Eskilstuna"],[20706,15,"Strängnäs"],[7874,2,"Trosa"],[3163,6,"Ödeshög"],[9579,8,"Tjörn"],[2165,4,"Ydre"],[5797,8,"Kinda"],[3257,2,"Boxholm"],[6348,6,"Åtvidaberg"],[11725,8,"Finspång"],[4300,5,"Valdemarsvik"],[70268,38,"Linköping"],[65825,41,"Norrköping"],[8245,6,"Söderköping"],[9776,5,"Orust"],[5352,4,"Sotenäs"],[6533,5,"Munkedal"],[8037,11,"Tanum"],[22941,19,"Motala"],[4181,1,"Vadstena"],[15634,17,"Mjölby"],[4127,3,"Aneby"],[5414,3,"Gnosjö"],[4142,2,"Mullsjö"],[7104,4,"Habo"],[2904,2,"Dals-Ed"],[4023,2,"Färgelanda"],[15900,7,"Ale"],[21069,11,"Lerum"],[6937,5,"Vårgårda"],[5497,4,"Bollebygd"],[3514,2,"Grästorp"],[3620,2,"Essunga"],[4281,3,"Karlsborg"],[16594,19,"Gislaved"],[8231,9,"Vaggeryd"],[72321,45,"Jönköping"],[16855,12,"Nässjö"],[19731,15,"Värnamo"],[3018,6,"Gullspång"],[6915,5,"Tranemo"],[5567,8,"Bengtsfors"],[5403,5,"Mellerud"],[7964,7,"Lilla Edet"],[20558,14,"Mark"],[6582,7,"Sävsjö"],[15652,13,"Vetlanda"],[9447,10,"Eksjö"],[9173,6,"Tranås"],[5249,8,"Uppvidinge"],[4222,6,"Lessebo"],[6290,6,"Svenljunga"],[5509,4,"Herrljunga"],[10033,9,"Vara"],[8157,8,"Götene"],[6415,6,"Tibro"],[5306,2,"Töreboda"],[198058,91,"Göteborg"],[32950,14,"Mölndal"],[26021,12,"Kungälv"],[7398,16,"Tingsryd"],[11021,16,"Alvesta"],[9200,10,"Älmhult"],[5918,8,"Markaryd"],[45649,37,"Växjö"],[16428,21,"Ljungby"],[7750,5,"Lysekil"],[30401,21,"Uddevalla"],[7290,8,"Strömstad"],[21559,11,"Vänersborg"],[3114,5,"Högsby"],[4410,7,"Torsås"],[9857,10,"Mörbylånga"],[7717,11,"Hultsfred"],[28603,16,"Trollhättan"],[21007,9,"Alingsås"],[54268,35,"Borås"],[14683,11,"Ulricehamn"],[6565,7,"Åmål"],[14192,19,"Mariestad"],[23112,16,"Lidköping"],[7623,8,"Mönsterås"],[5327,7,"Emmaboda"],[36337,25,"Kalmar"],[10335,10,"Skara"],[31233,16,"Skövde"],[5521,3,"Hjo"],[7737,1,"Tidaholm"],[18396,17,"Falköping"],[7058,4,"Kil"],[5250,6,"Eda"],[7786,14,"Torsby"],[11540,12,"Nybro"],[14865,10,"Oskarshamn"],[18907,17,"Västervik"],[9184,6,"Vimmerby"],[6708,6,"Borgholm"],[36964,29,"Gotland"],[7113,8,"Olofström"],[35140,25,"Karlskrona"],[2482,1,"Storfors"],[8821,4,"Hammarö"],[2260,2,"Munkfors"],[6572,3,"Forshaga"],[5234,6,"Grums"],[6397,9,"Årjäng"],[8794,5,"Sunne"],[47011,24,"Karlstad"],[12922,11,"Kristinehamn"],[16726,15,"Ronneby"],[17412,21,"Karlshamn"],[10162,9,"Sölvesborg"],[8351,6,"Svalöv"],[5541,6,"Filipstad"],[7223,7,"Hagfors"],[15514,15,"Arvika"],[8808,9,"Säffle"],[5005,3,"Lekeberg"],[3296,6,"Laxå"],[13539,7,"Staffanstorp"],[8513,7,"Burlöv"],[20458,6,"Vellinge"],[7674,5,"Östra Göinge"],[6064,7,"Örkelljunga"],[8854,6,"Bjuv"],[17420,9,"Kävlinge"],[12158,5,"Lomma"],[12067,6,"Svedala"],[9252,6,"Skurup"],[11951,7,"Sjöbo"],[9102,7,"Hallsberg"],[5451,4,"Degerfors"],[3538,5,"Hällefors"],[2626,2,"Ljusnarsberg"],[69410,32,"Örebro"],[12203,9,"Kumla"],[7268,11,"Askersund"],[16586,11,"Karlskoga"],[19303,9,"Upplands Väsby"],[16617,9,"Vallentuna"],[22989,11,"Österåker"],[19957,11,"Värmdö"],[9163,4,"Hörby"],[9549,8,"Höör"],[8275,7,"Tomelilla"],[6913,5,"Bromölla"],[7400,10,"Osby"],[3546,3,"Perstorp"],[10373,8,"Klippan"],[8511,5,"Åstorp"],[9436,8,"Båstad"],[126890,51,"Malmö"],[32596,14,"Järfälla"],[13271,5,"Ekerö"],[39182,13,"Huddinge"],[31721,16,"Botkyrka"],[6901,1,"Salem"],[35714,18,"Haninge"],[17963,5,"Tyresö"],[13033,7,"Upplands-Bro"],[6139,3,"Nykvarn"],[32135,12,"Täby"],[17952,3,"Danderyd"],[39482,11,"Sollentuna"],[46153,20,"Lund"],[20549,12,"Landskrona"],[66804,31,"Helsingborg"],[15249,6,"Höganäs"],[17754,14,"Eslöv"],[16580,10,"Ystad"],[23976,14,"Trelleborg"],[45065,40,"Kristianstad"]]},"lines":{"pop_tatort":[-5.846399222746804,0.777],"pop_fua":[-3.9126544969995374,0.6606],"pop_kommun":[-3.629315966526787,0.5918],"car_kommun":[-4.05862628382179,0.6754646468201482]}};
+const ROOT = {"k": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "obs": [1113, 530, 157, 57, 35, 21, 13, 14, 14, 16, 2, 6, 9, 30], "exp": [1142.25, 467.57, 169.79, 76.14, 41.71, 25.97, 17.59, 12.66, 9.54, 7.43, 5.94, 4.83, 3.97, 31.62], "kmax": 12, "beta": 0.809, "n": 2017};
+const NS = "http://www.w3.org/2000/svg";
+const el = (n,a={})=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const css = v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- Forest plot ---------- */
+function forest(){
+  const svg=document.getElementById('forest');
+  const W=760,H=320,m={l:185,r:40,t:30,b:54};
+  const x0=0.45,x1=1.05;
+  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r);
+  const rows=[
+    {name:"Tätort (settlement)",b:0.777,lo:0.761,hi:0.793},
+    {name:"FUA (functional)",b:0.661,lo:0.610,hi:0.712},
+    {name:"Kommun (admin.)",b:0.592,lo:0.545,hi:0.638},
+  ];
+  const ink=css('--ink'),dim=css('--ink-dim'),acc=css('--accent'),acc2=css('--accent-2'),line=css('--line');
+  // infra band 0.75-0.9
+  svg.appendChild(el('rect',{x:X(0.75),y:m.t-6,width:X(0.90)-X(0.75),height:H-m.t-m.b+12,fill:acc2,opacity:.10}));
+  // axis ticks
+  for(const t of [0.5,0.6,0.7,0.8,0.9,1.0]){
+    svg.appendChild(el('line',{x1:X(t),y1:m.t-6,x2:X(t),y2:H-m.b,stroke:line,'stroke-width':1}));
+    const tx=el('text',{x:X(t),y:H-m.b+22,fill:dim,'font-size':13,'text-anchor':'middle','font-family':'Inter'});tx.textContent=t.toFixed(1);svg.appendChild(tx);
+  }
+  // beta=1 reference
+  svg.appendChild(el('line',{x1:X(1),y1:m.t-6,x2:X(1),y2:H-m.b,stroke:acc,'stroke-width':2,'stroke-dasharray':'5 5'}));
+  const r1=el('text',{x:X(1),y:m.t-12,fill:acc,'font-size':12.5,'text-anchor':'middle','font-family':'Space Grotesk'});r1.textContent='β = 1 (proportional)';svg.appendChild(r1);
+  const rowH=(H-m.t-m.b)/rows.length;
+  rows.forEach((r,i)=>{
+    const y=m.t+rowH*(i+0.5);
+    svg.appendChild(el('line',{x1:X(r.lo),y1:y,x2:X(r.hi),y2:y,stroke:acc2,'stroke-width':3,'stroke-linecap':'round'}));
+    svg.appendChild(el('circle',{cx:X(r.b),cy:y,r:6,fill:acc2,stroke:css('--bg'),'stroke-width':2}));
+    const nm=el('text',{x:m.l-16,y:y+5,fill:ink,'font-size':15,'text-anchor':'end','font-family':'Inter'});nm.textContent=r.name;svg.appendChild(nm);
+    const bv=el('text',{x:X(r.b),y:y-13,fill:acc2,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk','font-weight':600});bv.textContent=r.b.toFixed(2);svg.appendChild(bv);
+  });
+}
+
+/* ---------- Scatter with effective-population arrows ---------- */
+function scatter(){
+  const svg=document.getElementById('scatter');
+  const W=760,H=560,m={l:54,r:24,t:24,b:60};
+  const xd=[3.3,6.05], yd=[-0.05,2.02];
+  const X=v=>m.l+(v-xd[0])/(xd[1]-xd[0])*(W-m.l-m.r);
+  const Y=v=>H-m.b-(v-yd[0])/(yd[1]-yd[0])*(H-m.t-m.b);
+  const ink=css('--ink'),dim=css('--ink-dim'),acc=css('--accent'),acc2=css('--accent-2'),over=css('--over'),under=css('--under'),line=css('--line');
+  const l10=Math.log10;
+  // gridlines x (powers of 10 + helpers)
+  const xticks=[[3.3,'2k'],[4,'10k'],[4.7,'50k'],[5,'100k'],[5.7,'500k'],[6,'1M']];
+  xticks.forEach(([t,lab])=>{
+    svg.appendChild(el('line',{x1:X(t),y1:m.t,x2:X(t),y2:H-m.b,stroke:line,'stroke-width':1,opacity:.5}));
+    const tx=el('text',{x:X(t),y:H-m.b+22,fill:dim,'font-size':12.5,'text-anchor':'middle','font-family':'Inter'});tx.textContent=lab;svg.appendChild(tx);
+  });
+  [[0,'1'],[0.7,'5'],[1,'10'],[1.7,'50'],[2,'100']].forEach(([t,lab])=>{
+    svg.appendChild(el('line',{x1:m.l,y1:Y(t),x2:W-m.r,y2:Y(t),stroke:line,'stroke-width':1,opacity:.5}));
+    const ty=el('text',{x:m.l-10,y:Y(t)+4,fill:dim,'font-size':12.5,'text-anchor':'end','font-family':'Inter'});ty.textContent=lab;svg.appendChild(ty);
+  });
+  // axis labels
+  const xl=el('text',{x:(m.l+W-m.r)/2,y:H-12,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk'});xl.textContent='Residents  →';svg.appendChild(xl);
+  const yl=el('text',{x:16,y:(m.t+H-m.b)/2,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk',transform:`rotate(-90 16 ${(m.t+H-m.b)/2})`});yl.textContent='Stations  →';svg.appendChild(yl);
+  // regression line
+  const xa=xd[0],xb=xd[1];
+  const py=x=>l10(C)+BETA*x; // log10 P = log10 C + beta*log10 S
+  svg.appendChild(el('line',{x1:X(xa),y1:Y(py(xa)),x2:X(xb),y2:Y(py(xb)),stroke:acc2,'stroke-width':2.5}));
+  // horizontal proportionality label, placed below the line in open space
+  const flx=X(5.15), fly=Y(py(5.15))+26;
+  const fitlab=el('text',{x:flx,y:fly,fill:acc2,'font-size':15,'font-family':'Space Grotesk','font-weight':600,'text-anchor':'middle'});
+  fitlab.appendChild(document.createTextNode('P ∝ S'));
+  const sup=el('tspan',{'font-size':11,'baseline-shift':'super'});sup.textContent='0.59';fitlab.appendChild(sup);
+  svg.appendChild(fitlab);
+  // points
+  const highlight={'Malung-Sälen':1,'Sundbyberg':1};
+  KOMMUN.forEach(([n,S,P,z,band])=>{
+    if(highlight[n])return;
+    const col = z>0.6?over : z<-0.6?under : dim;
+    const op = Math.abs(z)>0.6?0.85:0.4;
+    svg.appendChild(el('circle',{cx:X(l10(S)),cy:Y(l10(P)),r:Math.abs(z)>0.6?4:3,fill:col,opacity:op}));
+  });
+  // effective-population arrows
+  function arrow(name,colVar,labOffset){
+    const row=KOMMUN.find(r=>r[0]===name); const S=row[1],P=row[2];
+    const Seff=Math.exp((Math.log(P)-ALPHA)/BETA);
+    const yv=l10(P), x_from=l10(S), x_to=l10(Seff);
+    const col=colVar;
+    svg.appendChild(el('line',{x1:X(x_from),y1:Y(yv),x2:X(x_to),y2:Y(yv),stroke:col,'stroke-width':2.5,'stroke-dasharray':'2 4',opacity:.9}));
+    // arrowhead
+    const dir=x_to>x_from?1:-1, ax=X(x_to);
+    svg.appendChild(el('path',{d:`M${ax} ${Y(yv)} l${-dir*9} -5 l0 10 z`,fill:col}));
+    // start dot
+    svg.appendChild(el('circle',{cx:X(x_from),cy:Y(yv),r:6,fill:col,stroke:css('--bg'),'stroke-width':2}));
+    // label
+    const t=el('text',{x:X(x_from)+labOffset[0],y:Y(yv)+labOffset[1],fill:col,'font-size':13.5,'font-family':'Space Grotesk','font-weight':600,'text-anchor':labOffset[0]<0?'end':'start'});
+    t.textContent=name+` (~${Math.round(Seff/1000)}k)`;svg.appendChild(t);
+  }
+  arrow('Malung-Sälen',over,[6,-12]);
+  arrow('Sundbyberg',under,[-6,-12]);
+}
+
+/* ---------- Map of Sweden: municipalities by over/under-stationing ---------- */
+function smap(){
+  const svg=document.getElementById('map');
+  const W=360,H=700,m=16;
+  // domain from outline extent
+  const xd=[278,905], yd=[6128,7600];
+  const dx=xd[1]-xd[0], dy=yd[1]-yd[0];
+  const s=Math.min((W-2*m)/dx,(H-2*m)/dy);          // equal scale -> true map shape
+  const ox=m+((W-2*m)-dx*s)/2, oy=m+((H-2*m)-dy*s)/2;
+  const X=x=>ox+(x-xd[0])*s, Y=y=>oy+(yd[1]-y)*s;   // invert northing
+  const dim=css('--ink-dim'),over=css('--over'),under=css('--under'),line=css('--line'),panel=css('--panel');
+  // national outline
+  MAP.rings.forEach(r=>{
+    const d='M'+r.map(([x,y])=>`${X(x).toFixed(1)} ${Y(y).toFixed(1)}`).join('L')+'Z';
+    svg.appendChild(el('path',{d,fill:panel,'fill-opacity':.45,stroke:line,'stroke-width':1,'stroke-linejoin':'round'}));
+  });
+  // bubbles, largest first so small ones stay clickable on top
+  const rows=KOMMUN.filter(r=>MAP.cent[r[0]]).slice().sort((a,b)=>b[1]-a[1]);
+  rows.forEach(([n,S,P,z])=>{
+    const [cx,cy]=MAP.cent[n];
+    const col = z>0.6?over : z<-0.6?under : dim;
+    const ext = Math.abs(z)>0.6;
+    const r = 1.4+0.0135*Math.sqrt(S);
+    svg.appendChild(el('circle',{cx:X(cx),cy:Y(cy),r,fill:col,opacity:ext?0.82:0.32,
+      stroke:ext?css('--bg'):'none','stroke-width':ext?0.8:0}));
+  });
+  // region annotations
+  function note(tx,x,y,col,anchor){
+    const t=el('text',{x,y,fill:col,'font-size':11.5,'font-family':'Space Grotesk','font-weight':600,'text-anchor':anchor||'start'});
+    t.textContent=tx;svg.appendChild(t);
+  }
+  note('Mountain & border',X(300),Y(7180),over,'start');
+  note('— over-stationed',X(300),Y(7130),over,'start');
+  note('Stockholm &',X(715),Y(6560),under,'start');
+  note('Göteborg suburbs',X(715),Y(6510),under,'start');
+  note('— under-stationed',X(715),Y(6460),under,'start');
+}
+
+/* ---------- Stockholm region: one area, three rulers (MAUP) ---------- */
+function stomap(){
+  const svg=document.getElementById('stomap');
+  const W=460,H=540,m=12;
+  let xs=[],ys=[];
+  const eat=r=>r.forEach(([x,y])=>{xs.push(x);ys.push(y);});
+  STO.fua.forEach(eat); STO.kom.forEach(eat); STO.tat.forEach(eat); eat(STO.st);
+  const xmin=Math.min.apply(null,xs),xmax=Math.max.apply(null,xs),
+        ymin=Math.min.apply(null,ys),ymax=Math.max.apply(null,ys);
+  const dx=xmax-xmin,dy=ymax-ymin;
+  const s=Math.min((W-2*m)/dx,(H-2*m)/dy);
+  const ox=m+((W-2*m)-dx*s)/2, oy=m+((H-2*m)-dy*s)/2;
+  const X=x=>ox+(x-xmin)*s, Y=y=>oy+(ymax-y)*s;
+  const dim=css('--ink-dim'),acc=css('--accent'),acc2=css('--accent-2'),ink=css('--ink');
+  const path=rings=>rings.map(r=>'M'+r.map(([x,y])=>`${X(x).toFixed(1)} ${Y(y).toFixed(1)}`).join('L')+'Z').join(' ');
+  svg.appendChild(el('path',{d:path(STO.fua),fill:acc,'fill-opacity':.08,stroke:'none'}));          // FUA fill
+  svg.appendChild(el('path',{d:path(STO.tat),fill:acc2,'fill-opacity':.42,stroke:'none'}));         // settlements
+  svg.appendChild(el('path',{d:path(STO.kom),fill:'none',stroke:dim,'stroke-width':0.6,'stroke-opacity':.55})); // municipalities
+  svg.appendChild(el('path',{d:path(STO.fua),fill:'none',stroke:acc,'stroke-width':2}));            // FUA outline
+  STO.st.forEach(([x,y])=>svg.appendChild(el('circle',{cx:X(x),cy:Y(y),r:1.7,fill:ink,opacity:.9}))); // stations
+}
+
+/* ---------- Rootogram: observed vs predicted station-count frequencies (tätort, NB) ---------- */
+function rootogram(){
+  const svg=document.getElementById('rootogram'); if(!svg)return;
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const W=760,H=400,m={l:48,r:18,t:26,b:64};
+  const ink=css('--ink'),dim=css('--ink-dim'),acc=css('--accent'),acc2=css('--accent-2'),under=css('--under'),line=css('--line');
+  const ks=ROOT.k, obs=ROOT.obs, exp=ROOT.exp, n=ks.length, sq=Math.sqrt;
+  const yhi=sq(Math.max.apply(null,exp.concat(obs)))+1.5, ylo=-3;
+  const X=i=>m.l+(i+0.5)/n*(W-m.l-m.r);
+  const Y=v=>m.t+(yhi-v)/(yhi-ylo)*(H-m.t-m.b);
+  const bw=(W-m.l-m.r)/n*0.7;
+  // y gridlines at sqrt scale (label original frequency)
+  [0,1,5,25,100,400,1000].forEach(f=>{const v=sq(f); if(v>yhi)return;
+    svg.appendChild(el('line',{x1:m.l,y1:Y(v),x2:W-m.r,y2:Y(v),stroke:line,'stroke-width':1,opacity:.4}));
+    const t=el('text',{x:m.l-8,y:Y(v)+4,fill:dim,'font-size':12,'text-anchor':'end','font-family':'Inter'});t.textContent=f;svg.appendChild(t);
+  });
+  // hanging bars: top at curve sqrt(exp), bottom at sqrt(exp)-sqrt(obs)
+  ks.forEach((k,i)=>{
+    const top=sq(exp[i]), bot=sq(exp[i])-sq(obs[i]);
+    const under0=bot<-0.02; // observed exceeds predicted -> dips below baseline
+    svg.appendChild(el('rect',{x:X(i)-bw/2,y:Y(top),width:bw,height:Math.max(0,Y(bot)-Y(top)),
+      fill:under0?under:acc,'fill-opacity':under0?0.5:0.32,stroke:under0?under:acc,'stroke-width':1,'stroke-opacity':.7}));
+  });
+  // baseline (the reference: perfect agreement = bar bottoms on this line)
+  svg.appendChild(el('line',{x1:m.l,y1:Y(0),x2:W-m.r,y2:Y(0),stroke:dim,'stroke-width':1.5}));
+  // expected curve through bar tops
+  const d='M'+ks.map((k,i)=>`${X(i).toFixed(1)} ${Y(sq(exp[i])).toFixed(1)}`).join('L');
+  svg.appendChild(el('path',{d,fill:'none',stroke:acc2,'stroke-width':2.5}));
+  ks.forEach((k,i)=>svg.appendChild(el('circle',{cx:X(i),cy:Y(sq(exp[i])),r:3,fill:acc2})));
+  // x labels
+  ks.forEach((k,i)=>{const lab=(k===ROOT.kmax+1)?(ROOT.kmax+1)+'+':''+k;
+    const t=el('text',{x:X(i),y:H-m.b+22,fill:dim,'font-size':12,'text-anchor':'middle','font-family':'Inter'});t.textContent=lab;svg.appendChild(t);});
+  const xl=el('text',{x:(m.l+W-m.r)/2,y:H-12,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk'});xl.textContent='Stations in a settlement';svg.appendChild(xl);
+  const yl=el('text',{x:15,y:(m.t+H-m.b)/2,fill:ink,'font-size':13.5,'text-anchor':'middle','font-family':'Space Grotesk',transform:`rotate(-90 15 ${(m.t+H-m.b)/2})`});yl.textContent='settlements (√ scale)';svg.appendChild(yl);
+  // legend
+  const lx=W-m.r-188, ly=m.t+4;
+  svg.appendChild(el('line',{x1:lx,y1:ly,x2:lx+22,y2:ly,stroke:acc2,'stroke-width':2.5}));
+  const lt=el('text',{x:lx+28,y:ly+4,fill:dim,'font-size':12,'font-family':'Inter'});lt.textContent='predicted by the law';svg.appendChild(lt);
+  svg.appendChild(el('rect',{x:lx,y:ly+12,width:22,height:9,fill:acc,'fill-opacity':.32,stroke:acc,'stroke-opacity':.7}));
+  const lt2=el('text',{x:lx+28,y:ly+21,fill:dim,'font-size':12,'font-family':'Inter'});lt2.textContent='observed (bars)';svg.appendChild(lt2);
+}
+
+/* ---------- Interactive scatter explorer ---------- */
+const EXPSTATE={s:'pop',u:'kommun'};
+const UNAME={tatort:'tätort',fua:'FUA',kommun:'kommun'};
+function expKey(){return EXPSTATE.s==='car'?'car_kommun':'pop_'+EXPSTATE.u;}
+function niceTicks(lo,hi){ // powers of 10 (+ 2,5 sub-decades) within [lo,hi] in log10 space
+  const out=[]; for(let e=Math.floor(lo);e<=Math.ceil(hi);e++){
+    [1,2,5].forEach(mlt=>{const v=Math.log10(mlt)+e; if(v>=lo-1e-9&&v<=hi+1e-9){
+      const val=mlt*Math.pow(10,e);
+      const l=val>=1e6?(val/1e6)+'M':val>=1e3?(val/1e3)+'k':''+val;
+      out.push([v,l]);}});}
+  return out;
+}
+function explorer(){
+  const svg=document.getElementById('explorer'); if(!svg)return;
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const tip=document.getElementById('exptip');
+  const W=760,H=560,m={l:56,r:24,t:24,b:60};
+  const ink=css('--ink'),dim=css('--ink-dim'),acc2=css('--accent-2'),over=css('--over'),under=css('--under'),line=css('--line');
+  const key=expKey(), pts=EXP.views[key], lp=EXP.lines[key]; const a=lp[0],b=lp[1];
+  const l10=Math.log10, ln=Math.log;
+  let xs=pts.map(p=>l10(p[0])), ys=pts.map(p=>l10(p[1]));
+  let xlo=Math.min.apply(null,xs),xhi=Math.max.apply(null,xs),ylo=Math.min.apply(null,ys),yhi=Math.max.apply(null,ys);
+  const padx=(xhi-xlo)*0.06||.3, pady=(yhi-ylo)*0.08||.3; xlo-=padx;xhi+=padx;ylo-=pady;yhi+=pady;
+  const X=v=>m.l+(v-xlo)/(xhi-xlo)*(W-m.l-m.r);
+  const Y=v=>H-m.b-(v-ylo)/(yhi-ylo)*(H-m.t-m.b);
+  niceTicks(xlo,xhi).forEach(([t,l])=>{
+    svg.appendChild(el('line',{x1:X(t),y1:m.t,x2:X(t),y2:H-m.b,stroke:line,'stroke-width':1,opacity:.45}));
+    const tx=el('text',{x:X(t),y:H-m.b+22,fill:dim,'font-size':12.5,'text-anchor':'middle','font-family':'Inter'});tx.textContent=l;svg.appendChild(tx);
+  });
+  niceTicks(ylo,yhi).forEach(([t,l])=>{
+    svg.appendChild(el('line',{x1:m.l,y1:Y(t),x2:W-m.r,y2:Y(t),stroke:line,'stroke-width':1,opacity:.45}));
+    const ty=el('text',{x:m.l-10,y:Y(t)+4,fill:dim,'font-size':12.5,'text-anchor':'end','font-family':'Inter'});ty.textContent=l;svg.appendChild(ty);
+  });
+  const xtitle=EXPSTATE.s==='car'?'Registered cars  →':'Residents  →';
+  const xl=el('text',{x:(m.l+W-m.r)/2,y:H-12,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk'});xl.textContent=xtitle;svg.appendChild(xl);
+  const yl=el('text',{x:16,y:(m.t+H-m.b)/2,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk',transform:`rotate(-90 16 ${(m.t+H-m.b)/2})`});yl.textContent='Stations  →';svg.appendChild(yl);
+  // regression line: log10 P = a/ln10 + b*log10 S
+  const py10=x10=>a/Math.LN10 + b*x10;
+  const rlo=Math.max(xlo,Math.min.apply(null,xs)-.02), rhi=Math.min(xhi,Math.max.apply(null,xs)+.02);
+  svg.appendChild(el('line',{x1:X(rlo),y1:Y(py10(rlo)),x2:X(rhi),y2:Y(py10(rhi)),stroke:acc2,'stroke-width':2.5}));
+  const mx=(rlo+rhi)/2, fitlab=el('text',{x:X(mx),y:Y(py10(mx))+24,fill:acc2,'font-size':15,'font-family':'Space Grotesk','font-weight':600,'text-anchor':'middle'});
+  fitlab.appendChild(document.createTextNode('P ∝ S'));
+  const sup=el('tspan',{'font-size':11,'baseline-shift':'super'});sup.textContent=b.toFixed(2);fitlab.appendChild(sup);
+  svg.appendChild(fitlab);
+  const big=pts.length>400, r0=pts.length>700?2.4:pts.length>200?3.2:6;
+  pts.forEach(([S,P,name])=>{
+    const resid=ln(P)-(a+b*ln(S));
+    const col=resid>0.45?over:resid<-0.45?under:dim;
+    const op=Math.abs(resid)>0.45?0.85:(big?0.4:0.55);
+    const c=el('circle',{cx:X(l10(S)).toFixed(1),cy:Y(l10(P)).toFixed(1),r:r0,fill:col,opacity:op});
+    c.addEventListener('mouseenter',()=>{
+      const ratio=P/Math.exp(a+b*ln(S));
+      tip.innerHTML='<div class="tn">'+name+'</div>'+
+        S.toLocaleString()+(EXPSTATE.s==='car'?' cars':' residents')+' · '+P+' stations'+
+        '<div class="tr">'+(ratio>=1?(ratio.toFixed(1)+'× more'):((1/ratio).toFixed(1)+'× fewer'))+' than the law predicts</div>';
+      const r=svg.getBoundingClientRect(), wr=svg.parentElement.getBoundingClientRect();
+      tip.style.left=(r.left-wr.left + X(l10(S))/W*r.width)+'px';
+      tip.style.top=(r.top-wr.top + Y(l10(P))/H*r.height)+'px';
+      tip.style.opacity=1; c.setAttribute('stroke',ink); c.setAttribute('stroke-width','1.5');
+    });
+    c.addEventListener('mouseleave',()=>{tip.style.opacity=0;c.removeAttribute('stroke');});
+    svg.appendChild(c);
+  });
+  const cap=document.getElementById('expcap');
+  const denom=EXPSTATE.s==='car'?'registered cars':'residents';
+  const uname=EXPSTATE.s==='car'?'kommun':UNAME[EXPSTATE.u];
+  cap.innerHTML='Each dot is one <strong>'+uname+'</strong> ('+pts.length+' with at least one station): stations vs. '+denom+
+    ', log–log. Mint line = the fitted power law, β = '+b.toFixed(2)+'. '+
+    '<span style="color:var(--over)">●</span> over-stationed · '+
+    '<span style="color:var(--under)">●</span> under-stationed · hover any point for its name.';
+}
+function syncSegs(){
+  document.querySelectorAll('#seg-s button').forEach(btn=>btn.setAttribute('aria-pressed',btn.dataset.s===EXPSTATE.s));
+  const carMode=EXPSTATE.s==='car';
+  document.querySelectorAll('#seg-u button').forEach(btn=>{
+    const isK=btn.dataset.u==='kommun';
+    btn.disabled=carMode&&!isK;
+    btn.setAttribute('aria-pressed',(carMode?isK:btn.dataset.u===EXPSTATE.u));
+  });
+  document.getElementById('carsnote').textContent=carMode
+    ?'Cars are registered to a municipality, so this denominator only exists at the kommun level.':'';
+}
+function wireExplorer(){
+  document.querySelectorAll('#seg-s button').forEach(btn=>btn.addEventListener('click',()=>{
+    EXPSTATE.s=btn.dataset.s; if(EXPSTATE.s==='car')EXPSTATE.u='kommun'; syncSegs(); explorer();
+  }));
+  document.querySelectorAll('#seg-u button').forEach(btn=>btn.addEventListener('click',()=>{
+    if(btn.disabled)return; EXPSTATE.u=btn.dataset.u; syncSegs(); explorer();
+  }));
+  syncSegs();
+}
+
+/* render once KaTeX is ready */
+function render(){
+  if(window.renderMathInElement){
+    renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+  }
+  forest(); scatter(); smap(); stomap(); rootogram(); wireExplorer(); explorer();
+}
+window.addEventListener('load',()=>setTimeout(render,60));
+
+/* light scroll reveal */
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(n=>io.observe(n));
+</script>
+</body>
+</html>
