@@ -115,127 +115,310 @@ footer a{color:var(--accent)}
   .seg button[aria-pressed="true"]{background:#5a3e86;color:#fff}
   .ctrls{gap:14px}
 }
+
+/* --- rebuild additions --- */
+.scene-air{padding-top:120px;padding-bottom:120px}
+.air-top{margin-top:46px}
+.note{font-size:14.5px;color:var(--ink-dim);margin:14px 0 0;line-height:1.55}
+.hint{font-size:13px;color:var(--ink-dim);letter-spacing:.04em}
+.snapbtn{font:inherit;font-family:'Space Grotesk',sans-serif;font-size:13.5px;color:var(--ink);
+  background:var(--bg-2);border:1px solid var(--line);border-radius:9px;padding:8px 15px;cursor:pointer;
+  transition:border-color .15s,color .15s}
+.snapbtn:hover{border-color:var(--accent);color:var(--accent)}
+/* progressive-disclosure drawer */
+details.drawer{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;margin:22px 0;padding:0}
+details.drawer>summary{cursor:pointer;list-style:none;padding:16px 20px;font-family:'Space Grotesk',sans-serif;
+  font-size:15px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:12px}
+details.drawer>summary::-webkit-details-marker{display:none}
+details.drawer>summary::before{content:"+";display:grid;place-items:center;width:22px;height:22px;flex:0 0 22px;
+  border-radius:6px;background:var(--panel);color:var(--accent);font-weight:700;font-size:16px;transition:transform .2s}
+details.drawer[open]>summary::before{content:"\2212"}
+details.drawer>summary .tagline{font-family:'Inter',sans-serif;font-weight:400;font-size:13px;color:var(--ink-dim)}
+details.drawer .body{padding:2px 22px 22px;font-size:15.5px;line-height:1.6}
+details.drawer .body p{margin:0 0 14px}
+details.drawer .body p:last-child{margin-bottom:0}
+/* the surprise / pivot get extra air and a left rule */
+.beat{border-left:3px solid var(--accent-2);padding-left:24px;margin:8px 0}
+.beat.pivot{border-color:var(--over)}
+@media print{details.drawer{border-color:#cdddd4;background:#f3f7f4}details.drawer .body{display:block!important}}
+
 </style>
 </head>
 <body>
 
 <header class="wrap hero">
-  <p class="kicker reveal">Sweden · petrol stations · scaling laws</p>
+  <p class="kicker reveal">Sweden &middot; 3,263 petrol stations &middot; one scaling law</p>
   <h1 class="reveal">Do bigger towns<br>have more petrol stations?</h1>
-  <p class="sub lead reveal">Yes — but not proportionally. Across every Swedish town,
-  fuel provision grows <em>slower</em> than population. We measured exactly how much slower,
-  and found the places where the rule spectacularly breaks.</p>
+  <p class="sub lead reveal">Yes &mdash; but never in proportion. Across all of Sweden, fuel provision
+  grows <em>slower</em> than the population it serves. One number captures how much slower; the places
+  where that number fails turn out to map tourism, the Norwegian border, and the motorways.</p>
 
   <div class="stats reveal">
     <div class="stat"><div class="big">3,263</div><div class="lab">petrol stations mapped (OpenStreetMap)</div></div>
-    <div class="stat"><div class="big">2,017</div><div class="lab">settlements analysed (<em>tätorter</em>)</div></div>
-    <div class="stat"><div class="big">β ≈ 0.78</div><div class="lab">scaling exponent — well below 1</div></div>
+    <div class="stat"><div class="big">290</div><div class="lab">municipalities &mdash; the unit we follow throughout</div></div>
+    <div class="stat"><div class="big">&beta; &lt; 1</div><div class="lab">sublinear, every way we slice it</div></div>
   </div>
+  <p class="note reveal hint">Scroll to descend &mdash; from one number for the whole country, down onto a single named town.</p>
 </header>
 
+<!-- ===== SCENE 1: the suggestive droop (linear space) ===== -->
 <section class="wrap">
-  <p class="kicker reveal">The rule</p>
-  <h2 class="reveal">One number describes the whole country</h2>
-  <p class="lead reveal">Count the people <span class="purple">S</span> in a town and the petrol
-  stations <span class="hl">P</span>, and a single power law links them:</p>
-
-  <div class="eqbox reveal">
-    <div class="eq">$$P \;\propto\; S^{\beta}\qquad\text{(in full, }P = C\cdot S^{\beta}\text{)}$$</div>
-    <p class="note">The whole story lives in the exponent <strong>β</strong>. If stations simply tracked
-    people, <strong>β would equal 1</strong>. We measure <strong>β = 0.78</strong>: doubling a town's
-    population multiplies its stations by only 2<sup>0.78</sup> ≈ <strong>1.7×</strong>. Big towns are
-    more fuel-efficient, per person. <span class="dim">(The constant <em>C</em> just sets the overall
-    scale — fix the country's total station count — and carries no interpretation of its own, so we
-    write the law as a proportionality.)</span></p>
-  </div>
-</section>
-
-<section class="wrap">
-  <p class="kicker reveal">But wait —</p>
-  <h2 class="reveal">City people barely drive</h2>
-  <p class="reveal">Before we go further, the obvious objection. Of course a big city has fewer
-  stations per resident — its people walk, cycle and take the metro, and far fewer of them own a
-  car at all. Maybe the whole "efficiency" is just an artefact of <em>who owns a car</em>, not of
-  how fuel retail actually scales.</p>
-  <p class="reveal">A petrol station doesn't serve people; it serves <em>cars</em>. So we swap the
-  denominator: count a municipality's <strong>registered cars</strong> instead of its residents. If
-  car ownership were the whole story, this would erase the effect and push β back toward 1.</p>
-
-  <div class="stats reveal" style="max-width:560px">
-    <div class="stat"><div class="lab" style="margin:0 0 8px">stations per <em>resident</em></div>
-      <div class="big">β 0.59</div><div class="lab" style="color:var(--under)">sublinear</div></div>
-    <div class="stat" style="display:flex;align-items:center;justify-content:center;flex:0 0 44px;border:none;background:none"><div class="big" style="color:var(--ink-dim)">→</div></div>
-    <div class="stat"><div class="lab" style="margin:0 0 8px">stations per <em>car</em></div>
-      <div class="big">β 0.68</div><div class="lab" style="color:var(--under)">still sublinear</div></div>
-  </div>
-
-  <p class="reveal">It barely moves. Switching to cars lifts β from <strong>0.59 to 0.68</strong> — so
-  about a fifth of the gap from proportionality really was just lower urban car ownership. But the
-  rest is genuine: <strong>even per car, bigger places are served more efficiently</strong>. Greater
-  Stockholm's deficit shrinks once you count its (relatively few) cars — yet it doesn't vanish. The
-  sublinearity is real, not a car-ownership mirage. From here the question is no longer <em>whether</em>
-  fuel scales sublinearly, but <em>where</em> the pattern bends — and where it breaks outright.</p>
-</section>
-
-<section class="wrap">
-  <p class="kicker reveal">The method, briefly</p>
-  <h2 class="reveal">Why we count stations, not ratios</h2>
-  <p class="reveal">Stations aren't sprinkled at random — they fall as an <em>inhomogeneous
-  Poisson process</em>, denser where demand is higher. The number landing inside a town is a
-  Poisson count whose mean follows the power law:</p>
-  <div class="eqbox reveal">
-    <div class="eq">$$P_i \sim \mathrm{Poisson}(\mu_i),\qquad \log\mu_i = \alpha + \beta\,\log S_i$$</div>
-    <p class="note">This is the honest model for counts: it keeps the many <strong>zero-station
-    towns</strong> (a ratio would throw them away and bias β upward), and where stations cluster
-    more than chance allows we relax to a Negative-Binomial. We test the headline claim against
-    pure proportionality, $H_0:\beta=1$, with $z=(\hat\beta-1)/\mathrm{SE}$ — and reject it
-    overwhelmingly.</p>
-  </div>
-</section>
-
-<section class="wrap">
-  <p class="kicker reveal">The catch</p>
-  <h2 class="reveal">β depends on where you draw the line</h2>
-  <p class="reveal">Redraw the boundaries — settlements, functional regions, whole
-  municipalities — and β slides from <strong>0.78</strong> down to <strong>0.59</strong>.
-  Every definition is sublinear (none touches β = 1), but the <em>size</em> of the effect is
-  not a law of nature; it depends on the map. That spread is itself the result.</p>
+  <p class="kicker reveal">The shape of it</p>
+  <h2 class="reveal">Plot them, and the line bends</h2>
+  <p class="reveal lead">Take every Swedish municipality. Along the bottom, how many people live there
+  <span class="purple">(S)</span>; up the side, how many petrol stations it has <span class="hl">(P)</span>.
+  If stations simply tracked people, the dots would climb a straight ramp from the corner.</p>
   <figure class="reveal">
-    <svg id="forest" viewBox="0 0 760 320" role="img" aria-label="Forest plot of beta across three spatial definitions"></svg>
-    <figcaption>β with 95% confidence intervals across three spatial definitions. Dashed purple = pure
-    proportionality (β = 1); shaded band = the 0.75–0.90 range typical of distribution
-    infrastructure. Administrative <em>kommuner</em> bundle dense cities with empty hinterland,
-    pushing β lowest.</figcaption>
-  </figure>
-
-  <p class="reveal">What are those three units? A <strong>tätort</strong> is a built-up settlement —
-  a contiguous patch of buildings (SCB draws them at ≥200 residents, ≤200 m between houses). A
-  <strong>kommun</strong> is an administrative municipality, dense town plus empty hinterland in one
-  parcel. And the widest, the <strong>Functional Urban Area</strong> (FUA), is an OECD/Eurostat unit:
-  a city <em>plus its commuting zone</em> — every surrounding municipality that sends enough commuters
-  into the core to count as functionally part of it. Sweden has just <strong>12</strong>.</p>
-
-  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
-    <svg id="stomap" viewBox="0 0 460 540" role="img" aria-label="Greater Stockholm shown as settlements, municipalities and one functional urban area" style="max-width:430px"></svg>
-    <figcaption style="max-width:540px">One region, three rulers. Greater Stockholm's FUA
-    (<span class="purple">purple outline</span>) bundles <strong>28 municipalities</strong>
-    (<span style="color:var(--ink-dim)">grey borders</span>) and <strong>183 settlements</strong>
-    (<span style="color:var(--accent-2)">mint patches</span>) — and the same
-    <strong>330 stations</strong> (dots) — into a single unit. Count those stations per settlement and
-    β is high (0.78); fold the whole commuting region into one big-S point and β drops to 0.66. Same
-    stations, different denominator. <em>That</em> is the Modifiable Areal Unit Problem.</figcaption>
+    <svg id="snaplin" viewBox="0 0 760 460" role="img" aria-label="Stations against population for Swedish municipalities, linear axes, showing a curve that bends down"></svg>
+    <figcaption>Each dot is a municipality. The cloud doesn&rsquo;t climb a straight ramp &mdash; it
+    <em>bends</em>, rising fast for small towns and then flattening: the largest cities sit well below
+    where a straight line would put them. The eye&rsquo;s verdict is a hunch &mdash; <em>it seems to level off?</em></figcaption>
   </figure>
 </section>
 
+<!-- ===== SCENE 2: the snap to log-log ===== -->
 <section class="wrap">
-  <p class="kicker reveal">Pick your ruler</p>
-  <h2 class="reveal">There is no single number — and that's the point</h2>
-  <p class="reveal">We never got one tidy headline. Change <em>what</em> we divide by — residents or the
-  cars they actually own — and β moves. Change <em>how</em> we draw the map — settlements, functional
-  regions, whole municipalities — and it moves again. So rather than hand you one figure, here is the
-  whole family of fits. Toggle the denominator and the spatial unit, and watch what changes and what
-  doesn't.</p>
+  <p class="kicker reveal">Make it exact</p>
+  <h2 class="reveal">On log paper, the bend becomes a slope</h2>
+  <p class="reveal">Stretch both axes so that each step multiplies rather than adds &mdash; 10, 100, 1,000.
+  The bent cloud falls onto a straight line. A straight line on log&ndash;log paper <em>is</em> a power
+  law, <strong>P&nbsp;&prop;&nbsp;S<sup>&beta;</sup></strong>, and the whole story is now a single number:
+  the <em>slope</em>, &beta;.</p>
+  <figure class="reveal">
+    <svg id="snaplog" viewBox="0 0 760 460" role="img" aria-label="The same data on logarithmic axes, straightening into a line of slope beta"></svg>
+    <figcaption><button class="snapbtn" id="snapreplay" type="button">&#9656; watch it straighten</button>
+    &nbsp; Same 290 municipalities, log&ndash;log. The hunch becomes a measurement: the dots track a
+    line of slope <strong>&beta;&nbsp;=&nbsp;0.59</strong>. A proportional world would have slope 1.</figcaption>
+  </figure>
+  <div class="eqbox reveal">
+    <div class="eq">$$P \;\propto\; S^{\beta}$$</div>
+    <p class="note">If stations tracked people one-for-one, <strong>&beta;&nbsp;would&nbsp;equal&nbsp;1</strong>.
+    A slope below 1 means each extra resident adds <em>fewer</em> stations than the last &mdash; the
+    bend we just saw, written as one figure.</p>
+  </div>
+</section>
 
+<!-- ===== SCENE 3: the surprise (air) ===== -->
+<section class="wrap scene-air">
+  <p class="kicker reveal">The surprise</p>
+  <h2 class="reveal">Bigger places run leaner</h2>
+  <blockquote class="pullquote reveal">Double a town&rsquo;s population and its petrol stations grow by
+  only about <strong>2<sup>0.59</sup> &asymp; 1.5&times;</strong>. Sweden fuels its large cities more
+  efficiently, per person &mdash; the opposite of what &ldquo;more people, more pumps&rdquo; would suggest.</blockquote>
+  <p class="reveal">That is genuinely counter-intuitive, so the rest of this descent is spent trying to
+  break it. We hand the doubter their two best objections, in turn, and watch what the slope does. Picture
+  a wall at <span class="purple">&beta;&nbsp;=&nbsp;1</span> &mdash; proportionality. The question for the
+  next two scenes is simply: <em>can anything push the slope to the wall?</em></p>
+</section>
+
+<!-- ===== SCENE 4: concession one, the variable (cars) ===== -->
+<section class="wrap">
+  <p class="kicker reveal">Objection one &mdash; the denominator</p>
+  <h2 class="reveal">&ldquo;City people just own fewer cars&rdquo;</h2>
+  <p class="reveal">Fair. A petrol station serves <em>cars</em>, not residents, and city-dwellers own fewer of
+  them &mdash; transit, density, the price of parking. Maybe the efficiency is an accounting trick of the
+  denominator. So we change it: count each municipality&rsquo;s <strong>registered cars</strong> instead of
+  its people. If car-ownership were the whole story, the slope would spring to the wall.</p>
+  <div class="stats reveal" style="max-width:600px">
+    <div class="stat"><div class="lab" style="margin:0 0 8px">slope per <em>resident</em></div>
+      <div class="big">&beta; 0.59</div><div class="lab" style="color:var(--under)">sublinear</div></div>
+    <div class="stat" style="display:flex;align-items:center;justify-content:center;flex:0 0 44px;border:none;background:none"><div class="big" style="color:var(--ink-dim)">&rarr;</div></div>
+    <div class="stat"><div class="lab" style="margin:0 0 8px">slope per <em>car</em></div>
+      <div class="big">&beta; 0.68</div><div class="lab" style="color:var(--under)">still sublinear</div></div>
+  </div>
+  <p class="reveal">It moves &mdash; and stalls. Cars-per-person really do fall with size (0.60 in small
+  municipalities, 0.49 in large), so about a fifth of the gap was the denominator. But the slope only
+  climbs from <strong>0.59 to 0.68</strong> and stops well short of 1. <strong>Even counted per car, big
+  places are served more efficiently.</strong> Objection one granted in full; the effect survives.</p>
+</section>
+
+<!-- ===== SCENE 5: concession two, the geography (MAUP) + the wall ===== -->
+<section class="wrap">
+  <p class="kicker reveal">Objection two &mdash; the map</p>
+  <h2 class="reveal">&ldquo;Then you drew the boundaries wrong&rdquo;</h2>
+  <p class="reveal">Also fair. &ldquo;A place&rdquo; is a choice. Redraw it &mdash; tight built-up
+  <em>settlements</em>, whole <em>municipalities</em>, or entire commuting <em>regions</em> &mdash; and the
+  slope shifts again. Here is every version at once, each with its uncertainty, all measured against the
+  wall.</p>
+  <figure class="reveal">
+    <svg id="forest" viewBox="0 0 760 360" role="img" aria-label="Beta with confidence intervals across denominators and spatial units, none reaching beta equals one"></svg>
+    <figcaption>&beta; with 95% confidence intervals. The dashed line is the wall (&beta;&nbsp;=&nbsp;1,
+    proportional); the shaded band is the 0.75&ndash;0.90 range typical of space-serving infrastructure
+    (roads, cable, pipe). <strong>Not one slice reaches the wall</strong> &mdash; the slope creeps as far
+    as 0.81 and stops. That refusal-to-reach is the result.</figcaption>
+  </figure>
+  <p class="reveal">Why does the slope wander between 0.59 and 0.81? A <strong>municipality</strong> bundles a
+  dense town together with its empty hinterland into one big-S parcel, which drags the slope down; a
+  <strong>settlement</strong> measures only the built-up core. Same stations, different rulers &mdash; the
+  textbook <em>Modifiable Areal Unit Problem</em>. There is no single &ldquo;true&rdquo; unit, so we state
+  the unit with the number, and follow municipalities from here on because that is where the local stories
+  live.</p>
+  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
+    <svg id="stomap" viewBox="0 0 460 540" role="img" aria-label="Greater Stockholm as settlements, municipalities and one functional urban area" style="max-width:430px"></svg>
+    <figcaption style="max-width:540px">One region, three rulers. Greater Stockholm&rsquo;s commuting region
+    (<span class="purple">purple outline</span>) holds the same
+    <strong>330 stations</strong> (dots) whether you count them across its
+    <strong>28 municipalities</strong> (<span style="color:var(--ink-dim)">grey</span>) or its
+    <strong>183 settlements</strong> (<span style="color:var(--accent-2)">mint patches</span>). Counting
+    per settlement gives &beta;&nbsp;=&nbsp;0.78; folding the whole region into one point gives 0.66.</figcaption>
+  </figure>
+
+  <details class="drawer reveal">
+    <summary>How we measured the slope honestly <span class="tagline">&mdash; count models, kept zeros, and the rootogram</span></summary>
+    <div class="body">
+      <p>Petrol stations are <em>counted</em>, not measured, and many small settlements have zero, one, or
+      two. The textbook move &mdash; take logs and fit a straight line &mdash; cannot take the log of zero,
+      so it silently drops every stationless place and biases the slope <em>upward</em> (for settlements,
+      from 0.78 to a fake 0.46). We instead fit a <strong>Poisson / Negative-Binomial count model</strong>
+      with a log link, which keeps the zeros and treats a town going from one station to two as the
+      ordinary high-variance wobble it is, not a doubling.</p>
+      <p>The test of such a model is whether it reproduces the real spread of counts:</p>
+      <figure style="display:flex;flex-direction:column;align-items:center;margin:8px 0">
+        <svg id="rootogram" viewBox="0 0 760 400" role="img" aria-label="Rootogram of observed versus predicted station counts" style="max-width:660px"></svg>
+        <figcaption style="max-width:600px">A <em>rootogram</em>: bars are how many of the 2,017 settlements
+        have exactly 0, 1, 2&hellip; stations, hung from the model&rsquo;s prediction (<span style="color:var(--accent-2)">mint curve</span>).
+        A bar dipping below the baseline = more real towns than predicted. The big <strong>zero</strong>
+        bar lands almost dead on: 1,113 empty settlements observed, &asymp;1,142 predicted. The model earns
+        its zeros rather than fudging them. It is not flawless &mdash; a single exponent slightly
+        mis-describes the very smallest and largest towns, a real, tested bend &mdash; but the sublinearity
+        is what survives the check.</figcaption>
+      </figure>
+    </div>
+  </details>
+</section>
+
+<!-- ===== SCENE 6: the pivot ===== -->
+<section class="wrap scene-air">
+  <p class="kicker reveal">The pivot</p>
+  <h2 class="reveal">Now trust the line &mdash; and study what misses it</h2>
+  <p class="reveal beat pivot">The slope held under every objection, so we stop measuring it and start using
+  it. The fitted law becomes a quiet baseline; the dots that sit <em>off</em> it become the subject. A
+  municipality with far more stations than its residents can explain is being asked a question: <span class="purple">how
+  big would you have to be to justify these pumps?</span> Run the law backwards and the answer is the
+  town&rsquo;s <strong>effective population</strong> &mdash; the crowd of non-residents the pumps are
+  really serving.</p>
+  <div class="eqbox reveal">
+    <div class="eq">$$S_{\text{eff}}=\left(\tfrac{P}{C}\right)^{1/\beta}$$</div>
+    <p class="note">The size that would make the observed station count most likely. The gap
+    $S_{\text{eff}}-S$ is the implied crowd of <strong>ghosts</strong>: tourists, cross-border shoppers,
+    transit traffic &mdash; demand the resident count never saw.</p>
+  </div>
+</section>
+
+<!-- ===== SCENE 7a: the descent into named places ===== -->
+<section class="wrap">
+  <p class="kicker reveal">Down onto the map</p>
+  <h2 class="reveal">Two towns, opposite ghosts</h2>
+  <p class="reveal">Slide a point horizontally to the baseline and read off where it lands. The distance
+  <em>is</em> the surplus or missing demand, now in plain population units.</p>
+  <figure class="reveal">
+    <svg id="scatter" viewBox="0 0 760 560" role="img" aria-label="Municipalities with effective-population arrows from true size to the baseline"></svg>
+    <figcaption>Municipalities, stations vs. residents (log&ndash;log); the fitted law is now the
+    <span style="color:var(--ink-dim)">grey baseline</span>.
+    <span style="color:var(--over)">Purple</span> arrow &mdash; Malung-S&auml;len <em>fuels like</em> a town
+    five times its size. <span style="color:var(--under)">Mint</span> arrow &mdash; Sundbyberg fuels like a
+    village a fraction of its size, because its residents fill up somewhere else.</figcaption>
+  </figure>
+  <table class="reveal">
+    <thead><tr><th>Municipality</th><th>Residents</th><th>Stations</th><th>Fuels like</th><th></th></tr></thead>
+    <tbody>
+      <tr><td class="name">Malung-S&auml;len</td><td>10,260</td><td>17</td><td>~55,300</td><td><span class="tag over">&times;5.4 ghosts</span></td></tr>
+      <tr><td class="name">H&auml;rjedalen</td><td>10,145</td><td>15</td><td>~44,700</td><td><span class="tag over">&times;4.4</span></td></tr>
+      <tr><td class="name">Tingsryd <span class="dim">(transit + visitors)</span></td><td>12,155</td><td>16</td><td>~49,900</td><td><span class="tag over">&times;4.1</span></td></tr>
+      <tr><td class="name">Sundbyberg</td><td>55,912</td><td>2</td><td>~1,500</td><td><span class="tag under">&times;0.03</span></td></tr>
+      <tr><td class="name">Nacka</td><td>110,633</td><td>10</td><td>~22,600</td><td><span class="tag under">&times;0.20</span></td></tr>
+    </tbody>
+  </table>
+  <p class="note reveal">The same lens reads both signs: a positive gap is unseen <em>inbound</em> demand;
+  a negative gap is residents fuelling <em>elsewhere</em>. Point it anywhere and it names the local story.</p>
+</section>
+
+<!-- ===== SCENE 7b: it's geography, not noise ===== -->
+<section class="wrap">
+  <p class="kicker reveal">The same story, on the map</p>
+  <h2 class="reveal">The misses cluster &mdash; it&rsquo;s geography, not noise</h2>
+  <p class="reveal">Put every municipality where it actually sits, sized by population, coloured by how far it
+  beats or misses the law &mdash; measured per <em>registered car</em>, so a big city near the line stays
+  neutral rather than looking extreme. The surprises are not scattered at random.
+  <span class="purple">Over-stationed</span> places line the <em>Norwegian mountain border</em> and the
+  sparse north; <span style="color:var(--under)">under-stationed</span> places ring the <em>Stockholm and
+  G&ouml;teborg suburbs</em>.</p>
+  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
+    <svg id="map" viewBox="0 0 360 700" role="img" aria-label="Map of Sweden, municipalities coloured by over- or under-stationing" style="max-width:340px"></svg>
+    <figcaption style="max-width:520px">Each circle is a municipality at its true location; area &prop;
+    population. <span style="color:var(--over)">&#9679;</span> over-stationed &middot;
+    <span style="color:var(--under)">&#9679;</span> under-stationed &middot;
+    <span style="color:var(--ink-dim)">&#9679;</span> in line with the law.</figcaption>
+  </figure>
+  <p class="reveal note">This is the honest crux, so we say it plainly: <strong>no single municipality is a
+  defensible outlier.</strong> Fourteen stray past the 95% mark &mdash; against 14.5 expected by pure
+  chance &mdash; and none survives a multiple-testing correction. Rare things happen. What cannot happen by
+  chance is the <em>arrangement</em>: the surprises clump hard (Moran&rsquo;s I&nbsp;=&nbsp;0.42,
+  p&nbsp;=&nbsp;0.001, a ~13&sigma; departure from randomness). The structure is in the geography, never in
+  any one dot.</p>
+</section>
+
+<!-- ===== SCENE 7c: the diagnostic pays off (tourism separates the mechanisms) ===== -->
+<section class="wrap">
+  <p class="kicker reveal">Who are the ghosts?</p>
+  <h2 class="reveal">Tourists &mdash; but only the kind that drive</h2>
+  <p class="reveal">If the extra stations serve visitors, the visitors should leave a footprint. Not the
+  walk-around kind &mdash; a crowd at Stockholm&rsquo;s Old Town arrives by metro and buys no fuel. The
+  tourism that <strong>moves petrol</strong> arrives by car and stays: a ski week in S&auml;len, a camping
+  trip on &Ouml;land. So we built the proxy deliberately from <span class="purple">overnight beds and
+  ski-lifts</span> &mdash; and ignored the urban kind.</p>
+  <p class="reveal">It lands. A municipality&rsquo;s surplus tracks this mobile-tourism proxy at
+  <strong>+0.58</strong>, far above the <strong>+0.20</strong> from cheap unmanned pumps, the other rural
+  suspect. And it is not just &ldquo;rural places have both&rdquo;: after stripping out residents, their
+  cars and their income, the leftover surprise still follows tourism at <strong>+0.43</strong>
+  (p&nbsp;&lt;&nbsp;10&#8315;&#185;&#8309;).</p>
+  <p class="reveal">Here is where the lens proves it sees more than one thing. The Norwegian-border
+  municipalities are over-stationed <em>and</em> they are the big ski destinations &mdash; two stories
+  tangled together. Switch the tourism proxy on, and it pulls them apart cleanly:</p>
+  <table class="reveal">
+    <thead><tr><th>Municipality</th><th>before tourism</th><th>after tourism</th><th>what the lens says</th></tr></thead>
+    <tbody>
+      <tr><td class="name">&Aring;re</td><td>z 1.08</td><td>z &minus;0.41</td><td><span class="tag under">pure ski resort &mdash; fully explained</span></td></tr>
+      <tr><td class="name">&Auml;lvdalen</td><td>z 1.13</td><td>z 0.00</td><td><span class="tag under">fully explained</span></td></tr>
+      <tr><td class="name">H&auml;rjedalen</td><td>z 2.41</td><td>z 1.08</td><td><span class="tag over">half ski, half border</span></td></tr>
+      <tr><td class="name">Malung-S&auml;len</td><td>z 3.28</td><td>z 1.62</td><td><span class="tag over">ski <em>and</em> cross-border fuel</span></td></tr>
+    </tbody>
+  </table>
+  <p class="reveal">Pure ski resorts collapse to zero &mdash; the surplus <em>was</em> the skiers. The
+  border-and-ski towns keep a stubborn residual: tourism erases about 57% of the Norway over-stationing,
+  but a significant remainder survives (perm p&nbsp;=&nbsp;0.006), and the Finnish border shows neither
+  effect. That remainder is genuine <strong>cross-border fuel arbitrage</strong> &mdash; Norwegians driving
+  over to fill up where tax is lower. One residual surface, two mechanisms, separated.</p>
+
+  <details class="drawer reveal">
+    <summary>What the lens still can&rsquo;t see <span class="tagline">&mdash; the Sm&aring;land puzzle, brands, and income</span></summary>
+    <div class="body">
+      <p><strong>The motorway cluster.</strong> With the mountains explained by tourism, the largest
+      unexplained over-stationed group is interior Sm&aring;land &mdash; V&auml;xj&ouml;, Alvesta, Ljungby.
+      Not border, not high-tourism, and surviving cars, income <em>and</em> tourism. The likely culprit is
+      <em>through-traffic</em>: the E4 and routes 25/27 carry freight and pass-through demand that neither
+      resident cars nor overnight stays capture. Because tourism has already ruled out the obvious
+      alternative, this is the clean next thing to test (Trafikverket traffic counts).</p>
+      <p><strong>Brands sort by deviation.</strong> Manned majors (Circle K, OKQ8, St1) concentrate in the
+      tight urban municipalities; unmanned <em>automat</em> chains (Din-X, Qstar) thicken the over-stationed
+      rural tail. Real and significant, but a minor texture &mdash; the residual&ndash;automat correlation
+      is only +0.2.</p>
+      <p><strong>Income is a bundle, not a mechanism.</strong> The wealthy Stockholm-ring municipalities
+      have fewer stations even per car, and income absorbs a quarter of that deficit &mdash; but income is
+      inseparable here from land price and density, which is the very economics of sublinear scaling. A
+      strong association; not proof that wealth <em>zones out</em> pumps.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ===== THE BOWL: hand over the controls ===== -->
+<section class="wrap">
+  <p class="kicker reveal">Now you try</p>
+  <h2 class="reveal">Pick your ruler</h2>
+  <p class="reveal">You watched both knobs in the stem: the denominator (people or cars) and the spatial unit
+  (settlement, region, municipality). Here they are, yours to turn. Whatever you pick, the line stays
+  sublinear &mdash; and the same towns stay stubbornly <span class="purple">above</span> or
+  <span style="color:var(--under)">below</span> it.</p>
   <div class="ctrls reveal">
     <div class="ctrl-row">
       <span class="lbl">Divide by</span>
@@ -247,149 +430,20 @@ footer a{color:var(--accent)}
     <div class="ctrl-row">
       <span class="lbl">Spatial unit</span>
       <div class="seg" id="seg-u">
-        <button data-u="tatort" aria-pressed="false">Tätort</button>
+        <button data-u="tatort" aria-pressed="false">T&auml;tort</button>
         <button data-u="fua" aria-pressed="false">FUA</button>
         <button data-u="kommun" aria-pressed="true">Kommun</button>
       </div>
     </div>
   </div>
   <p class="carsnote reveal" id="carsnote"></p>
-
   <figure class="reveal explorer-wrap">
     <svg id="explorer" viewBox="0 0 760 560" role="img" aria-label="Interactive scatter of stations against population or cars across spatial units"></svg>
     <div id="exptip"></div>
     <figcaption id="expcap" style="max-width:560px"></figcaption>
   </figure>
-
-  <p class="note reveal">Don't be put off by the fuzzy bottom-left, where small towns hold just one or
-  two stations and the dots scatter widely. We're counting events, not measuring a quantity, so the law
-  is fitted as a <em>count</em> model: it asks how <em>probable</em> each station count is given the rate
-  the line predicts, not how far the dot sits from it. A village going from one station to two looks like
-  a 100% miss to the eye but is an ordinary wobble to the model. Judged on that probability — the right
-  yardstick here, not an R² — the fit holds tightly.</p>
-
-  <p class="reveal">The slope flexes between roughly <strong>0.59 and 0.78</strong> — but every single
-  fit leans the same way: sublinear, larger places served more efficiently, never a straight β = 1.
-  And notice the dots that stay stubbornly <span class="purple">above</span> or
-  <span style="color:var(--under)">below</span> the line <em>no matter which ruler you pick</em> — the
-  ski-and-border north up top, the Stockholm commuter belt down below. Those are the places the law
-  can't explain on its own, and they're where the rest of this story lives.</p>
 </section>
 
-<section class="wrap">
-  <p class="kicker reveal">Where the rule breaks</p>
-  <h2 class="reveal">The "ghost customer" map</h2>
-  <p class="reveal">Some places have far more stations than their residents can explain — others
-  far fewer. Instead of measuring the gap in <em>stations</em>, we ask the law a different
-  question: <span class="purple">how big would this town have to be</span> to justify the
-  stations it actually has? Slide horizontally to the regression line, and the answer is the
-  town's <strong>effective population</strong>.</p>
-
-  <div class="eqbox reveal">
-    <div class="eq">$$S_{\text{eff}}=\left(\tfrac{P}{C}\right)^{1/\beta}
-      =\exp\!\left(\frac{\log P-\alpha}{\beta}\right)$$</div>
-    <p class="note">This is exactly the value of S that makes the observed count most likely —
-    the maximum-likelihood point on the curve. The gap $S_{\text{eff}}-S$ is the implied crowd of
-    <strong>non-residents</strong>: tourists, cross-border shoppers, transit traffic.</p>
-  </div>
-
-  <figure class="reveal">
-    <svg id="scatter" viewBox="0 0 760 560" role="img" aria-label="Stations vs population per municipality with effective-population arrows"></svg>
-    <figcaption>Each dot is a municipality: stations vs. residents (log–log). The line is the fitted
-    law. <span style="color:var(--over)">Purple</span> arrow — Malung-Sälen <em>fuels like</em> a
-    town 5× its size. <span style="color:var(--under)">Mint</span> arrow — Sundbyberg fuels like a
-    village 1/40th its size.</figcaption>
-  </figure>
-
-  <table class="reveal">
-    <thead><tr><th>Municipality</th><th>Residents</th><th>Stations</th><th>Fuels like</th><th></th></tr></thead>
-    <tbody>
-      <tr><td class="name">Malung-Sälen</td><td>10,260</td><td>17</td><td>~55,300</td><td><span class="tag over">×5.4 ghosts</span></td></tr>
-      <tr><td class="name">Härjedalen</td><td>10,145</td><td>15</td><td>~44,700</td><td><span class="tag over">×4.4</span></td></tr>
-      <tr><td class="name">Tingsryd <span class="dim">(transit + visitors)</span></td><td>12,155</td><td>16</td><td>~49,900</td><td><span class="tag over">×4.1</span></td></tr>
-      <tr><td class="name">Sundbyberg</td><td>55,912</td><td>2</td><td>~1,500</td><td><span class="tag under">×0.03</span></td></tr>
-      <tr><td class="name">Nacka</td><td>110,633</td><td>10</td><td>~22,600</td><td><span class="tag under">×0.20</span></td></tr>
-    </tbody>
-  </table>
-
-  <blockquote class="pullquote reveal">Sälen has 10,000 residents but fuels like a town of 55,000.
-  Sundbyberg has 56,000 residents but fuels like a village of 1,500. Same law, opposite ends —
-  resident population is simply the wrong denominator when demand crosses the line.</blockquote>
-</section>
-
-<section class="wrap">
-  <p class="kicker reveal">Who are the ghosts?</p>
-  <h2 class="reveal">Tourists — but only the kind that drive</h2>
-  <p class="reveal">If the extra stations serve visitors, we should be able to <em>see</em> the visitors. We
-  can't count them directly, so we proxy them by the footprint they leave behind — but not just any
-  tourism. A crowd wandering Stockholm's Old Town and the Vasa Museum arrives by metro and never buys
-  a litre of fuel. The tourism that <strong>moves petrol</strong> is the kind that arrives by car and
-  stays: a ski week in Sälen, a camping trip on Öland, a lakeside cabin in the forest. So we built the
-  proxy deliberately from <span class="purple">overnight beds and ski-lifts</span> — hotels, hostels,
-  campsites and chalets, lift stations — the infrastructure of <em>mobile, stay-over</em> tourism, and
-  ignored the walk-around urban kind.</p>
-
-  <p class="reveal">It lands. A municipality's over- or under-stationing tracks this mobile-tourism
-  proxy at <strong>+0.58</strong> — far above the <strong>+0.20</strong> we get from the share of
-  cheap unmanned pumps, the other obvious rural suspect. And it isn't just "rural places have both":
-  after we strip out residents, <em>their cars</em>, and their income, the leftover surprise still
-  follows tourism at <strong>+0.43</strong>. In the full model, holding cars and income fixed, more
-  visitor infrastructure means significantly more stations (p &lt; 10⁻¹⁵), and switching it on pulls
-  the over-stationed tail's average gap down by about a quarter.</p>
-
-  <div class="stats reveal" style="max-width:620px">
-    <div class="stat"><div class="lab" style="margin-bottom:6px">residual vs. <em>mobile tourism</em><br>(beds + ski-lifts)</div><div class="big" style="color:var(--over)">+0.58</div><div class="lab">the ghosts have a footprint</div></div>
-    <div class="stat" style="display:flex;align-items:center;justify-content:center;flex:0 0 44px;border:none;background:none"><div class="big" style="color:var(--ink-dim)">vs</div></div>
-    <div class="stat"><div class="lab" style="margin-bottom:6px">residual vs. <em>unmanned pumps</em><br>(automat share)</div><div class="big" style="color:var(--ink-dim)">+0.20</div><div class="lab">a rural texture, not the cause</div></div>
-  </div>
-
-  <p class="note reveal">It explains the resorts cleanly — Sälen, Härjedalen, Åre light up on both beds
-  and lifts. It explains Tingsryd only <em>partly</em>: the Kingdom of Crystal's glassworks and
-  forest day-trips leave no overnight footprint, so the proxy under-counts exactly the car-borne
-  day-tourism we'd most want to measure. The signal is real; the proxy is a floor, not a ceiling.</p>
-</section>
-
-<section class="wrap">
-  <p class="kicker reveal">The same story, on the map</p>
-  <h2 class="reveal">It's geography, not noise</h2>
-  <p class="reveal">Plot every municipality where it actually sits — circle size for population, colour
-  for the deviation — and the surprises aren't scattered at random. <span class="purple">Over-stationed</span>
-  places line the <em>Norwegian mountain border</em> and the sparse north: ski resorts and
-  cross-border fuel runs. <span style="color:var(--under)">Under-stationed</span> places cluster in the
-  <em>Stockholm and Göteborg suburbs</em>, whose residents fuel up in the core or in transit.</p>
-  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
-    <svg id="map" viewBox="0 0 360 700" role="img" aria-label="Map of Sweden, municipalities coloured by over- or under-stationing" style="max-width:340px"></svg>
-    <figcaption style="max-width:520px">Each circle is a municipality at its true location; area ∝ population.
-    <span style="color:var(--over)">●</span> over-stationed (fuels for ghosts) ·
-    <span style="color:var(--under)">●</span> under-stationed ·
-    <span style="color:var(--ink-dim)">●</span> in line with the law. The over/under split is
-    the same north-vs-suburb pattern the arrows above revealed.</figcaption>
-  </figure>
-</section>
-
-<section class="wrap">
-  <p class="kicker reveal">Due diligence</p>
-  <h2 class="reveal">Did we fit reality to the theory?</h2>
-  <p class="reveal">A petrol station is a <em>counted thing</em>, not a measured quantity, so we fitted it
-  with a count model (negative-binomial regression) rather than a tidy line through logged data — which
-  would have silently dropped every town with zero stations. The real test is whether the model reproduces
-  the actual spread of counts:</p>
-
-  <figure class="reveal" style="display:flex;flex-direction:column;align-items:center">
-    <svg id="rootogram" viewBox="0 0 760 400" role="img" aria-label="Rootogram: observed versus predicted number of settlements by station count" style="max-width:640px"></svg>
-    <figcaption style="max-width:580px">A <em>rootogram</em>: each bar is how many of the 2,017 settlements
-    have exactly 0, 1, 2 … stations; the <span style="color:var(--accent-2)">mint curve</span> is the
-    model's prediction. Bars hang <em>from</em> the curve, so a bar reaching below the baseline means
-    slightly more real towns than predicted, above means fewer. The big <strong>zero</strong> bar lands
-    almost dead on — 1,113 empty settlements observed, ~1,142 predicted — so the model earns its zeros
-    rather than needing a special fudge.</figcaption>
-  </figure>
-
-  <p class="note reveal">It isn't a flawless fit, and shouldn't be: a single exponent slightly mis-describes
-  the smallest and largest towns (a real, tested bend in the curve), and the leftover surprises cluster on
-  the map rather than scattering at random. Those misses aren't hidden — they're the second half of this
-  story. The sublinearity is what survives the checks, not what a flattering line invented.</p>
-</section>
 
 <footer class="wrap">
   <p><strong>Data.</strong> Stations: OpenStreetMap <code>amenity=fuel</code> (2026), deduped at 50 m.
@@ -419,13 +473,15 @@ const css = v=>getComputedStyle(document.documentElement).getPropertyValue(v).tr
 /* ---------- Forest plot ---------- */
 function forest(){
   const svg=document.getElementById('forest');
-  const W=760,H=320,m={l:185,r:40,t:30,b:54};
+  const W=760,H=360,m={l:205,r:44,t:34,b:54};
   const x0=0.45,x1=1.05;
   const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r);
   const rows=[
+    {name:"Tätort + småort",b:0.808,lo:0.794,hi:0.821},
     {name:"Tätort (settlement)",b:0.777,lo:0.761,hi:0.793},
-    {name:"FUA (functional)",b:0.661,lo:0.610,hi:0.712},
-    {name:"Kommun (admin.)",b:0.592,lo:0.545,hi:0.638},
+    {name:"Kommun · per car",b:0.681,lo:0.633,hi:0.728,alt:true},
+    {name:"FUA (functional region)",b:0.661,lo:0.610,hi:0.712},
+    {name:"Kommun · per resident",b:0.592,lo:0.545,hi:0.638},
   ];
   const ink=css('--ink'),dim=css('--ink-dim'),acc=css('--accent'),acc2=css('--accent-2'),line=css('--line');
   // infra band 0.75-0.9
@@ -437,14 +493,15 @@ function forest(){
   }
   // beta=1 reference
   svg.appendChild(el('line',{x1:X(1),y1:m.t-6,x2:X(1),y2:H-m.b,stroke:acc,'stroke-width':2,'stroke-dasharray':'5 5'}));
-  const r1=el('text',{x:X(1),y:m.t-12,fill:acc,'font-size':12.5,'text-anchor':'middle','font-family':'Space Grotesk'});r1.textContent='β = 1 (proportional)';svg.appendChild(r1);
+  const r1=el('text',{x:X(1),y:m.t-12,fill:acc,'font-size':12.5,'text-anchor':'middle','font-family':'Space Grotesk'});r1.textContent='↑ the wall — β = 1 (proportional)';svg.appendChild(r1);
   const rowH=(H-m.t-m.b)/rows.length;
   rows.forEach((r,i)=>{
     const y=m.t+rowH*(i+0.5);
-    svg.appendChild(el('line',{x1:X(r.lo),y1:y,x2:X(r.hi),y2:y,stroke:acc2,'stroke-width':3,'stroke-linecap':'round'}));
-    svg.appendChild(el('circle',{cx:X(r.b),cy:y,r:6,fill:acc2,stroke:css('--bg'),'stroke-width':2}));
+    svg.appendChild(el('line',{x1:X(r.lo),y1:y,x2:X(r.hi),y2:y,stroke:r.alt?css('--under'):acc2,'stroke-width':3,'stroke-linecap':'round'}));
+    const dotcol=r.alt?css('--under'):acc2;
+    svg.appendChild(el('circle',{cx:X(r.b),cy:y,r:6,fill:dotcol,stroke:css('--bg'),'stroke-width':2}));
     const nm=el('text',{x:m.l-16,y:y+5,fill:ink,'font-size':15,'text-anchor':'end','font-family':'Inter'});nm.textContent=r.name;svg.appendChild(nm);
-    const bv=el('text',{x:X(r.b),y:y-13,fill:acc2,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk','font-weight':600});bv.textContent=r.b.toFixed(2);svg.appendChild(bv);
+    const bv=el('text',{x:X(r.b),y:y-13,fill:r.alt?css('--under'):acc2,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk','font-weight':600});bv.textContent=r.b.toFixed(2);svg.appendChild(bv);
   });
 }
 
@@ -473,12 +530,13 @@ function scatter(){
   // regression line
   const xa=xd[0],xb=xd[1];
   const py=x=>l10(C)+BETA*x; // log10 P = log10 C + beta*log10 S
-  svg.appendChild(el('line',{x1:X(xa),y1:Y(py(xa)),x2:X(xb),y2:Y(py(xb)),stroke:acc2,'stroke-width':2.5}));
+  svg.appendChild(el('line',{x1:X(xa),y1:Y(py(xa)),x2:X(xb),y2:Y(py(xb)),stroke:dim,'stroke-width':2,'stroke-dasharray':'6 5'}));
   // horizontal proportionality label, placed below the line in open space
   const flx=X(5.15), fly=Y(py(5.15))+26;
-  const fitlab=el('text',{x:flx,y:fly,fill:acc2,'font-size':15,'font-family':'Space Grotesk','font-weight':600,'text-anchor':'middle'});
+  const fitlab=el('text',{x:flx,y:fly,fill:dim,'font-size':14,'font-family':'Space Grotesk','font-weight':600,'text-anchor':'middle'});
   fitlab.appendChild(document.createTextNode('P ∝ S'));
   const sup=el('tspan',{'font-size':11,'baseline-shift':'super'});sup.textContent='0.59';fitlab.appendChild(sup);
+  fitlab.appendChild(document.createTextNode('  (the baseline)'));
   svg.appendChild(fitlab);
   // points
   const highlight={'Malung-Sälen':1,'Sundbyberg':1};
@@ -519,6 +577,10 @@ function smap(){
   const ox=m+((W-2*m)-dx*s)/2, oy=m+((H-2*m)-dy*s)/2;
   const X=x=>ox+(x-xd[0])*s, Y=y=>oy+(yd[1]-y)*s;   // invert northing
   const dim=css('--ink-dim'),over=css('--over'),under=css('--under'),line=css('--line'),panel=css('--panel');
+  // colour by the cars-vs-stations kommun residual — the SAME metric and ±0.45
+  // threshold the explorer scatter uses, so a city near the line reads the same here.
+  const cl=EXP.lines.car_kommun, ca=cl[0], cb=cl[1];
+  const cres={}; EXP.views.car_kommun.forEach(([x,P,name])=>{cres[name]=Math.log(P)-(ca+cb*Math.log(x));});
   // national outline
   MAP.rings.forEach(r=>{
     const d='M'+r.map(([x,y])=>`${X(x).toFixed(1)} ${Y(y).toFixed(1)}`).join('L')+'Z';
@@ -526,10 +588,11 @@ function smap(){
   });
   // bubbles, largest first so small ones stay clickable on top
   const rows=KOMMUN.filter(r=>MAP.cent[r[0]]).slice().sort((a,b)=>b[1]-a[1]);
-  rows.forEach(([n,S,P,z])=>{
+  rows.forEach(([n,S,P,z0])=>{
     const [cx,cy]=MAP.cent[n];
-    const col = z>0.6?over : z<-0.6?under : dim;
-    const ext = Math.abs(z)>0.6;
+    const z = cres[n]!==undefined?cres[n]:0;
+    const col = z>0.45?over : z<-0.45?under : dim;
+    const ext = Math.abs(z)>0.45;
     const r = 1.4+0.0135*Math.sqrt(S);
     svg.appendChild(el('circle',{cx:X(cx),cy:Y(cy),r,fill:col,opacity:ext?0.82:0.32,
       stroke:ext?css('--bg'):'none','stroke-width':ext?0.8:0}));
@@ -702,11 +765,97 @@ function wireExplorer(){
   syncSegs();
 }
 
+
+/* ---------- Scene 1-2: linear droop -> log-log snap (kommun anchor) ---------- */
+function snapGeom(){
+  const W=760,H=460,m={l:64,r:26,t:24,b:58};
+  const S=KOMMUN.map(r=>r[1]), P=KOMMUN.map(r=>r[2]);
+  const sMax=Math.max.apply(null,S), pMax=Math.max.apply(null,P);
+  const l10=Math.log10;
+  const xs=S.map(l10), ys=P.map(l10);
+  const xlo=Math.min.apply(null,xs)-.07, xhi=Math.max.apply(null,xs)+.07,
+        ylo=Math.min.apply(null,ys)-.12, yhi=Math.max.apply(null,ys)+.14;
+  return {W,H,m,S,P,sMax,pMax,xs,ys,xlo,xhi,ylo,yhi,l10,
+    Xn:s=>m.l+(s/(sMax*1.04))*(W-m.l-m.r),
+    Yn:p=>H-m.b-(p/(pMax*1.06))*(H-m.t-m.b),
+    Xl:v=>m.l+(v-xlo)/(xhi-xlo)*(W-m.l-m.r),
+    Yl:v=>H-m.b-(v-ylo)/(yhi-ylo)*(H-m.t-m.b)};
+}
+function snapLin(){
+  const svg=document.getElementById('snaplin'); if(!svg)return;
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const g=snapGeom(), {W,H,m,sMax,pMax,Xn,Yn}=g;
+  const ink=css('--ink'),dim=css('--ink-dim'),acc2=css('--accent-2'),line=css('--line');
+  [0,250000,500000,750000,1000000].forEach(t=>{
+    svg.appendChild(el('line',{x1:Xn(t),y1:m.t,x2:Xn(t),y2:H-m.b,stroke:line,'stroke-width':1,opacity:.4}));
+    const tx=el('text',{x:Xn(t),y:H-m.b+22,fill:dim,'font-size':12.5,'text-anchor':'middle','font-family':'Inter'});
+    tx.textContent=t===0?'0':(t/1000)+'k';svg.appendChild(tx);
+  });
+  [0,20,40,60].forEach(t=>{
+    svg.appendChild(el('line',{x1:m.l,y1:Yn(t),x2:W-m.r,y2:Yn(t),stroke:line,'stroke-width':1,opacity:.4}));
+    const ty=el('text',{x:m.l-10,y:Yn(t)+4,fill:dim,'font-size':12.5,'text-anchor':'end','font-family':'Inter'});
+    ty.textContent=t;svg.appendChild(ty);
+  });
+  const xl=el('text',{x:(m.l+W-m.r)/2,y:H-12,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk'});xl.textContent='Residents  →';svg.appendChild(xl);
+  const yl=el('text',{x:18,y:(m.t+H-m.b)/2,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk',transform:`rotate(-90 18 ${(m.t+H-m.b)/2})`});yl.textContent='Stations  →';svg.appendChild(yl);
+  // power curve y = C * S^BETA
+  let d='M';
+  for(let i=0;i<=80;i++){const s=sMax*i/80; d+=`${Xn(s).toFixed(1)} ${Yn(C*Math.pow(s,BETA)).toFixed(1)} `;}
+  svg.appendChild(el('path',{d:'M'+d.slice(1),fill:'none',stroke:acc2,'stroke-width':2.5,'stroke-linejoin':'round'}));
+  g.S.forEach((s,i)=>svg.appendChild(el('circle',{cx:Xn(s).toFixed(1),cy:Yn(g.P[i]).toFixed(1),r:3.2,fill:acc2,opacity:.55})));
+  const note=el('text',{x:Xn(640000),y:Yn(52),fill:dim,'font-size':12.5,'font-family':'Space Grotesk','text-anchor':'middle'});
+  note.textContent='the curve flattens →';svg.appendChild(note);
+}
+function snapLog(animate){
+  const svg=document.getElementById('snaplog'); if(!svg)return;
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const g=snapGeom(), {W,H,m,xlo,xhi,ylo,yhi,l10,Xl,Yl,Xn,Yn}=g;
+  const ink=css('--ink'),dim=css('--ink-dim'),acc2=css('--accent-2'),line=css('--line');
+  // ticks (log decades + 2,5)
+  const ticks=(lo,hi)=>{const o=[];for(let e=Math.floor(lo);e<=Math.ceil(hi);e++)[1,2,5].forEach(mm=>{const v=Math.log10(mm)+e;if(v>=lo&&v<=hi){const val=mm*Math.pow(10,e);o.push([v,val>=1e6?(val/1e6)+'M':val>=1e3?(val/1e3)+'k':''+val]);}});return o;};
+  ticks(xlo,xhi).forEach(([t,l])=>{
+    svg.appendChild(el('line',{x1:Xl(t),y1:m.t,x2:Xl(t),y2:H-m.b,stroke:line,'stroke-width':1,opacity:.4}));
+    const tx=el('text',{x:Xl(t),y:H-m.b+22,fill:dim,'font-size':12.5,'text-anchor':'middle','font-family':'Inter'});tx.textContent=l;svg.appendChild(tx);
+  });
+  ticks(ylo,yhi).forEach(([t,l])=>{
+    svg.appendChild(el('line',{x1:m.l,y1:Yl(t),x2:W-m.r,y2:Yl(t),stroke:line,'stroke-width':1,opacity:.4}));
+    const ty=el('text',{x:m.l-10,y:Yl(t)+4,fill:dim,'font-size':12.5,'text-anchor':'end','font-family':'Inter'});ty.textContent=l;svg.appendChild(ty);
+  });
+  const xl=el('text',{x:(m.l+W-m.r)/2,y:H-12,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk'});xl.textContent='Residents (log)  →';svg.appendChild(xl);
+  const yl=el('text',{x:18,y:(m.t+H-m.b)/2,fill:ink,'font-size':14,'text-anchor':'middle','font-family':'Space Grotesk',transform:`rotate(-90 18 ${(m.t+H-m.b)/2})`});yl.textContent='Stations (log)  →';svg.appendChild(yl);
+  // straight fit line
+  const py=x=>l10(C)+BETA*x;
+  svg.appendChild(el('line',{x1:Xl(xlo),y1:Yl(py(xlo)),x2:Xl(xhi),y2:Yl(py(xhi)),stroke:acc2,'stroke-width':2.5}));
+  const mx=(xlo+xhi)/2, fl=el('text',{x:Xl(mx),y:Yl(py(mx))+24,fill:acc2,'font-size':15,'font-family':'Space Grotesk','font-weight':600,'text-anchor':'middle'});
+  fl.appendChild(document.createTextNode('slope β = 0.59'));svg.appendChild(fl);
+  // dots — final positions are log; optionally fly in from linear positions
+  const circles=g.S.map((s,i)=>{
+    const cxL=Xl(g.xs[i]),cyL=Yl(g.ys[i]);
+    const c=el('circle',{cx:cxL.toFixed(1),cy:cyL.toFixed(1),r:3.2,fill:acc2,opacity:.6});
+    svg.appendChild(c); return [c,Xn(s),Yn(g.P[i]),cxL,cyL];
+  });
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(animate && !reduce){
+    const t0=performance.now(), dur=1150;
+    (function fr(now){let k=Math.min(1,(now-t0)/dur);const e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+      circles.forEach(([c,xn,yn,xl_,yl_])=>{c.setAttribute('cx',(xn+(xl_-xn)*e).toFixed(1));c.setAttribute('cy',(yn+(yl_-yn)*e).toFixed(1));});
+      if(k<1)requestAnimationFrame(fr);})(t0);
+  }
+}
+function snapObserve(){
+  const fig=document.getElementById('snaplog'); if(!fig)return;
+  const ob=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){snapLog(true);ob.unobserve(e.target);}}),{threshold:.4});
+  ob.observe(fig);
+  const btn=document.getElementById('snapreplay');
+  if(btn)btn.addEventListener('click',()=>snapLog(true));
+}
+
 /* render once KaTeX is ready */
 function render(){
   if(window.renderMathInElement){
     renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
   }
+  snapLin(); snapLog(false); snapObserve();
   forest(); scatter(); smap(); stomap(); rootogram(); wireExplorer(); explorer();
 }
 window.addEventListener('load',()=>setTimeout(render,60));
