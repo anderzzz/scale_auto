@@ -20,6 +20,31 @@ All four definitions are sublinear and exclude β = 1, but the magnitude swings 
 0.59 to 0.81 depending on the unit — that MAUP spread is the point. Full write-up in
 [`output/report.md`](output/report.md).
 
+## Density scaling (Sutton et al. framing)
+
+Coarse, mixed units mis-measure the rural-urban divide: Sundsvall kommun reads as
+**0.22 ppl/ha** (rural-looking) because a real city is smeared over 3,474 km² of
+forest. Following Sutton et al. (2024), Phase 10 instead uses **population density
+ρ = S/A** on fine, complete-coverage units — **DeSO** (n≈6,160) and **RegSO**
+(n≈3,363) — and fits a **segmented count GLM with an area offset**
+(`log E[P] = log A + a + β·log ρ`), which handles the many P = 0 units and avoids
+the spurious-ratio R² inflation of OLS on P/A.
+
+| Unit | n | single β | rural slope (below) | urban slope (above) | breakpoint |
+|---|--:|--:|--:|--:|--:|
+| DeSO | 6,160 | 0.79 | **0.98** (≈linear) | **0.26** (saturating) | **5.7 ppl/ha** |
+| RegSO | 3,363 | 0.82 | 0.95 | 0.20 | 8.0 ppl/ha |
+
+Two clean findings: (1) the segmented model is decisively preferred (ΔAIC > 280,
+LR p < 1e-60 at both granularities) — fuel retail scales **~linearly with density in
+rural Sweden, then saturates sharply** once you cross into urban density; (2) that
+transition sits at **~6–8 ppl/ha, far below Sutton's 33 ± 5** for England-&-Wales
+socio-demographics — fuel demand saturates at much lower density. And the Sundsvall
+problem dissolves: at DeSO resolution the kommun splits into 59 units spanning
+0.01–77 ppl/ha, with **25 units (≈46k people, ~46% of the kommun) on the urban side**
+of the breakpoint — invisible at kommun resolution. See
+[`output/density.md`](output/density.md) and `output/charts/10_density.png`.
+
 ## Run
 
 ```bash
@@ -40,6 +65,7 @@ still leaves a valid (partial) deliverable. Single random seed = 17.
 | 3 | `scripts/03_regressions.py` | `output/results.json` — NB/Poisson GLM, OLS, bootstrap |
 | 4 | `scripts/04_charts.py` | `output/charts/*.png` |
 | 5 | `scripts/05_report.py` | `output/report.md`, `output/methods.md` |
+| 10 | `scripts/10_density.py` | `output/density_summary.json`, `output/density.md`, density chart |
 | — | `scripts/99_summary.py` | stdout summary |
 
 `scripts/common.py` holds config loading, timestamped logging to `logs/status.log`,

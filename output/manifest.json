@@ -83,7 +83,35 @@
       "source_url": "derived: OSM tourism POIs per kommun",
       "size_bytes": 46084,
       "timestamp": "2026-06-23T16:55:30Z"
+    },
+    {
+      "name": "pop_deso_regso.json",
+      "path": "cache/pop_deso_regso.json",
+      "source_url": "https://api.scb.se/OV0104/v1/doris/en/ssd/BE/BE0101/BE0101Y/FolkmDesoAldKon (total pop 2025)",
+      "size_bytes": 205273,
+      "timestamp": "2026-06-28T06:42:10Z"
+    },
+    {
+      "name": "units_deso.geojson",
+      "path": "cache/units_deso.geojson",
+      "source_url": "https://geodata.scb.se/geoserver/stat/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames=stat:DeSO_2025&outputFormat=application/json&srsName=EPSG:3006&count=20000",
+      "size_bytes": 64419520,
+      "timestamp": "2026-06-28T06:46:54Z"
+    },
+    {
+      "name": "units_regso.geojson",
+      "path": "cache/units_regso.geojson",
+      "source_url": "https://geodata.scb.se/geoserver/stat/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames=stat:RegSO_2025&outputFormat=application/json&srsName=EPSG:3006&count=20000",
+      "size_bytes": 52640873,
+      "timestamp": "2026-06-28T06:46:58Z"
+    },
+    {
+      "name": "stations_clean.gpkg",
+      "path": "cache/stations_clean.gpkg",
+      "source_url": "derived: cleaned+normalised stations (Phase 16)",
+      "size_bytes": 716800,
+      "timestamp": "2026-06-29T12:45:26Z"
     }
   ],
-  "updated": "2026-06-23T16:55:30Z"
+  "updated": "2026-06-29T12:45:26Z"
 }
