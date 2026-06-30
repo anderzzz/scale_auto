@@ -1178,9 +1178,28 @@ function orientInit(){
     tt.setAttribute('stroke','#E3C56B');tt.setAttribute('stroke-width','0.7');
     tt.appendChild(document.createTextNode(t.n));g_lab.appendChild(tt);
   });
+  // Augment the zoom RegSO layer with in-window national RegSO the core build omitted
+  // (Nyköping/Oxelösund etc.) so every purple line in the zoomed frame is present & thickened.
+  (function(){
+    const vb=ORIENT.regVB, X0=vb[0],Y0=vb[1],X1=vb[0]+vb[2],Y1=vb[1]+vb[3];
+    const flt=d=>{const m=d.match(/-?\d+\.?\d*/g);return m?m.map(Number):[];};
+    const meta=d=>{const a=flt(d);if(a.length<2)return null;
+      let mnx=a[0],mxx=a[0],mny=a[1],mxy=a[1];
+      for(let i=0;i<a.length-1;i+=2){const x=a[i],y=a[i+1];
+        if(x<mnx)mnx=x;if(x>mxx)mxx=x;if(y<mny)mny=y;if(y>mxy)mxy=y;}
+      return {mnx,mxx,mny,mxy,cx:(mnx+mxx)/2,cy:(mny+mxy)/2};};
+    const core=ORIENT.regso_reg.map(meta).filter(Boolean);
+    let add='';
+    ORIENT.regso_nat.forEach(d=>{const m=meta(d);if(!m)return;
+      if(m.mxx<X0||m.mnx>X1||m.mxy<Y0||m.mny>Y1)return;           // outside the zoom window
+      for(const c of core){if(Math.abs(c.cx-m.cx)<3.5&&Math.abs(c.cy-m.cy)<3.5)return;} // already in core
+      add+=d;});
+    if(add)g_regreg.setAttribute('d',ORIENT.regso_reg.join('')+add);
+  })();
   const layers={outline:g_outline,kommun:g_kommun,regnat:g_regnat,regreg:g_regreg,deso:g_deso,tat:g_tat,lab:g_lab};
   for(const k in layers){layers[k].style.transition='opacity .6s ease'; if(k!=='outline')layers[k].style.opacity=0;}
   g_kommun.style.transition='opacity .6s ease, stroke-width .6s ease'; g_kommun.style.strokeWidth='1';
+  g_regreg.style.transition='opacity .6s ease, stroke-width .6s ease'; g_regreg.style.strokeWidth='0.9';
   let curVB=ORIENT.natVB.slice(), animId=null;
   function tweenVB(target){
     if(curVB.every((v,i)=>v===target[i]))return;
@@ -1204,6 +1223,7 @@ function orientInit(){
     Object.assign(all,st.op);
     for(const k in layers) layers[k].style.opacity=all[k];
     g_kommun.style.strokeWidth = st.zoom ? '2.5' : '1';
+    g_regreg.style.strokeWidth = st.zoom ? '1.5' : '0.9';
     tweenVB(st.vb);
     document.querySelectorAll('#maplegend span').forEach(sp=>sp.classList.toggle('on',st.leg.indexOf(sp.dataset.k)>=0));
   }
