@@ -32,8 +32,10 @@ body{
 }
 .wrap{max-width:760px;margin:0 auto;padding:0 28px}
 h1,h2,.kicker,.big{font-family:'Space Grotesk',sans-serif}
-section{padding:78px 0;border-bottom:1px solid var(--line)}
-section:last-of-type{border-bottom:none}
+section{padding:78px 0}
+/* act-mark: the only structural separator — a short centered rule at the felt turns */
+.actmark{width:46px;height:2px;background:var(--accent);border-radius:2px;margin:0 auto 40px;opacity:.9}
+.scene-air .actmark{margin-bottom:46px}
 .kicker{color:var(--accent);text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:600;margin:0 0 14px}
 h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:0 0 18px;font-weight:700;letter-spacing:-.01em}
 h2{font-size:clamp(26px,4vw,38px);line-height:1.12;margin:0 0 16px;font-weight:600;letter-spacing:-.01em}
@@ -187,27 +189,28 @@ details.drawer .body p:last-child{margin-bottom:0}
 <body>
 
 <header class="wrap hero">
-  <p class="kicker reveal">Sweden &middot; 3,263 petrol stations &middot; one scaling law</p>
-  <h1 class="reveal">Do bigger towns<br>have more petrol stations?</h1>
-  <p class="sub lead reveal">Yes &mdash; but never in proportion. Across all of Sweden, fuel provision
-  grows <em>slower</em> than the population it serves. One number captures how much slower; the places
-  where that number fails turn out to map tourism, the Norwegian border, and the motorways.</p>
-
-  <div class="stats reveal">
-    <div class="stat"><div class="big">3,263</div><div class="lab">petrol stations mapped (OpenStreetMap)</div></div>
-    <div class="stat"><div class="big">290</div><div class="lab">municipalities (kommuner) &mdash; the unit we follow throughout</div></div>
-    <div class="stat"><div class="big">&beta; &lt; 1</div><div class="lab">sublinear, every way we slice it</div></div>
-  </div>
-  <p class="note reveal hint">Scroll to descend &mdash; from one number for the whole country, down onto a single named town.</p>
+  <p class="kicker reveal">Sweden &middot; a scaling law</p>
+  <h1 class="reveal">City and Village<br>Petrol Stations of Sweden</h1>
+  <p class="sub lead reveal">Petrol stations are the nodes of the car&ndash;transport network &mdash; fuel bought
+  to enable commutes, vacations, and the haulage of goods. More people mean more demand for all of it. But
+  does more demand mean more <em>stations</em>?</p>
+  <p class="sub lead reveal">Yes &mdash; though in more interesting ways than you might guess. Out of a
+  competitive, heterogeneous market a remarkable regularity emerges. A <strong>scaling law</strong>: one
+  compact rule for how an economy presses against the land, be it in big cities, in small settlements, out
+  in the forest, and up at the northern ski resorts.</p>
 </header>
 
 <!-- ===== ORIENTATION: the units of Sweden (scrollytelling map) ===== -->
 <section class="mapscene">
   <div class="wrap" style="max-width:1080px">
-    <p class="kicker reveal">First, the lay of the land</p>
     <h2 class="reveal">Five ways to cut up Sweden</h2>
-    <p class="reveal lead">Before any numbers, meet the rulers. Everything that follows hangs on the unit we
-    measure in &mdash; so here they are as a map, drawn one inside the next. Scroll, and watch the country divide.</p>
+    <p class="reveal lead">The economics of place needs a geographic unit to measure in &mdash; and everything that
+    follows hangs on which one. Here are five ways to cut the land into units, drawn one inside the next.
+    Scroll, and watch the country divide.</p>
+    <p class="reveal note">Definitions follow Statistics Sweden&rsquo;s <a
+    href="https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/"
+    target="_blank" rel="noopener"
+    style="color:var(--ink-dim);text-decoration:underline;text-underline-offset:2px">regional divisions</a>.</p>
   </div>
   <div class="inner">
     <div class="map-graphic">
@@ -216,23 +219,22 @@ details.drawer .body p:last-child{margin-bottom:0}
         <span data-k="land"><i class="fill" style="background:#1d4435;border:1px solid #3a6a53"></i>land</span>
         <span data-k="kommun"><i style="border-top-color:#9DC9B3"></i>municipality &middot; 290</span>
         <span data-k="regso"><i style="border-top-color:#C9B4E6"></i>RegSO &middot; ~3,400</span>
-        <span data-k="deso"><i style="border-top-color:#B7E4C7"></i>DeSO &middot; ~6,160</span>
+        <span data-k="deso"><i style="border-top-color:#B7E4C7"></i>DeSO &middot; ~6,200</span>
         <span data-k="tatort"><i class="fill" style="background:#E3C56B"></i>settlement (t&auml;tort)</span>
       </div>
     </div>
     <div class="map-stepcol">
-      <div class="mstep" data-step="0"><div class="card"><div class="num">Step 1</div><h3>One country</h3><p>Sweden &mdash; 450,000&nbsp;km&sup2;, most of it forest and water, the population pressed into a few percent of the land.</p></div></div>
-      <div class="mstep" data-step="1"><div class="card"><div class="num">Step 2</div><h3>290 municipalities</h3><p>The administrative tiles &mdash; the unit the regressions mostly follow. They cover the whole country with no gaps, each one a dense town wrapped in its empty hinterland.</p></div></div>
-      <div class="mstep" data-step="2"><div class="card"><div class="num">Step 3</div><h3>~3,400 RegSO</h3><p>Every municipality divides into RegSO &mdash; a few thousand named neighbourhoods that tile each municipality exactly. The mesh tightens, finest where the people are.</p></div></div>
-      <div class="mstep" data-step="3"><div class="card"><div class="num">Step 4</div><h3>~6,160 DeSO &mdash; zoom in</h3><p>Push in on Norrk&ouml;ping and Link&ouml;ping. RegSO split once more into DeSO &mdash; the finest mesh, 700&ndash;2,700 residents each. These are the tiles the density story is built on.</p></div></div>
-      <div class="mstep" data-step="4"><div class="card"><div class="num">Step 5</div><h3>Settlement &mdash; the odd one out</h3><p>Now the <span style="color:#E3C56B">built-up areas</span> bloom on top. Settlements are drawn around <em>buildings</em>, not the mesh &mdash; watch them spill <em>across</em> the DeSO lines. They cover the ~2% of land where ~88% of Swedes live; everywhere else is rural, yet still inside a DeSO.</p></div></div>
+      <div class="mstep" data-step="0"><div class="card"><h3>One country</h3><p>450,000&nbsp;km&sup2;, most of it forest and lakes, the population pressed into a few percent of the land.</p></div></div>
+      <div class="mstep" data-step="1"><div class="card"><h3>290 municipalities</h3><p>The administrative units. They cover the whole country with no gaps, each typically centred on a town or city and its surrounding landscape.</p></div></div>
+      <div class="mstep" data-step="2"><div class="card"><h3>~3,400 RegSO</h3><p>Every municipality divides further into RegSO &mdash; named regions of roughly 700 to 23,000 residents, their borders drawn to follow natural boundaries like roads and waterways. The mesh tightens, finest where the people are.</p></div></div>
+      <div class="mstep" data-step="3"><div class="card"><h3>~6,200 DeSO &mdash; zoom in</h3><p>Push in on Norrk&ouml;ping and Link&ouml;ping. Every RegSO splits once more into DeSO &mdash; the finest mesh, about 700 to 3,000 residents each, again shaped around clusters of land use and the lie of the terrain.</p></div></div>
+      <div class="mstep" data-step="4"><div class="card"><h3>Settlements</h3><p>Now the <span style="color:#E3C56B">built-up areas</span> bloom on top &mdash; the cities and towns. Drawn around <em>buildings</em> rather than the mesh, they spill <em>across</em> the DeSO lines. They cover just ~2% of the land, yet ~88% of Swedes live inside them; everywhere else is tiny villages or remote and rural.</p></div></div>
     </div>
   </div>
 </section>
 
 <!-- ===== SCENE 1-2: linear -> log, scroll to straighten ===== -->
 <section class="wrap" style="max-width:780px">
-  <p class="kicker reveal">The shape of it</p>
   <h2 class="reveal">Plot them, and the line bends</h2>
   <p class="reveal lead">Take every Swedish municipality. Along the bottom, how many people live there
   <span class="purple">(S)</span>; up the side, how many petrol stations it has <span class="hl">(P)</span>.
@@ -263,6 +265,7 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== SCENE 3: the surprise (air) ===== -->
 <section class="wrap scene-air">
+  <div class="actmark reveal" aria-hidden="true"></div>
   <p class="kicker reveal">The surprise</p>
   <h2 class="reveal">Bigger places run leaner</h2>
   <blockquote class="pullquote reveal">Double a town&rsquo;s population and its petrol stations grow by
@@ -316,7 +319,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   the unit with the number, and follow municipalities from here on because that is where the local stories
   live.</p>
   <details class="drawer reveal">
-    <summary>How we measured the slope honestly <span class="tagline">&mdash; count models, kept zeros, and the rootogram</span></summary>
+    <summary>How we measured the slope honestly <span class="tagline">&mdash; count models and kept zeros</span></summary>
     <div class="body">
       <p>Petrol stations are <em>counted</em>, not measured, and many small settlements have zero, one, or
       two. The textbook move &mdash; take logs and fit a straight line &mdash; cannot take the log of zero,
@@ -324,17 +327,6 @@ details.drawer .body p:last-child{margin-bottom:0}
       from 0.78 to a fake 0.46). We instead fit a <strong>Poisson / Negative-Binomial count model</strong>
       with a log link, which keeps the zeros and treats a town going from one station to two as the
       ordinary high-variance wobble it is, not a doubling.</p>
-      <p>The test of such a model is whether it reproduces the real spread of counts:</p>
-      <figure style="display:flex;flex-direction:column;align-items:center;margin:8px 0">
-        <svg id="rootogram" viewBox="0 0 760 400" role="img" aria-label="Rootogram of observed versus predicted station counts" style="max-width:660px"></svg>
-        <figcaption style="max-width:600px">A <em>rootogram</em>: bars are how many of the 2,017 settlements
-        have exactly 0, 1, 2&hellip; stations, hung from the model&rsquo;s prediction (<span style="color:var(--accent-2)">mint curve</span>).
-        A bar dipping below the baseline = more real towns than predicted. The big <strong>zero</strong>
-        bar lands almost dead on: 1,113 empty settlements observed, &asymp;1,142 predicted. The model earns
-        its zeros rather than fudging them. It is not flawless &mdash; a single exponent slightly
-        mis-describes the very smallest and largest towns, a real, tested bend &mdash; but the sublinearity
-        is what survives the check.</figcaption>
-      </figure>
     </div>
   </details>
 </section>
@@ -377,6 +369,7 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== SCENE 5c: let them drive — the law comes back (interactive) ===== -->
 <section class="wrap scene-air">
+  <div class="actmark reveal" aria-hidden="true"></div>
   <p class="kicker reveal">The resolution</p>
   <h2 class="reveal">The pumps didn&rsquo;t vanish &mdash; they moved out</h2>
   <p class="reveal">The dense core holds few stations for a dull reason: <em>nobody builds a forecourt where
@@ -442,6 +435,7 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== SCENE 6: the pivot ===== -->
 <section class="wrap scene-air">
+  <div class="actmark reveal" aria-hidden="true"></div>
   <p class="kicker reveal">The pivot</p>
   <h2 class="reveal">Now trust the line &mdash; and study what misses it</h2>
   <p class="reveal beat pivot">The slope held under every objection, so we stop measuring it and start using
@@ -456,11 +450,34 @@ details.drawer .body p:last-child{margin-bottom:0}
     $S_{\text{eff}}-S$ is the implied crowd of <strong>ghosts</strong>: tourists, cross-border shoppers,
     transit traffic &mdash; demand the resident count never saw.</p>
   </div>
+  <details class="drawer reveal">
+    <summary>Is the baseline good enough to trust? <span class="tagline">&mdash; the count model, the fan, and the rootogram</span></summary>
+    <div class="body">
+      <p>Worth pausing before we lean on it. On a log axis the settlement cloud fans out alarmingly at the
+      small towns &mdash; a jump from one station to two looks as violent as twenty to forty. In a
+      straight-line-through-logs frame that fanning would sink the model. But we never fit a straight line to
+      logs; we fit a <strong>count model</strong>, and a count model <em>predicts</em> precisely this shape:
+      the wobble around a place that expects &mu; stations grows only like &radic;&mu;, so it looks enormous
+      at the bottom of the range and vanishes at the top. The real test is whether the spread the model
+      actually draws is the spread it claims &mdash; and it is, running if anything a touch <em>tighter</em>
+      than a plain Poisson would allow, which is why no heavier-tailed model was needed here.</p>
+      <figure style="display:flex;flex-direction:column;align-items:center;margin:8px 0">
+        <svg id="rootogram" viewBox="0 0 760 400" role="img" aria-label="Rootogram of observed versus predicted station counts" style="max-width:660px"></svg>
+        <figcaption style="max-width:600px">A <em>rootogram</em>: bars are how many of the 2,017 settlements
+        have exactly 0, 1, 2&hellip; stations, hung from the model&rsquo;s prediction (<span style="color:var(--accent-2)">mint curve</span>).
+        A bar dipping below the baseline = more real towns than predicted. The big <strong>zero</strong>
+        bar lands almost dead on: 1,113 empty settlements observed, &asymp;1,142 predicted &mdash; the model
+        earns its zeros rather than fudging them. A formal goodness-of-fit check agrees on the gross law and
+        balks in just one place: the very smallest and largest towns, where a single exponent strains. That
+        strain isn&rsquo;t noise to apologise for &mdash; those few off-law places are exactly the named
+        towns the rest of this descent visits.</figcaption>
+      </figure>
+    </div>
+  </details>
 </section>
 
 <!-- ===== SCENE 7a: the descent into named places ===== -->
 <section class="wrap">
-  <p class="kicker reveal">Down onto the map</p>
   <h2 class="reveal">Two towns, opposite ghosts</h2>
   <p class="reveal">Slide a point horizontally to the baseline and read off where it lands. The distance
   <em>is</em> the surplus or missing demand, now in plain population units.</p>
@@ -488,7 +505,6 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== SCENE 7b: it's geography, not noise ===== -->
 <section class="wrap">
-  <p class="kicker reveal">The same story, on the map</p>
   <h2 class="reveal">The misses cluster &mdash; it&rsquo;s geography, not noise</h2>
   <p class="reveal">Put every municipality where it actually sits, sized by population, coloured by how far it
   beats or misses the law &mdash; measured per <em>registered car</em>, so a big city near the line stays
@@ -513,7 +529,6 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== SCENE 7c: the diagnostic pays off (tourism separates the mechanisms) ===== -->
 <section class="wrap">
-  <p class="kicker reveal">Who are the ghosts?</p>
   <h2 class="reveal">Tourists &mdash; but only the kind that drive</h2>
   <p class="reveal">If the extra stations serve visitors, the visitors should leave a footprint. Not the
   walk-around kind &mdash; a crowd at Stockholm&rsquo;s Old Town arrives by metro and buys no fuel. The
@@ -566,7 +581,6 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== SCENE 7d: who keeps the rural lights on ===== -->
 <section class="wrap">
-  <p class="kicker reveal">A different kind of deviation</p>
   <h2 class="reveal">Out in the thin tail, the big brands quietly leave</h2>
   <p class="reveal">Every miss so far was about <em>how many</em> pumps. The last twist is about <em>whose</em>.
   Tag each car-serving station by operator &mdash; the majors (Circle&nbsp;K, OKQ8, Preem, St1) against the
@@ -601,6 +615,7 @@ details.drawer .body p:last-child{margin-bottom:0}
 
 <!-- ===== THE BOWL: hand over the controls ===== -->
 <section class="wrap">
+  <div class="actmark reveal" aria-hidden="true"></div>
   <p class="kicker reveal">Now you try</p>
   <h2 class="reveal">Pick your ruler</h2>
   <p class="reveal">You watched both knobs in the stem: the denominator (people or cars) and the spatial unit
