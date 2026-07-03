@@ -30,7 +30,7 @@ body{
   font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:760px;margin:0 auto;padding:0 28px}
+.wrap{max-width:720px;margin:0 auto;padding:0 28px}
 h1,h2,.kicker,.big{font-family:'Space Grotesk',sans-serif}
 section{padding:78px 0}
 /* act-mark: the only structural separator — a short centered rule at the felt turns */
@@ -47,7 +47,7 @@ strong,.hl{color:var(--accent-2);font-weight:600}
 
 /* hero */
 .hero{padding-top:96px;text-align:left}
-.hero .sub{font-size:20px;color:var(--ink-dim);max-width:560px}
+.hero .sub{color:var(--ink-dim);max-width:560px}
 
 /* big number band */
 .stats{display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 6px}
@@ -59,7 +59,11 @@ strong,.hl{color:var(--accent-2);font-weight:600}
 .eqbox{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);
   border-radius:12px;padding:22px 26px;margin:24px 0}
 .eqbox .eq{font-size:20px;color:var(--ink);overflow-x:auto}
-.eqbox .note{font-size:14.5px;color:var(--ink-dim);margin:14px 0 0}
+.eqbox .note{font-size:15.5px;color:var(--ink-dim);margin:14px 0 0}
+.eqbox .eqhead{margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
+  font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.eqbox .eqlist{list-style:none;padding:0;margin:12px 0 0}
+.eqbox .eqlist li{padding:3px 0;font-size:15.5px;color:var(--ink-dim)}
 .katex{color:var(--ink)}
 
 figure{margin:30px 0 8px}
@@ -78,6 +82,7 @@ td.name{color:var(--ink);font-weight:500}
 
 .pullquote{font-family:'Space Grotesk';font-size:25px;line-height:1.3;color:var(--ink);
   border-left:3px solid var(--accent);padding-left:22px;margin:30px 0}
+.pullquote.pivot{border-color:var(--over)}
 
 footer{padding:54px 0 80px;color:var(--ink-dim);font-size:13.5px}
 footer a{color:var(--accent)}
@@ -121,7 +126,7 @@ footer a{color:var(--accent)}
 /* --- rebuild additions --- */
 .scene-air{padding-top:120px;padding-bottom:120px}
 .air-top{margin-top:46px}
-.note{font-size:14.5px;color:var(--ink-dim);margin:14px 0 0;line-height:1.55}
+.note{font-size:14px;color:var(--ink-dim);margin:14px 0 0;line-height:1.55}
 .hint{font-size:13px;color:var(--ink-dim);letter-spacing:.04em}
 .snapbtn{font:inherit;font-family:'Space Grotesk',sans-serif;font-size:13.5px;color:var(--ink);
   background:var(--bg-2);border:1px solid var(--line);border-radius:9px;padding:8px 15px;cursor:pointer;
@@ -139,9 +144,6 @@ details.drawer>summary .tagline{font-family:'Inter',sans-serif;font-weight:400;f
 details.drawer .body{padding:2px 22px 22px;font-size:15.5px;line-height:1.6}
 details.drawer .body p{margin:0 0 14px}
 details.drawer .body p:last-child{margin-bottom:0}
-/* the surprise / pivot get extra air and a left rule */
-.beat{border-left:3px solid var(--accent-2);padding-left:24px;margin:8px 0}
-.beat.pivot{border-color:var(--over)}
 @media print{details.drawer{border-color:#cdddd4;background:#f3f7f4}details.drawer .body{display:block!important}}
 
 
@@ -234,12 +236,13 @@ details.drawer .body p:last-child{margin-bottom:0}
 </section>
 
 <!-- ===== SCENE 1-2: linear -> log, scroll to straighten ===== -->
-<section class="wrap" style="max-width:780px">
-  <h2 class="reveal">Plot them, and the line bends</h2>
-  <p class="reveal lead">Take every Swedish municipality. Along the bottom, how many people live there
-  <span class="purple">(S)</span>; up the side, how many petrol stations it has <span class="hl">(P)</span>.
-  If stations simply tracked people, the dots would climb a straight ramp from the corner &mdash; they
-  don&rsquo;t. <span class="dim">Scroll to stretch the axes.</span></p>
+<section class="wrap">
+  <h2 class="reveal">People and Stations Scaling</h2>
+  <p class="reveal lead">Take every Swedish municipality. Plot along the bottom the number of people living
+  there <span class="purple">(S)</span>; plot up the side how many petrol stations it has
+  <span class="hl">(P)</span>. If stations simply tracked people, the dots in the scatter plot would fall
+  along a line.</p>
+  <p class="reveal lead">They don&rsquo;t. <span class="dim">Scroll to stretch the axes.</span></p>
 </section>
 
 <section class="snapscene">
@@ -248,18 +251,28 @@ details.drawer .body p:last-child{margin-bottom:0}
       <svg id="snapmorph" viewBox="0 0 760 460" role="img" aria-label="Stations against population for Swedish municipalities, morphing from linear axes to logarithmic axes as you scroll, the bent cloud straightening into a line of slope beta equals 0.59"></svg>
     </div>
     <div class="map-stepcol">
-      <div class="mstep" data-snap="0"><div class="card"><div class="num">Linear axes</div><h3>Each step <em>adds</em></h3><p>Equal gaps mean equal <em>amounts</em>: every gridline is another <strong>+250,000</strong> residents. The cloud climbs fast for small towns, then sags &mdash; the big cities fall well below a straight ramp. Your eye says <em>it levels off?</em>, but there&rsquo;s no number to hold onto.</p></div></div>
-      <div class="mstep" data-snap="1"><div class="card"><div class="num">Log&ndash;log axes</div><h3>Each step <em>multiplies</em></h3><p>Now stretch both axes so equal gaps mean equal <em>factors</em>: every gridline is another <strong>&times;10</strong>. The bend pulls straight &mdash; and a straight line on log&ndash;log paper <em>is</em> a power law, its whole story in one <strong>slope, &beta;&nbsp;=&nbsp;0.59</strong>. This is the view everything after is drawn in; the linear one you can forget.</p></div></div>
+      <div class="mstep" data-snap="0"><div class="card"><div class="num">Linear axes</div><h3>Each step <em>adds</em></h3><p>Equal gaps mean equal <em>amounts</em>: every gridline is another <strong>+250,000</strong> residents. The cloud climbs fast for small towns, then sags &mdash; the big cities fall well below a straight ramp. Your eye says <em>it levels off?</em></p></div></div>
+      <div class="mstep" data-snap="1"><div class="card"><div class="num">Log&ndash;log axes</div><h3>Each step <em>multiplies</em></h3><p>Now stretch both axes so equal gaps mean equal <em>factors</em>: every gridline is another <strong>&times;10</strong>. The bend pulls straight &mdash; and a straight line on log&ndash;log paper <em>is</em> a power law, its whole story in one <strong>slope, &beta;&nbsp;=&nbsp;0.59</strong>.</p></div></div>
     </div>
   </div>
 </section>
 
-<section class="wrap" style="max-width:720px">
+<section class="wrap">
   <div class="eqbox reveal">
-    <div class="eq">$$P \;\propto\; S^{\beta}$$</div>
-    <p class="note">If stations tracked people one-for-one, <strong>&beta;&nbsp;would&nbsp;equal&nbsp;1</strong>.
-    A slope below 1 means each extra resident adds <em>fewer</em> stations than the last &mdash; the
-    bend you just watched straighten, written as one figure.</p>
+    <h3 class="eqhead">What is a scaling law?</h3>
+    <div class="eq">$$P = C\,S^{\beta}$$</div>
+    <p class="note">The constant $C$ sets the overall rate; the exponent $\beta$ sets how the count grows
+    with size. Read it off by doubling &mdash; take a municipality twice the size, $S_{d}=2S$:</p>
+    <div class="eq">$$P_{d} = C\,S_{d}^{\beta} = C\,(2S)^{\beta} = 2^{\beta}\,C\,S^{\beta} = 2^{\beta}\,P$$</div>
+    <p class="note">So the single factor $2^{\beta}$ decides everything:</p>
+    <ul class="eqlist">
+      <li>$\beta > 1$ &mdash; <strong>superlinear</strong>: doubling the people <em>more</em> than doubles the stations</li>
+      <li>$\beta = 1$ &mdash; <strong>linear</strong>: stations track people one&#8209;for&#8209;one</li>
+      <li>$\beta < 1$ &mdash; <strong>sublinear</strong>: doubling the people <em>less</em> than doubles the stations</li>
+    </ul>
+    <p class="note">Sweden&rsquo;s municipalities sit firmly in the last case: at <strong>&beta;&nbsp;=&nbsp;0.59</strong>
+    petrol stations scale <em>sublinearly</em> with population &mdash; the bend you just watched straighten,
+    written as one number.</p>
   </div>
 </section>
 
@@ -410,7 +423,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   supply along different lines. Measure both over one shared catchment and the sublinearity is rock-steady
   &mdash; <em>and indifferent to how finely you chop the map.</em> The humble municipality was the trustworthy
   ruler all along: a municipality is just about catchment-sized.</p>
-  <p class="reveal beat">So the two scares were one scare. <span class="purple">Turn the box-size dial
+  <p class="reveal pullquote">So the two scares were one scare. <span class="purple">Turn the box-size dial
   coarse</span> and a municipality bundles the dense city in with its empty hinterland &mdash; the slope sags
   toward 0.59 and Sundsvall hides. <span style="color:var(--under)">Turn it fine</span> and a tile shrinks
   below a single station&rsquo;s reach, so its pumps land in the tile next door and the densest squares read
@@ -438,7 +451,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   <div class="actmark reveal" aria-hidden="true"></div>
   <p class="kicker reveal">The pivot</p>
   <h2 class="reveal">Now trust the line &mdash; and study what misses it</h2>
-  <p class="reveal beat pivot">The slope held under every objection, so we stop measuring it and start using
+  <p class="reveal pullquote pivot">The slope held under every objection, so we stop measuring it and start using
   it. The fitted law becomes a quiet baseline; the dots that sit <em>off</em> it become the subject. A
   municipality with far more stations than its residents can explain is being asked a question: <span class="purple">how
   big would you have to be to justify these pumps?</span> Run the law backwards and the answer is the
