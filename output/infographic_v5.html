@@ -257,9 +257,9 @@ details.drawer .body p:last-child{margin-bottom:0}
 <section class="mapscene">
   <div class="wrap" style="max-width:1080px">
     <h2 class="reveal">Five ways to cut up Sweden</h2>
-    <p class="reveal lead">The economics of place needs a geographic unit to measure in &mdash; and everything that
-    follows hangs on which one. Here are five ways to cut the land into units, drawn one inside the next.
-    Scroll, and watch the country divide.</p>
+    <p class="reveal lead">To measure anything about a place, you first have to decide where it ends &mdash; and
+    everything that follows hangs on that choice. Here are five ways to cut the land into units, drawn one
+    inside the next. Scroll, and watch the country divide.</p>
     <p class="reveal note">Definitions follow Statistics Sweden&rsquo;s <a
     href="https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/"
     target="_blank" rel="noopener"
@@ -280,7 +280,7 @@ details.drawer .body p:last-child{margin-bottom:0}
       <div class="mstep" data-step="0"><div class="card"><h3>One country</h3><p>450,000&nbsp;km&sup2;, most of it forest and lakes, the population pressed into a few percent of the land.</p></div></div>
       <div class="mstep" data-step="1"><div class="card"><h3>290 municipalities</h3><p>The administrative units. They cover the whole country with no gaps, each typically centred on a town or city and its surrounding landscape.</p></div></div>
       <div class="mstep" data-step="2"><div class="card"><h3>~3,400 RegSO</h3><p>Every municipality divides further into RegSO &mdash; named regions of roughly 700 to 23,000 residents, their borders drawn to follow natural boundaries like roads and waterways. The mesh tightens, finest where the people are.</p></div></div>
-      <div class="mstep" data-step="3"><div class="card"><h3>~6,200 DeSO &mdash; zoom in</h3><p>Push in on Norrk&ouml;ping and Link&ouml;ping. Every RegSO splits once more into DeSO &mdash; the finest mesh, again shaped around clusters of land use and the lie of the terrain. Note what holds these steady: <strong>not area, but people</strong>. Each one is drawn to hold roughly 700 to 3,000 residents, so the tiles are large out in the forest and tiny in the cities. Remember that; it matters later.</p></div></div>
+      <div class="mstep" data-step="3"><div class="card"><h3>~6,200 DeSO &mdash; zoom in</h3><p>Push in on Norrk&ouml;ping and Link&ouml;ping. Every RegSO splits once more into DeSO &mdash; the finest mesh, again drawn around how the land is used and how the terrain lies. Note what holds these steady: <strong>not area, but people</strong>. Each one is drawn to hold roughly 700 to 3,000 residents, so the tiles are large out in the forest and tiny in the cities. Remember that; it matters later.</p></div></div>
       <div class="mstep" data-step="4"><div class="card"><h3>Settlements</h3><p>Now the <span style="color:#F2C14E">built-up areas</span> bloom on top &mdash; the cities and towns. Drawn around <em>buildings</em> rather than the mesh, they spill <em>across</em> the DeSO lines. They cover just ~2% of the land, yet ~88% of Swedes live inside them; everywhere else is tiny villages or remote and rural.</p></div></div>
     </div>
   </div>
@@ -302,7 +302,7 @@ details.drawer .body p:last-child{margin-bottom:0}
       <svg id="snapmorph" viewBox="0 0 760 460" role="img" aria-label="Stations against population for Swedish municipalities, morphing from linear axes to logarithmic axes as you scroll, the bent cloud straightening into a line of slope beta equals 0.59"></svg>
     </div>
     <div class="map-stepcol">
-      <div class="mstep" data-snap="0"><div class="card"><div class="num">Linear axes</div><h3>Each step <em>adds</em></h3><p>Equal gaps mean equal <em>amounts</em>: every gridline is another <strong>+250,000</strong> residents. The cloud climbs fast for small towns, then sags &mdash; the big cities fall well below a straight ramp. Your eye says <em>it levels off?</em></p></div></div>
+      <div class="mstep" data-snap="0"><div class="card"><div class="num">Linear axes</div><h3>Each step <em>adds</em></h3><p>Equal gaps mean equal <em>amounts</em>: every gridline is another <strong>+250,000</strong> residents. The cloud climbs fast for small towns, then sags &mdash; the big cities fall well below a straight ramp. Your eye says <em>it levels off.</em></p></div></div>
       <div class="mstep" data-snap="1"><div class="card"><div class="num">Log&ndash;log axes</div><h3>Each step <em>multiplies</em></h3><p>Now stretch both axes so equal gaps mean equal <em>factors</em>: every gridline is another <strong>&times;10</strong>. The bend pulls straight &mdash; and a straight line on log&ndash;log paper <em>is</em> a power law, its whole story in one <strong>slope, &beta;&nbsp;=&nbsp;0.59</strong>.</p></div></div>
     </div>
   </div>
@@ -354,8 +354,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   country&rsquo;s 290 municipalities.</blockquote>
   <p class="reveal">There is a plausible economics to it. A forecourt is a lump of fixed costs &mdash; land,
   tanks, canopy. As towns grow, businesses can usually serve more people by expanding existing stations than
-  by building new ones. Competition for valuable land and improvements in transport networks reinforce the
-  same tendency, favouring fewer but busier forecourts.</p>
+  by building new ones. Expensive land and better roads push the same way: fewer stations, each one busier.</p>
   <p class="reveal">Other urban-scaling studies find exactly this signature for infrastructure of many kinds,
   with exponents in the <strong>0.60&ndash;0.90</strong> band (for a popular account, see
   <a href="https://www.penguinrandomhouse.com/books/314049/scale-by-geoffrey-west/" target="_blank"
@@ -381,9 +380,9 @@ details.drawer .body p:last-child{margin-bottom:0}
   <div class="actmark reveal" aria-hidden="true"></div>
   <p class="kicker reveal">The hinge</p>
   <h2 class="reveal">&ldquo;You drew the geographic boundaries wrong&rdquo;</h2>
-  <p class="reveal">There is something arbitrary in any demarcation of geography. A municipality is a
-  political demarcation, not an economic one. What if we clustered people and petrol stations differently?
-  This problem is sometimes called the <em>Modifiable Areal Unit Problem</em>.</p>
+  <p class="reveal">Every boundary is somewhat arbitrary. A municipality is a political line, not an
+  economic one. What if we grouped people and pumps differently? Statisticians have a name for this worry:
+  the <em>Modifiable Areal Unit Problem</em>.</p>
   <p class="reveal">One complication is that a municipality almost always bundles both a town and its rural
   surroundings &mdash; and for the purposes of transport, these are different worlds glued into one box.
   Really, the choice of unit is one dial: <strong>how big a box to draw</strong>. Turned coarse, a box is a
@@ -406,7 +405,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   <p class="reveal">Sweden&rsquo;s population is not spread out &mdash; it is pressed into a few percent of the
   land, with everything else close to empty. So a municipality is almost never one thing: it is a dense core
   <em>plus</em> a rural hinterland, glued into a single dot. If &beta;&nbsp;=&nbsp;0.59 is really an average of
-  two different regimes, it is not trustworthy at all &mdash; just a mixture that happens to come out tidy.</p>
+  two different worlds, it is not trustworthy at all &mdash; just a mixture that happens to come out tidy.</p>
   <p class="reveal">There is only one way to find out. Unblend it.</p>
   <details class="drawer reveal">
     <summary>How we measured the slope honestly <span class="tagline">&mdash; count models and kept zeros</span></summary>
@@ -430,7 +429,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   wrapped in 3,400&nbsp;km&sup2; of forest, one dot on every chart so far, two fuel economies on the ground.
   <strong>Sundbyberg</strong> is the opposite pole: 56,000 people on nine square kilometres of unbroken city,
   and <em>two</em> stations. Blend those in different proportions across 290 municipalities and any slope you
-  fit is a weighted average of something.</p>
+  fit is a weighted average of two things you can&rsquo;t see.</p>
   <p class="reveal">So take the <strong>DeSO</strong> mesh from the opening map &mdash; ~6,200 tiles of
   700&ndash;2,700 residents each, fine enough that most are close to internally uniform. And because
   &ldquo;rural versus urban&rdquo; is at bottom a statement about <em>density</em>, put density straight on
@@ -445,9 +444,7 @@ details.drawer .body p:last-child{margin-bottom:0}
     &Delta;AIC&nbsp;&asymp;&nbsp;415) &mdash; and the last bin already sags below the line, a first sight of
     the downturn the next chart makes explicit. The strip underneath counts what no dot-cloud can show: the
     share of tiles with <em>no station at all</em>, climbing from 44% in the countryside to
-    <span style="color:#F2C14E">98% in the dense core</span>. (Sutton et&nbsp;al. put the equivalent threshold
-    for general amenities in England&nbsp;&amp;&nbsp;Wales at 33&nbsp;&plusmn;&nbsp;5&nbsp;ppl/ha &mdash;
-    fuel saturates far earlier.)</figcaption>
+    <span style="color:#F2C14E">98% in the dense core</span>.</figcaption>
   </figure>
   <p class="reveal">There it is. <strong>Two regimes, and the data prefers them decisively.</strong> Below the
   breakpoint provision grows <em>as fast as</em> density &mdash; no economy of scale in the countryside at all.
@@ -481,6 +478,9 @@ details.drawer .body p:last-child{margin-bottom:0}
       goes on to show what a two-slope model structurally can&rsquo;t: the slope doesn&rsquo;t just flatten
       in the densest tiles, it keeps falling, through zero. That decline is the fuel-desert signature the
       next section explains.</p>
+      <p>For scale: Sutton et&nbsp;al. put the equivalent saturation threshold for general amenities in
+      England&nbsp;&amp;&nbsp;Wales at 33&nbsp;&plusmn;&nbsp;5&nbsp;ppl/ha &mdash; fuel saturates far earlier,
+      at the 5.7 we find here.</p>
     </div>
   </details>
   <p class="reveal">No market runs backwards. So it is not the market that broke &mdash; it is the
@@ -495,8 +495,8 @@ details.drawer .body p:last-child{margin-bottom:0}
   <p class="reveal">Here is the thing about the DeSO mesh, hiding in plain sight since the opening map. Those
   tiles are drawn to hold roughly constant <strong>population</strong> &mdash; 700 to 2,700 people each. So as
   density rises, the tile does not stay the same size and fill up. <em>It shrinks.</em></p>
-  <p class="reveal">A rural tile is 11&nbsp;km&sup2;. A tile in the densest tenth of the country is half a
-  square kilometre &mdash; about <strong>180 metres</strong> from centre to edge. Meanwhile the ground one
+  <p class="reveal">A rural tile is 11&nbsp;km&sup2;. A tile in the densest tenth of the country is barely a
+  tenth of a square kilometre &mdash; about <strong>180 metres</strong> from centre to edge. Meanwhile the ground one
   petrol station actually serves does not shrink at all: people drive five or ten kilometres for fuel whether
   they live in Stockholm or Sorsele.</p>
   <figure class="reveal">
@@ -546,12 +546,13 @@ details.drawer .body p:last-child{margin-bottom:0}
       <text x="325" y="315" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13"
             font-weight="600" fill="#EAFBF1">Only the municipality is bigger than the thing it is trying to measure.</text>
     </svg>
-    <figcaption>Median radius of each unit (as an equal-area circle), against the 5&ndash;10&nbsp;km people
+    <figcaption>Each bar is the <em>median</em> unit&rsquo;s radius (as an equal-area circle), shown for
+    illustration &mdash; the spread within each type is wide &mdash; against the 5&ndash;10&nbsp;km people
     will drive for fuel. A unit can only contain its own stations if it is <em>larger</em> than their reach.</figcaption>
   </figure>
   <p class="reveal">That gives a test you can apply <strong>before fitting anything at all</strong>: counting
   stations inside a box only works when the box is bigger than the ground a station serves. Check the boxes
-  against that rule and the whole earlier wander falls into place &mdash; the municipality passes and reads
+  against that rule and everything we saw earlier falls into place &mdash; the municipality passes and reads
   0.59; the settlement and the dense tile fail, and read 0.78 and worse. The units did not disagree at random.
   <strong>They disagreed by exactly how badly they broke the rule.</strong></p>
   <details class="drawer reveal">
@@ -605,10 +606,10 @@ details.drawer .body p:last-child{margin-bottom:0}
   </div>
   <p class="reveal">The catchment slope barely twitches &mdash; <strong>0.59 &plusmn; 0.02 from 2&nbsp;km all
   the way to 50&nbsp;km</strong> &mdash; and it lands exactly on the <strong>municipality&rsquo;s 0.59</strong>
-  from the very first chart. The humble municipality was the trustworthy ruler all along, and now we know why
-  rather than by luck: a municipality is about catchment-sized, big enough to hold a town together with the
+  from the very first chart. The humble municipality was the trustworthy ruler all along, and now we know why,
+  instead of just being lucky: a municipality is about catchment-sized, big enough to hold a town together with the
   countryside that fuels around it.</p>
-  <p class="reveal">Which leaves one thing unfinished. What happened to the two regimes?</p>
+  <p class="reveal">Which leaves one thing unfinished. What happened to the two worlds?</p>
 </section>
 
 <!-- ===== NEW: Phase 19 — both regimes were distortions ===== -->
@@ -682,8 +683,7 @@ details.drawer .body p:last-child{margin-bottom:0}
     <summary>Why the countryside <em>looked</em> linear <span class="tagline">&mdash; the indivisible first station</span></summary>
     <div class="body">
       <p>At a 5&nbsp;km range, 27% of rural tiles have <em>no</em> station within reach and 47% have at most
-      one. Down there provision is quantised: a village either clears the threshold that justifies a single
-      pump or it does not. One station, then two &mdash; against a population that doubled &mdash; reads as
+      one. Out there, stations come in whole numbers: a village either justifies one pump or it does not. One station, then two &mdash; against a population that doubled &mdash; reads as
       near-proportional growth, because you cannot build half a forecourt. That is what manufactured the 0.98.
       Widen the range until the counts fill in (a median of 19 stations at 20&nbsp;km) and the rural slope
       sinks to 0.61 with the rest.</p>
@@ -987,8 +987,8 @@ details.drawer .body p:last-child{margin-bottom:0}
   <p class="reveal">Here are the dials, yours to turn &mdash; the denominator (people or cars) and the box
   (settlement or municipality). This is the world of boxes, so the slope will wobble exactly as it did
   earlier, and now you know why: the settlement fails the size test, the municipality passes it. What the
-  wobble will not do is reach the wall. Every setting stays sublinear, orbiting the catchment&rsquo;s
-  invariant <strong>0.59</strong>, and the same towns sit stubbornly
+  wobble will not do is reach the wall. Every setting stays sublinear, circling the catchment&rsquo;s
+  steady <strong>0.59</strong>, and the same towns sit stubbornly
   <span class="purple">above</span> or <span style="color:var(--under)">below</span> the line.</p>
   <div class="ctrls reveal">
     <div class="ctrl-row">
@@ -1025,7 +1025,7 @@ details.drawer .body p:last-child{margin-bottom:0}
   shrank.</blockquote>
   <p class="reveal">That was the whole middle of this piece. A mesh built to hold constant <em>population</em>
   gets smaller as places get denser, until the box is a fifth of a kilometre across and the station it should
-  contain is a kilometre away. Measure people and pumps over the same ground instead, and the two regimes
+  contain is a kilometre away. Measure people and pumps over the same ground instead, and the two halves
   close back into one &mdash; the same 0.59 the municipalities gave up at the start.</p>
   <p class="reveal">Then the law earned its keep a second time, as a baseline. The places that miss it turned
   out to be stories, not noise: skiers in the mountains, Norwegians chasing cheaper fuel across the border,
